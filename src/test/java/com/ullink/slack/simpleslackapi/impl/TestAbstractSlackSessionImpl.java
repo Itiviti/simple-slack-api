@@ -1,11 +1,9 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessage;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.List;
 
 public class TestAbstractSlackSessionImpl
 {
@@ -13,33 +11,31 @@ public class TestAbstractSlackSessionImpl
     private class TestSlackSessionImpl extends AbstractSlackSessionImpl
     {
 
-        List<SlackMessage> messageSent;
-
         @Override
         public void connect()
         {
-            channels.add(new SlackChannelImpl("channelid1", "testchannel1", "topicchannel1", "topicchannel1"));
-            channels.add(new SlackChannelImpl("channelid2", "testchannel2", "topicchannel2", "topicchannel2"));
-            channels.add(new SlackChannelImpl("channelid3", "testchannel3", "topicchannel3", "topicchannel3"));
-            channels.add(new SlackChannelImpl("channelid4", "testchannel4", "topicchannel4", "topicchannel4"));
-            channels.add(new SlackChannelImpl("channelid5", "testchannel5", "topicchannel5", "topicchannel5"));
+            channels.put("channelid1",new SlackChannelImpl("channelid1", "testchannel1", "topicchannel1", "topicchannel1"));
+            channels.put("channelid2",new SlackChannelImpl("channelid2", "testchannel2", "topicchannel2", "topicchannel2"));
+            channels.put("channelid3",new SlackChannelImpl("channelid3", "testchannel3", "topicchannel3", "topicchannel3"));
+            channels.put("channelid4",new SlackChannelImpl("channelid4", "testchannel4", "topicchannel4", "topicchannel4"));
+            channels.put("channelid5",new SlackChannelImpl("channelid5", "testchannel5", "topicchannel5", "topicchannel5"));
 
-            users.add(new SlackUserImpl("userid1", "username1", "realname1", false));
-            users.add(new SlackUserImpl("userid2", "username2", "realname2", false));
-            users.add(new SlackUserImpl("userid3", "username3", "realname3", true));
-            users.add(new SlackUserImpl("userid4", "username4", "realname4", false));
-            users.add(new SlackUserImpl("userid5", "username5", "realname4", true));
+            users.put("userid1",new SlackUserImpl("userid1", "username1", "realname1", false));
+            users.put("userid2",new SlackUserImpl("userid2", "username2", "realname2", false));
+            users.put("userid3",new SlackUserImpl("userid3", "username3", "realname3", true));
+            users.put("userid4",new SlackUserImpl("userid4", "username4", "realname4", false));
+            users.put("userid5",new SlackUserImpl("userid5", "username5", "realname4", true));
 
-            bots.add(new SlackBotImpl("botid1", "botname1", false));
-            bots.add(new SlackBotImpl("botid2", "botname2", false));
-            bots.add(new SlackBotImpl("botid3", "botname2", true));
+            bots.put("botid1",new SlackBotImpl("botid1", "botname1", false));
+            bots.put("botid2",new SlackBotImpl("botid2", "botname2", false));
+            bots.put("botid3",new SlackBotImpl("botid3", "botname2", true));
 
         }
 
         @Override
         public void sendMessage(SlackChannel channel, String message, String username, String iconURL)
         {
-
+            //DO NOTHING
         }
     }
 
@@ -147,5 +143,6 @@ public class TestAbstractSlackSessionImpl
 
         assertThat(slackSession.findUserByUserName("unknownuser")).isNull();
     }
+
 
 }

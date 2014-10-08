@@ -8,7 +8,6 @@ import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -25,19 +24,17 @@ import java.net.Proxy;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String>
 {
+
+    private static final String SLACK_HTTPS_AUTH_URL = "https://slack.com/api/rtm.start?token=";
 
     private Session websocketSession;
     private String authToken;
     private Proxy.Type proxyType;
     private String proxyAddress;
-    private int proxyPort;
+    private int proxyPort = -1;
     private Proxy outputProxy;
 
     SlackWebSocketSessionImpl(String authToken, Proxy.Type proxyType, String proxyAddress, int proxyPort)
@@ -46,6 +43,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         this.proxyType = proxyType;
         this.proxyAddress = proxyAddress;
         this.proxyPort = proxyPort;
+        outputProxy = new Proxy(proxyType, InetSocketAddress.createUnresolved(proxyAddress, proxyPort));
     }
 
     SlackWebSocketSessionImpl(String authToken)
@@ -59,9 +57,16 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     {
         try
         {
-            URL url = new URL("https://slack.com/api/rtm.start?token=" + authToken);
-            outputProxy = new Proxy(proxyType, InetSocketAddress.createUnresolved(proxyAddress, proxyPort));
-            HttpsURLConnection con = (HttpsURLConnection) url.openConnection(outputProxy);
+            URL url = new URL(SLACK_HTTPS_AUTH_URL + authToken);
+            HttpsURLConnection con;
+            if (outputProxy != null)
+            {
+                con = (HttpsURLConnection) url.openConnection(outputProxy);
+            }
+            else
+            {
+                con = (HttpsURLConnection) url.openConnection();
+            }
             StringBuilder strBuilder = new StringBuilder();
             BufferedReader br =
                     new BufferedReader(
@@ -74,100 +79,31 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             }
             br.close();
             String json = strBuilder.toString();
-            System.out.println("JSON : " + json);
-            JSONParser parser = new JSONParser();
-            JSONObject jsonResponse = (JSONObject) parser.parse(json);
-
-            JSONArray usersJson = (JSONArray) jsonResponse.get("users");
-
-            for (Object jsonObject : usersJson)
-            {
-                JSONObject jsonUser = (JSONObject) jsonObject;
-                String id = (String) jsonUser.get("id");
-                String name = (String) jsonUser.get("name");
-                String realName = (String) jsonUser.get("real_name");
-                Boolean deleted = (Boolean) jsonUser.get("deleted");
-                users.add(new SlackUserImpl(id, name, realName, deleted));
-            }
-
-            JSONArray botsJson = (JSONArray) jsonResponse.get("bots");
-
-            for (Object jsonObject : botsJson)
-            {
-                JSONObject jsonBot = (JSONObject) jsonObject;
-                String id = (String) jsonBot.get("id");
-                String name = (String) jsonBot.get("name");
-                Boolean deleted = (Boolean) jsonBot.get("deleted");
-                bots.add(new SlackBotImpl(id, name, deleted));
-            }
-
-            JSONArray channelsJson = (JSONArray) jsonResponse.get("channels");
-
-            for (Object jsonObject : channelsJson)
-            {
-                JSONObject jsonChannel = (JSONObject) jsonObject;
-                String id = (String) jsonChannel.get("id");
-                String name = (String) jsonChannel.get("name");
-                System.out.println(name);
-                String topic = null; // TODO
-                String purpose = null;  // TODO
-                SlackChannelImpl channel = new SlackChannelImpl(id, name, topic, purpose);
-                JSONArray membersJson = (JSONArray) jsonChannel.get("members");
-                if (membersJson != null)
-                {
-                    for (Object jsonMembersObject : membersJson)
-                    {
-                        String memberId = (String) jsonMembersObject;
-                        SlackUser user = findUserById(memberId);
-                        channel.addUser(user);
-                    }
-                }
-                channels.add(channel);
-            }
-
-            JSONArray groupsJson = (JSONArray) jsonResponse.get("groups");
-
-            for (Object jsonObject : groupsJson)
-            {
-                JSONObject jsonChannel = (JSONObject) jsonObject;
-                String id = (String) jsonChannel.get("id");
-                String name = (String) jsonChannel.get("name");
-                System.out.println(name);
-                String topic = null; // TODO
-                String purpose = null;  // TODO
-                SlackChannelImpl channel = new SlackChannelImpl(id, name, topic, purpose);
-                JSONArray membersJson = (JSONArray) jsonChannel.get("members");
-                if (membersJson != null)
-                {
-                    for (Object jsonMembersObject : membersJson)
-                    {
-                        String memberId = (String) jsonMembersObject;
-                        SlackUser user = findUserById(memberId);
-                        channel.addUser(user);
-                    }
-                }
-                channels.add(channel);
-            }
-
-            String wssurl = (String) jsonResponse.get("url");
+            SlackJSONSessionStatusParser sessionParser = new SlackJSONSessionStatusParser(json);
+            sessionParser.parse();
+            users = sessionParser.getUsers();
+            bots = sessionParser.getBots();
+            channels = sessionParser.getChannels();
+            String wssurl = sessionParser.getWebSocketURL();
 
             System.out.println("URL = " + wssurl);
 
             ClientManager client = ClientManager.createClient();
             client.getProperties().put(ClientProperties.LOG_HTTP_UPGRADE, true);
-            client.getProperties().put(ClientProperties.PROXY_URI, "http://" + proxyAddress + ":" + proxyPort);
+            if (proxyAddress != null)
+            {
+                client.getProperties().put(ClientProperties.PROXY_URI, "http://" + proxyAddress + ":" + proxyPort);
+            }
             final MessageHandler handler = this;
             websocketSession = client.connectToServer(new Endpoint()
             {
                 @Override
                 public void onOpen(Session session, EndpointConfig config)
                 {
-                    System.out.println("opening");
                     session.addMessageHandler(handler);
                 }
 
             }, URI.create(wssurl));
-            System.out.println("connected");
             for (SlackMessageListener slackMessageListener : messageListeners)
             {
                 slackMessageListener.onSessionLoad(this);

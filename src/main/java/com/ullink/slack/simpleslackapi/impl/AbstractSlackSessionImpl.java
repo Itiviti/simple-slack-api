@@ -8,40 +8,42 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
 
-    protected Collection<SlackChannel> channels = new ArrayList<>();
-    protected Collection<SlackUser> users = new ArrayList<>();
-    protected Collection<SlackBot> bots = new ArrayList<>();
+    protected Map<String,SlackChannel> channels = new HashMap<>();
+    protected Map<String,SlackUser> users = new HashMap<>();
+    protected Map<String,SlackBot> bots = new HashMap<>();
 
     protected Set<SlackMessageListener> messageListeners = new HashSet<>();
 
     @Override
     public Collection<SlackChannel> getChannels()
     {
-        return new ArrayList<>(channels);
+        return new ArrayList<>(channels.values());
     }
 
     @Override
     public Collection<SlackUser> getUsers()
     {
-        return new ArrayList<>(users);
+        return new ArrayList<>(users.values());
     }
 
     @Override
     public Collection<SlackBot> getBots()
     {
-        return new ArrayList<>(bots);
+        return new ArrayList<>(bots.values());
     }
 
     @Override
     public SlackChannel findChannelByName(String channelName)
     {
-        for (SlackChannel channel : channels)
+        for (SlackChannel channel : channels.values())
         {
             if (channelName.equals(channel.getName()))
             {
@@ -54,33 +56,19 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackChannel findChannelById(String channelId)
     {
-        for (SlackChannel channel : channels)
-        {
-            if (channelId.equals(channel.getId()))
-            {
-                return channel;
-            }
-        }
-        return null;
+        return channels.get(channelId);
     }
 
     @Override
     public SlackUser findUserById(String userId)
     {
-        for (SlackUser user : users)
-        {
-            if (userId.equals(user.getId()))
-            {
-                return user;
-            }
-        }
-        return null;
+        return users.get(userId);
     }
 
     @Override
     public SlackUser findUserByUserName(String userName)
     {
-        for (SlackUser user : users)
+        for (SlackUser user : users.values())
         {
             if (userName.equals(user.getUserName()))
             {
@@ -93,14 +81,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackBot findBotById(String botId)
     {
-        for (SlackBot bot : bots)
-        {
-            if (botId.equals(bot.getId()))
-            {
-                return bot;
-            }
-        }
-        return null;
+        return bots.get(botId);
     }
 
     @Override
