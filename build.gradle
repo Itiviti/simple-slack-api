@@ -1,17 +1,26 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:2.2.4"
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
-
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven'
+apply plugin: 'cobertura'
 
 group = 'com.ullink.slack'
 
 dependencies {
     compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.8.3'
-    compile 'com.googlecode.json-simple:json-simple:1.1'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
 
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'junit:junit:4.11'
