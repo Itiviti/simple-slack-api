@@ -156,46 +156,28 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public void onMessage(String message)
     {
-        SlackMessage slackMessage = decodeMessage(message);
-        if (slackMessage != null)
+        try
         {
-            for (SlackMessageListener slackMessageListener : messageListeners)
+            SlackMessage slackMessage = decodeMessage(message);
+            if (slackMessage != null)
             {
-                slackMessageListener.onMessage(slackMessage);
+                for (SlackMessageListener slackMessageListener : messageListeners)
+                {
+                    slackMessageListener.onMessage(slackMessage);
+                }
             }
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
         }
     }
 
 
-    private SlackMessage decodeMessage(String json)
+    private SlackMessage decodeMessage(String json) throws ParseException
     {
-        JSONParser parser = new JSONParser();
-        JSONObject obj = null;
-
-        try
-        {
-            obj = (JSONObject) parser.parse(json);
-        } catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
-
-        String messageType = (String) obj.get("type");
-        if (!"message".equals(messageType))
-        {
-            return null;
-        }
-
-        String channelId = (String) obj.get("channel");
-        String userId = (String) obj.get("user");
-        String botId = (String) obj.get("bot_id");
-
-        SlackChannel channel = channelId != null ? findChannelById(channelId) : null;
-        SlackUser user = userId != null ? findUserById(userId) : null;
-        SlackBot bot = botId != null ? findBotById(botId) : null;
-
-        String text = (String) obj.get("text");
-        String subtype = (String) obj.get("subtype");
-        return new SlackMessageImpl(text, bot, user, channel, SlackMessage.SlackMessageSubType.getByCode(subtype));
+        SlackJSONMessageParser messageParser = new SlackJSONMessageParser(json,this);
+        messageParser.parse();
+        return messageParser.getSlackMessage();
     }
 }
