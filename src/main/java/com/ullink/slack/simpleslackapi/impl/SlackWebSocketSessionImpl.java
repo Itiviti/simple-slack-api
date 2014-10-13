@@ -1,16 +1,14 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessage;
 import com.ullink.slack.simpleslackapi.SlackMessageListener;
 import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.websocket.Endpoint;
@@ -27,6 +25,8 @@ import java.net.URLEncoder;
 
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String>
 {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SlackWebSocketSessionImpl.class);
 
     private static final String SLACK_HTTPS_AUTH_URL = "https://slack.com/api/rtm.start?token=";
 
@@ -55,6 +55,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public void connect()
     {
+        LOGGER.info("connecting to slack");
         try
         {
             URL url = new URL(SLACK_HTTPS_AUTH_URL + authToken);
@@ -84,10 +85,13 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             users = sessionParser.getUsers();
             bots = sessionParser.getBots();
             channels = sessionParser.getChannels();
+            LOGGER.info(users.size() + " users found on this session");
+            LOGGER.info(bots.size() + " bots found on this session");
+            LOGGER.info(channels.size() + " channels found on this session");
+
             String wssurl = sessionParser.getWebSocketURL();
 
-            System.out.println("URL = " + wssurl);
-
+            LOGGER.debug("retrieved websocket URL : " + wssurl);
             ClientManager client = ClientManager.createClient();
             client.getProperties().put(ClientProperties.LOG_HTTP_UPGRADE, true);
             if (proxyAddress != null)
@@ -95,6 +99,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 client.getProperties().put(ClientProperties.PROXY_URI, "http://" + proxyAddress + ":" + proxyPort);
             }
             final MessageHandler handler = this;
+            LOGGER.debug("initiating connection to websocket");
             websocketSession = client.connectToServer(new Endpoint()
             {
                 @Override
@@ -107,6 +112,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             for (SlackMessageListener slackMessageListener : messageListeners)
             {
                 slackMessageListener.onSessionLoad(this);
+            }
+            if (websocketSession != null)
+            {
+                LOGGER.debug("websocket connection established");
+                LOGGER.info("slack session ready");
             }
         } catch (Exception e)
         {
@@ -169,7 +179,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private SlackMessage decodeMessage(String json)
     {
-        SlackJSONMessageParser messageParser = new SlackJSONMessageParser(json,this);
+        SlackJSONMessageParser messageParser = new SlackJSONMessageParser(json, this);
         try
         {
             messageParser.parse();
