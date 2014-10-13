@@ -156,28 +156,28 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public void onMessage(String message)
     {
-        try
+        SlackMessage slackMessage = decodeMessage(message);
+        if (slackMessage != null)
         {
-            SlackMessage slackMessage = decodeMessage(message);
-            if (slackMessage != null)
+            for (SlackMessageListener slackMessageListener : messageListeners)
             {
-                for (SlackMessageListener slackMessageListener : messageListeners)
-                {
-                    slackMessageListener.onMessage(slackMessage);
-                }
+                slackMessageListener.onMessage(slackMessage);
             }
-        }
-        catch (ParseException e)
-        {
-            e.printStackTrace();
         }
     }
 
 
-    private SlackMessage decodeMessage(String json) throws ParseException
+    private SlackMessage decodeMessage(String json)
     {
         SlackJSONMessageParser messageParser = new SlackJSONMessageParser(json,this);
-        messageParser.parse();
-        return messageParser.getSlackMessage();
+        try
+        {
+            messageParser.parse();
+            return messageParser.getSlackMessage();
+        } catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

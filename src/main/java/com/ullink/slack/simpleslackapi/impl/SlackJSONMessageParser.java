@@ -15,15 +15,15 @@ class SlackJSONMessageParser
     private String toParse;
     private SlackMessage slackMessage;
 
-    public SlackMessage getSlackMessage()
-    {
-        return slackMessage;
-    }
-
-    SlackJSONMessageParser(String toParse, SlackSession session)
+    SlackJSONMessageParser(String toParse, SlackSession slackSession)
     {
         this.toParse = toParse;
         this.slackSession = slackSession;
+    }
+
+    public SlackMessage getSlackMessage()
+    {
+        return slackMessage;
     }
 
     void parse() throws ParseException
