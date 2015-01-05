@@ -7,10 +7,10 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 
 class SlackMessageImpl implements SlackMessage
 {
-    private String messageContent;
-    private SlackUser user;
-    private SlackBot bot;
-    private SlackChannel channel;
+    private String              messageContent;
+    private SlackUser           user;
+    private SlackBot            bot;
+    private SlackChannel        channel;
     private SlackMessageSubType subType;
 
     SlackMessageImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, SlackMessageSubType subType)

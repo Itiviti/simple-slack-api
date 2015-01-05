@@ -288,7 +288,7 @@ public class TestSlackWebSocketSessionImpl
                 return new MockSession();
             }
         };
-        SlackWebSocketSessionImpl wsSession = new SlackWebSocketSessionImpl("testAuthToken", Proxy.Type.HTTP, "http://my.proxy.address", 5555);
+        SlackWebSocketSessionImpl wsSession = new SlackWebSocketSessionImpl("testAuthToken", Proxy.Type.HTTP, "http://my.proxy.address", 5555,false);
         wsSession.connect();
     }
 
@@ -313,7 +313,7 @@ public class TestSlackWebSocketSessionImpl
                 return new MockSession();
             }
         };
-        SlackWebSocketSessionImpl wsSession = new SlackWebSocketSessionImpl("testAuthToken");
+        SlackWebSocketSessionImpl wsSession = new SlackWebSocketSessionImpl("testAuthToken",false);
         wsSession.connect();
     }
 

@@ -5,17 +5,19 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 class SlackUserImpl implements SlackUser
 {
 
-    String id;
-    String userName;
-    String realName;
+    String  id;
+    String  userName;
+    String  realName;
+    String  userMail;
     boolean isDeleted;
 
-    SlackUserImpl(String id, String userName, String realName, boolean isDeleted)
+    SlackUserImpl(String id, String userName, String realName, String userMail, boolean isDeleted)
     {
         this.id = id;
         this.userName = userName;
         this.realName = realName;
         this.isDeleted = isDeleted;
+        this.userMail = userMail;
     }
 
     @Override
@@ -40,5 +42,11 @@ class SlackUserImpl implements SlackUser
     public boolean isDeleted()
     {
         return isDeleted;
+    }
+
+    @Override
+    public String getUserMail()
+    {
+        return userMail;
     }
 }

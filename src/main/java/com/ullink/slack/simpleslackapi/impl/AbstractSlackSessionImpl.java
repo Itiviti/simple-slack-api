@@ -5,7 +5,6 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageListener;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,9 +15,9 @@ import java.util.Set;
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
 
-    protected Map<String,SlackChannel> channels = new HashMap<>();
-    protected Map<String,SlackUser> users = new HashMap<>();
-    protected Map<String,SlackBot> bots = new HashMap<>();
+    protected Map<String, SlackChannel> channels         = new HashMap<>();
+    protected Map<String, SlackUser>    users            = new HashMap<>();
+    protected Map<String, SlackBot>     bots             = new HashMap<>();
 
     protected Set<SlackMessageListener> messageListeners = new HashSet<>();
 
@@ -79,6 +78,19 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
+    public SlackUser findUserByEmail(String userMail)
+    {
+        for (SlackUser user : users.values())
+        {
+            if (userMail.equals(user.getUserMail()))
+            {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public SlackBot findBotById(String botId)
     {
         return bots.get(botId);
@@ -95,6 +107,5 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     {
         messageListeners.add(listenerToRemove);
     }
-
 
 }

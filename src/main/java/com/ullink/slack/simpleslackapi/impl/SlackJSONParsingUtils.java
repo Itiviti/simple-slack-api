@@ -1,23 +1,16 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.SlackBot;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessage;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.util.Collection;
-import java.util.Map;
+import com.ullink.slack.simpleslackapi.SlackUser;
 
 class SlackJSONParsingUtils
 {
 
     private SlackJSONParsingUtils()
     {
-        //Helper class
+        // Helper class
     }
 
     static final SlackUserImpl buildSlackUser(JSONObject jsonUser)
@@ -26,7 +19,9 @@ class SlackJSONParsingUtils
         String name = (String) jsonUser.get("name");
         String realName = (String) jsonUser.get("real_name");
         Boolean deleted = (Boolean) jsonUser.get("deleted");
-        return new SlackUserImpl(id, name, realName, deleted);
+        JSONObject profileJSON = (JSONObject) jsonUser.get("profile");
+        String email = (String) profileJSON.get("email");
+        return new SlackUserImpl(id, name, realName, email, deleted);
     }
 
     static final SlackBotImpl buildSlackBot(JSONObject jsonBot)
@@ -37,13 +32,13 @@ class SlackJSONParsingUtils
         return new SlackBotImpl(id, name, deleted);
     }
 
-    static final SlackChannelImpl buildSlackChannel(JSONObject jsonChannel, Map<String,SlackUser> knownUsersById)
+    static final SlackChannelImpl buildSlackChannel(JSONObject jsonChannel, Map<String, SlackUser> knownUsersById)
     {
         String id = (String) jsonChannel.get("id");
         String name = (String) jsonChannel.get("name");
         System.out.println(name);
         String topic = null; // TODO
-        String purpose = null;  // TODO
+        String purpose = null; // TODO
         SlackChannelImpl toReturn = new SlackChannelImpl(id, name, topic, purpose);
         JSONArray membersJson = (JSONArray) jsonChannel.get("members");
         if (membersJson != null)

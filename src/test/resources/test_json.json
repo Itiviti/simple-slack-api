@@ -99,6 +99,9 @@
       "deleted": false,
       "status": null,
       "color": "a72f79",
+      "profile" : {
+          "email": "userid1@my.email"
+      },
       "real_name": "Test User 1",
       "skype": null,
       "phone": null,
@@ -120,6 +123,9 @@
       "deleted": false,
       "status": null,
       "color": "a72f79",
+      "profile" : {
+          "email": "userid2@my.email"
+      },
       "real_name": "Test User 2",
       "skype": null,
       "phone": null,
@@ -141,6 +147,9 @@
       "deleted": false,
       "status": null,
       "color": "a72f79",
+      "profile" : {
+          "email": "userid3@my.email"
+      },
       "real_name": "Test User 3",
       "skype": null,
       "phone": null,
@@ -162,6 +171,9 @@
       "deleted": false,
       "status": null,
       "color": "a72f79",
+      "profile" : {
+            "email": "userid4@my.email"
+      },
       "real_name": "Test User 4",
       "skype": null,
       "phone": null,

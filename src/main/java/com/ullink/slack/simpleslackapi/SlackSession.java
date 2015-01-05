@@ -19,11 +19,15 @@ public interface SlackSession
 
     SlackUser findUserByUserName(String userName);
 
+    SlackUser findUserByEmail(String userMail);
+
     SlackBot findBotById(String botId);
 
     void connect();
 
-    void sendMessage(SlackChannel channel, String message, String username, String iconURL);
+    void sendMessage(SlackChannel channel, String message, SlackAttachment attachment, String username, String iconURL);
+
+    void sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment);
 
     void addMessageListener(SlackMessageListener listenerToAdd);
 

@@ -5,8 +5,8 @@ import com.ullink.slack.simpleslackapi.SlackBot;
 class SlackBotImpl implements SlackBot
 {
 
-    private String id;
-    private String name;
+    private String  id;
+    private String  name;
     private boolean deleted;
 
     SlackBotImpl(String id, String name, boolean deleted)

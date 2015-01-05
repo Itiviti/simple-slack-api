@@ -9,21 +9,20 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 
 class SlackJSONSessionStatusParser
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SlackJSONSessionStatusParser.class);
+    private static final Logger       LOGGER   = LoggerFactory.getLogger(SlackJSONSessionStatusParser.class);
 
     private Map<String, SlackChannel> channels = new HashMap<>();
-    private Map<String, SlackUser> users = new HashMap<>();
-    private Map<String, SlackBot> bots = new HashMap<>();
+    private Map<String, SlackUser>    users    = new HashMap<>();
+    private Map<String, SlackBot>     bots     = new HashMap<>();
 
-    private String webSocketURL;
+    private String                    webSocketURL;
 
-    private String toParse;
+    private String                    toParse;
 
     SlackJSONSessionStatusParser(String toParse)
     {
@@ -99,6 +98,5 @@ class SlackJSONSessionStatusParser
         webSocketURL = (String) jsonResponse.get("url");
 
     }
-
 
 }

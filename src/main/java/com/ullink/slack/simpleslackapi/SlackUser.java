@@ -9,4 +9,6 @@ public interface SlackUser
     String getRealName();
 
     boolean isDeleted();
+
+    String getUserMail();
 }

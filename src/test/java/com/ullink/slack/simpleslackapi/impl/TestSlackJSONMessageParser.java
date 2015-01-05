@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessage;
 import com.ullink.slack.simpleslackapi.SlackSession;
@@ -23,9 +24,9 @@ public class TestSlackJSONMessageParser
             @Override
             public void connect()
             {
-                SlackUser user1 = new SlackUserImpl("TESTUSER1", "test user 1", "", false);
-                SlackUser user2 = new SlackUserImpl("TESTUSER2", "test user 2", "", false);
-                SlackUser user3 = new SlackUserImpl("TESTUSER3", "test user 3", "", false);
+                SlackUser user1 = new SlackUserImpl("TESTUSER1", "test user 1", "","", false);
+                SlackUser user2 = new SlackUserImpl("TESTUSER2", "test user 2", "","", false);
+                SlackUser user3 = new SlackUserImpl("TESTUSER3", "test user 3", "","", false);
                 users.put(user1.getId(), user1);
                 users.put(user2.getId(), user2);
                 users.put(user3.getId(), user3);
@@ -39,10 +40,17 @@ public class TestSlackJSONMessageParser
             }
 
             @Override
-            public void sendMessage(SlackChannel channel, String message, String username, String iconURL)
+            public void sendMessage(SlackChannel channel, String message, SlackAttachment attachment, String username, String iconURL)
             {
                 throw new UnsupportedOperationException();
             }
+
+            @Override
+            public void sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment)
+            {
+                throw new UnsupportedOperationException();
+            }
+
         };
         session.connect();
     }
