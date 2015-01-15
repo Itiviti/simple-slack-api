@@ -8,7 +8,7 @@ This library allows an aplication to connect to [Slack](http://www.slack.com/) t
 ### Slack connection :
 
 The connection is made through the SlackSessionFactory class :
-```
+```java
 SlackSession session = SlackSessionFactory.
   createWebSocketSlackSession("authenticationtoken", Proxy.Type.HTTP, "myproxy", 1234);
 session.connect();
@@ -17,26 +17,26 @@ session.connect();
 ### Listening to messages :
 
 Slack messages can be retrieved by attaching a SlackMessageListener to the session provided by the factory :
-```        
+```java
 session.addMessageListener(new SlackMessageListener()
-{
-  @Override
-  public void onSessionLoad(SlackSession slackSession)
   {
-    // is called when the session is connected
-  }
+    @Override
+    public void onSessionLoad(SlackSession slackSession)
+    {
+      // is called when the session is connected
+    }
 
-  @Override
-  public void onMessage(SlackMessage slackMessage)
-  {
-		// is called every time a message is sent on a subscribed channel
-  }
-});
+    @Override
+    public void onMessage(SlackMessage slackMessage)
+    {
+      // is called every time a message is sent on a subscribed channel
+    }
+  });
 ```        
 ### Sending messages :
 
 The SlackSession interface provides a method to send a message on a given channel :
-```        
+```java
  session.sendMessage(SlackChannel channel, String messageContent, 
                     String publishersName, String pathToPublishersIcon);
 ```        
@@ -44,7 +44,7 @@ The SlackSession interface provides a method to send a message on a given channe
 ## Full example :
 
 Here's a full example with an echoing bot using this library :
-```        
+```java
 public class Example
 {
 
