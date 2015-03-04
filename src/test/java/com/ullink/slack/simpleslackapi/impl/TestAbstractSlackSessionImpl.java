@@ -2,6 +2,7 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
 
@@ -34,15 +35,27 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public void sendMessage(SlackChannel channel, String message, SlackAttachment attachment, String username, String iconURL)
+        public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, String username, String iconURL)
         {
-            //DO NOTHING
+            return null;
         }
 
         @Override
-        public void sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment)
+        public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment)
         {
-            //DO NOTHING
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel)
+        {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message)
+        {
+            return null;
         }
     }
 

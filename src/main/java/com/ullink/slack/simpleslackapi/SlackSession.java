@@ -25,9 +25,13 @@ public interface SlackSession
 
     void connect();
 
-    void sendMessage(SlackChannel channel, String message, SlackAttachment attachment, String username, String iconURL);
+    SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel);
 
-    void sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment);
+    SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, String username, String iconURL);
+
+    SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message);
+
+    SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment);
 
     void addMessageListener(SlackMessageListener listenerToAdd);
 

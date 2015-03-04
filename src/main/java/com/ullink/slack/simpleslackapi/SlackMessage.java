@@ -8,7 +8,7 @@ public interface SlackMessage
 
     public static enum SlackMessageSubType
     {
-        CHANNEL_JOIN("channel_join"), MESSAGE_CHANGED("channel_leave"), MESSAGE_DELETED("message_deleted"), BOT_MESSAGE("bot_message"), OTHER("-");
+        CHANNEL_JOIN("channel_join"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), BOT_MESSAGE("bot_message"), OTHER("-");
 
         private static final Map<String, SlackMessageSubType> CODE_MAP = new HashMap<>();
 

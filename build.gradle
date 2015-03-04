@@ -23,6 +23,8 @@ dependencies {
     compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.8.3'
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'org.apache.httpcomponents:httpclient:4.4'
+    compile 'com.google.guava:guava:18.0'
 
     testCompile 'org.jmockit:jmockit:1.12'
     testCompile 'org.assertj:assertj-core:1.7.0'

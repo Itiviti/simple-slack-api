@@ -13,46 +13,6 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 
 class SlackJSONMessageParser
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SlackJSONMessageParser.class);
-
-    private SlackSession        slackSession;
-    private String              toParse;
-    private SlackMessage        slackMessage;
-
-    SlackJSONMessageParser(String toParse, SlackSession slackSession)
-    {
-        this.toParse = toParse;
-        this.slackSession = slackSession;
-    }
-
-    public SlackMessage getSlackMessage()
-    {
-        return slackMessage;
-    }
-
-    void parse() throws ParseException
-    {
-        LOGGER.debug("parsing message : " + toParse);
-        JSONParser parser = new JSONParser();
-        JSONObject obj = null;
-
-        try
-        {
-            obj = (JSONObject) parser.parse(toParse);
-        }
-        catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
-
-        String messageType = (String) obj.get("type");
-        if (!"message".equals(messageType))
-        {
-            return;
-        }
-
-        slackMessage = decode(slackSession, obj);
-    }
 
     static SlackMessage decode(SlackSession slackSession, JSONObject obj)
     {
