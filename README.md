@@ -8,9 +8,20 @@ This library allows an aplication to connect to [Slack](http://www.slack.com/) t
 ### Slack connection :
 
 The connection is made through the SlackSessionFactory class :
+
+#### Direct connection :
+
 ```java
 SlackSession session = SlackSessionFactory.
-  createWebSocketSlackSession("authenticationtoken", Proxy.Type.HTTP, "myproxy", 1234);
+  createWebSocketSlackSession("authenticationtoken",true);
+session.connect();
+```
+
+#### Through a proxy :
+
+```java
+SlackSession session = SlackSessionFactory.
+  createWebSocketSlackSession("authenticationtoken", Proxy.Type.HTTP, "myproxy", 1234,true);
 session.connect();
 ```
 
@@ -33,13 +44,16 @@ session.addMessageListener(new SlackMessageListener()
     }
   });
 ```        
-### Sending messages :
+### Message operation :
 
-The SlackSession interface provides a method to send a message on a given channel :
+The SlackSession interface provides various methods to send/modify and delete messages on a given channel :
 ```java
- session.sendMessage(SlackChannel channel, String messageContent, 
-                    String publishersName, String pathToPublishersIcon);
+SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, 
+String userName, String iconURL);
+SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message);
+SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel)
 ```        
+
  
 ## Full example :
 
@@ -52,7 +66,7 @@ public class Example
   {
 
     final SlackSession session = SlackSessionFactory.
-      createWebSocketSlackSession("authenticationtoken", Proxy.Type.HTTP, "myproxy", 1234);
+      createWebSocketSlackSession("authenticationtoken", Proxy.Type.HTTP, "myproxy", 1234, true);
       
     session.addMessageListener(new SlackMessageListener()
       {
@@ -64,9 +78,30 @@ public class Example
         @Override
         public void onMessage(SlackMessage slackMessage)
         {
-          session.sendMessage(slackMessage.getChannel(),slackMessage.getMessageContent(),
+          //let's send a message
+          SlackMessageHandle handle = session.sendMessage(slackMessage.getChannel(),
+                              slackMessage.getMessageContent(), null,
                               slackMessage.getSender().getUserName(), 
                               "http://youriconurl.com/icon.jpg");
+          try
+          {
+              Thread.sleep(2000);
+          } catch (InterruptedException e)
+          {
+              e.printStackTrace();
+          }
+          //2 secs later, let's update the message (I can only update my own messages)
+          session.updateMessage(handle.getSlackReply().getTimestamp(),slackMessage.getChannel(),
+                                slackMessage.getMessageContent()+" UPDATED");
+          try
+          {
+              Thread.sleep(2000);
+          } catch (InterruptedException e)
+          {
+              e.printStackTrace();
+          }
+          //2 secs later, let's now delete the message (I can only delete my own messages)
+          session.deleteMessage(handle.getSlackReply().getTimestamp(),slackMessage.getChannel())
         }
       });
     session.connect();
