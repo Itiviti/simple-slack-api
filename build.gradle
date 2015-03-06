@@ -16,9 +16,75 @@ apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'cobertura'
 apply plugin: 'eclipse'
+apply plugin: 'signing'
 
 group = 'com.ullink.slack'
+archivesBaseName = 'simpleslackapi'
+version = '0.3
 
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'Simple Slack API'
+        packaging 'jar'
+        // optionally artifactId can be defined here 
+        description 'A application used as an example on how to set up pushing  its components to the Central Repository.'
+        url 'http://www.example.com/example-application'
+
+        scm {
+          connection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
+          developerConnection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
+          url 'git@github.com:Ullink/simple-slack-api.git'
+        }
+
+        licenses {
+          license {
+            name 'CC0 1.0 Universal (CC0 1.0)'
+            url 'http://creativecommons.org/publicdomain/zero/1.0/'
+          }
+        }
+
+        developers {
+          developer {
+            id 'bcorne'
+            name 'Benoit Corne'
+            email 'benoit.corne@gmail.com'
+          }
+        }
+      }
+    }
+  }
+}
 dependencies {
     compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.8.3'
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
