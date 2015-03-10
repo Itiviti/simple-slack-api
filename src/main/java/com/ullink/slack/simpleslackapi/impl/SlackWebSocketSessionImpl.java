@@ -215,7 +215,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         nameValuePairList.add(new BasicNameValuePair("token", authToken));
         nameValuePairList.add(new BasicNameValuePair("channel", channel.getId()));
         nameValuePairList.add(new BasicNameValuePair("as_user", "true"));
-        nameValuePairList.add(new BasicNameValuePair("text", message));
+            nameValuePairList.add(new BasicNameValuePair("text", message));
         if (iconURL != null)
         {
             nameValuePairList.add(new BasicNameValuePair("icon_url", iconURL));
@@ -227,7 +227,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
         try
         {
-            request.setEntity(new UrlEncodedFormEntity(nameValuePairList));
+            request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
             HttpResponse response = client.execute(request);
             String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
             LOGGER.debug("PostMessage return: " + jsonResponse);
@@ -254,7 +254,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         nameValuePairList.add(new BasicNameValuePair("ts", timeStamp));
         try
         {
-            request.setEntity(new UrlEncodedFormEntity(nameValuePairList));
+            request.setEntity(new UrlEncodedFormEntity(nameValuePairList,"UTF-8"));
             HttpResponse response = client.execute(request);
             String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
             LOGGER.debug("PostMessage return: " + jsonResponse);
@@ -282,7 +282,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         nameValuePairList.add(new BasicNameValuePair("text", message));
         try
         {
-            request.setEntity(new UrlEncodedFormEntity(nameValuePairList));
+            request.setEntity(new UrlEncodedFormEntity(nameValuePairList,"UTF-8"));
             HttpResponse response = client.execute(request);
             String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
             LOGGER.debug("PostMessage return: " + jsonResponse);
