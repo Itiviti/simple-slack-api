@@ -1,7 +1,9 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackMessageListener;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
@@ -20,6 +22,8 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected Map<String, SlackBot>     bots             = new HashMap<>();
 
     protected Set<SlackMessageListener> messageListeners = new HashSet<>();
+
+    static final SlackChatConfiguration DEFAULT_CONFIGURATION = SlackChatConfiguration.getConfiguration().asUser();
 
     @Override
     public Collection<SlackChannel> getChannels()
@@ -106,6 +110,12 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public void removeMessageListener(SlackMessageListener listenerToRemove)
     {
         messageListeners.add(listenerToRemove);
+    }
+
+    @Override
+    public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment)
+    {
+        return sendMessage(channel, message, attachment, DEFAULT_CONFIGURATION);
     }
 
 }

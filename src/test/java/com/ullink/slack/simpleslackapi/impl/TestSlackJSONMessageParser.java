@@ -45,7 +45,7 @@ public class TestSlackJSONMessageParser
             }
 
             @Override
-            public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, String username, String iconURL)
+            public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
             {
                 throw new UnsupportedOperationException();
             }

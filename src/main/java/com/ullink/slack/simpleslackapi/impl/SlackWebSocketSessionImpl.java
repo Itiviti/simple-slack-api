@@ -39,6 +39,7 @@ import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackMessageListener;
 import com.ullink.slack.simpleslackapi.SlackReply;
 import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
 
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String>
 {
@@ -206,7 +207,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, String userName, String iconURL)
+    public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
     {
         SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
         HttpClient client = getHttpClient();
@@ -214,13 +215,21 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         List<NameValuePair> nameValuePairList = new ArrayList<>();
         nameValuePairList.add(new BasicNameValuePair("token", authToken));
         nameValuePairList.add(new BasicNameValuePair("channel", channel.getId()));
-        nameValuePairList.add(new BasicNameValuePair("as_user", "true"));
-            nameValuePairList.add(new BasicNameValuePair("text", message));
-        if (iconURL != null)
-        {
-            nameValuePairList.add(new BasicNameValuePair("icon_url", iconURL));
+        if (chatConfiguration.asUser) {
+            nameValuePairList.add(new BasicNameValuePair("as_user", "true"));
         }
-        nameValuePairList.add(new BasicNameValuePair("username", userName));
+        nameValuePairList.add(new BasicNameValuePair("text", message));
+        if (chatConfiguration.avatar == Avatar.ICON_URL)
+        {
+            nameValuePairList.add(new BasicNameValuePair("icon_url", chatConfiguration.avatarDescription));
+        }
+        if (chatConfiguration.avatar == Avatar.EMOJI)
+        {
+            nameValuePairList.add(new BasicNameValuePair("icon_emoji", chatConfiguration.avatarDescription));
+        }
+        if (chatConfiguration.userName != null) {
+            nameValuePairList.add(new BasicNameValuePair("username", chatConfiguration.userName));
+        }
         if (attachment != null)
         {
             nameValuePairList.add(new BasicNameValuePair("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachment).toString()));
@@ -411,4 +420,5 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             return null;
         }
     }
+
 }

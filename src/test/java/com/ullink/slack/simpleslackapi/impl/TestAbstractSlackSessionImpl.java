@@ -35,7 +35,7 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, String username, String iconURL)
+        public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
         {
             return null;
         }
