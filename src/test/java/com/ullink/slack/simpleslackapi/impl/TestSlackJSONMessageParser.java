@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import java.io.IOException;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessage;
@@ -69,7 +70,14 @@ public class TestSlackJSONMessageParser
             }
 
         };
-        session.connect();
+        try
+        {
+            session.connect();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Test

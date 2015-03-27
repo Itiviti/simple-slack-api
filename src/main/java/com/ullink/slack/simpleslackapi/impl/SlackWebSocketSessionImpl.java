@@ -2,6 +2,7 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ConnectException;
 import java.net.Proxy;
 import java.net.URI;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import javax.websocket.DeploymentException;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
@@ -16,6 +18,7 @@ import javax.websocket.Session;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -82,7 +85,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public void connect()
+    public void connect() throws IOException
     {
         long currentTime = System.nanoTime();
         while (lastConnectionTime >= 0 && currentTime - lastConnectionTime < TimeUnit.SECONDS.toNanos(30))
@@ -100,32 +103,45 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
         LOGGER.info("connecting to slack");
         lastConnectionTime = currentTime;
+        HttpClient httpClient = getHttpClient();
+        HttpGet request = new HttpGet(SLACK_HTTPS_AUTH_URL + authToken);
+        HttpResponse response;
+        response = httpClient.execute(request);
+        LOGGER.debug(response.getStatusLine().toString());
+        String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
+        SlackJSONSessionStatusParser sessionParser = new SlackJSONSessionStatusParser(jsonResponse);
         try
         {
-            HttpClient httpClient = getHttpClient();
-            HttpGet request = new HttpGet(SLACK_HTTPS_AUTH_URL + authToken);
-            HttpResponse response = httpClient.execute(request);
-            String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
-            SlackJSONSessionStatusParser sessionParser = new SlackJSONSessionStatusParser(jsonResponse);
             sessionParser.parse();
-            users = sessionParser.getUsers();
-            bots = sessionParser.getBots();
-            channels = sessionParser.getChannels();
-            LOGGER.info(users.size() + " users found on this session");
-            LOGGER.info(bots.size() + " bots found on this session");
-            LOGGER.info(channels.size() + " channels found on this session");
+        }
+        catch (ParseException e1)
+        {
+            LOGGER.error(e1.toString());
+        }
+        if (sessionParser.getError() != null)
+        {
+            LOGGER.error("Error during authentication : " + sessionParser.getError());
+            throw new ConnectException(sessionParser.getError());
+        }
+        users = sessionParser.getUsers();
+        bots = sessionParser.getBots();
+        channels = sessionParser.getChannels();
+        LOGGER.info(users.size() + " users found on this session");
+        LOGGER.info(bots.size() + " bots found on this session");
+        LOGGER.info(channels.size() + " channels found on this session");
+        String wssurl = sessionParser.getWebSocketURL();
 
-            String wssurl = sessionParser.getWebSocketURL();
-
-            LOGGER.debug("retrieved websocket URL : " + wssurl);
-            ClientManager client = ClientManager.createClient();
-            client.getProperties().put(ClientProperties.LOG_HTTP_UPGRADE, true);
-            if (proxyAddress != null)
-            {
-                client.getProperties().put(ClientProperties.PROXY_URI, "http://" + proxyAddress + ":" + proxyPort);
-            }
-            final MessageHandler handler = this;
-            LOGGER.debug("initiating connection to websocket");
+        LOGGER.debug("retrieved websocket URL : " + wssurl);
+        ClientManager client = ClientManager.createClient();
+        client.getProperties().put(ClientProperties.LOG_HTTP_UPGRADE, true);
+        if (proxyAddress != null)
+        {
+            client.getProperties().put(ClientProperties.PROXY_URI, "http://" + proxyAddress + ":" + proxyPort);
+        }
+        final MessageHandler handler = this;
+        LOGGER.debug("initiating connection to websocket");
+        try
+        {
             websocketSession = client.connectToServer(new Endpoint()
             {
                 @Override
@@ -135,27 +151,25 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 }
 
             }, URI.create(wssurl));
-            for (SlackMessageListener slackMessageListener : messageListeners)
-            {
-                slackMessageListener.onSessionLoad(this);
-            }
-            if (websocketSession != null)
-            {
-                LOGGER.debug("websocket connection established");
-                LOGGER.info("slack session ready");
-            }
-            if (connectionMonitoringThread == null)
-            {
-                LOGGER.debug("starting connection monitoring");
-                startConnectionMonitoring();
-            }
         }
-        catch (Exception e)
+        catch (DeploymentException e)
         {
-            // TODO : improve exception handling
-            e.printStackTrace();
+            LOGGER.error(e.toString());
         }
-
+        for (SlackMessageListener slackMessageListener : messageListeners)
+        {
+            slackMessageListener.onSessionLoad(this);
+        }
+        if (websocketSession != null)
+        {
+            LOGGER.debug("websocket connection established");
+            LOGGER.info("slack session ready");
+        }
+        if (connectionMonitoringThread == null)
+        {
+            LOGGER.debug("starting connection monitoring");
+            startConnectionMonitoring();
+        }
     }
 
     private void startConnectionMonitoring()
@@ -215,7 +229,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         List<NameValuePair> nameValuePairList = new ArrayList<>();
         nameValuePairList.add(new BasicNameValuePair("token", authToken));
         nameValuePairList.add(new BasicNameValuePair("channel", channel.getId()));
-        if (chatConfiguration.asUser) {
+        if (chatConfiguration.asUser)
+        {
             nameValuePairList.add(new BasicNameValuePair("as_user", "true"));
         }
         nameValuePairList.add(new BasicNameValuePair("text", message));
@@ -227,7 +242,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             nameValuePairList.add(new BasicNameValuePair("icon_emoji", chatConfiguration.avatarDescription));
         }
-        if (chatConfiguration.userName != null) {
+        if (chatConfiguration.userName != null)
+        {
             nameValuePairList.add(new BasicNameValuePair("username", chatConfiguration.userName));
         }
         if (attachment != null)
@@ -263,7 +279,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         nameValuePairList.add(new BasicNameValuePair("ts", timeStamp));
         try
         {
-            request.setEntity(new UrlEncodedFormEntity(nameValuePairList,"UTF-8"));
+            request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
             HttpResponse response = client.execute(request);
             String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
             LOGGER.debug("PostMessage return: " + jsonResponse);
@@ -291,7 +307,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         nameValuePairList.add(new BasicNameValuePair("text", message));
         try
         {
-            request.setEntity(new UrlEncodedFormEntity(nameValuePairList,"UTF-8"));
+            request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
             HttpResponse response = client.execute(request);
             String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
             LOGGER.debug("PostMessage return: " + jsonResponse);

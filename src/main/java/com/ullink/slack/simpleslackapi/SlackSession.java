@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi;
 
+import java.io.IOException;
 import java.util.Collection;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
 
@@ -24,7 +25,7 @@ public interface SlackSession
 
     SlackBot findBotById(String botId);
 
-    void connect();
+    void connect() throws IOException;
 
     SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel);
 
