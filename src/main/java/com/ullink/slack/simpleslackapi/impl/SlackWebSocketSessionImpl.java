@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.io.CharStreams;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackChannelCreated;
 import com.ullink.slack.simpleslackapi.SlackGroupJoined;
 import com.ullink.slack.simpleslackapi.SlackMessage;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
@@ -402,7 +403,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             }
             else if ("group_joined".equals(type))
             {
-                SlackGroupJoined groupJoined = parseGroupJoined(object);
+                SlackGroupJoined groupJoined = new SlackGroupJoinedImpl(parseChannelDescription(object));
                 if (groupJoined != null)
                 {
                     SlackChannel channel = groupJoined.getSlackChannel();
@@ -412,14 +413,26 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                     }
                 }
             }
+            else if ("channel_created".equals(type))
+            {
+                SlackChannelCreated channelCreated = new SlackChannelCreatedImpl(parseChannelDescription(object));
+                if (channelCreated != null)
+                {
+                    SlackChannel channel = channelCreated.getSlackChannel();
+                    if (channel != null)
+                    {
+                        channels.put(channel.getId(), channel);
+                    }
+                }
+            }
         }
     }
 
-    private SlackGroupJoined parseGroupJoined(JSONObject object)
+    private SlackChannel parseChannelDescription(JSONObject object)
     {
         JSONObject channel = (JSONObject) object.get("channel");
         SlackChannel slackChannel = SlackJSONParsingUtils.buildSlackChannel(channel, users);
-        return new SlackGroupJoinedImpl(slackChannel);
+        return slackChannel;
     }
 
     private JSONObject parseObject(String json)

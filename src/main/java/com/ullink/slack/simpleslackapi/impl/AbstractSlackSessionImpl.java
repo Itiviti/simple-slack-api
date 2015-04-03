@@ -17,11 +17,11 @@ import java.util.Set;
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
 
-    protected Map<String, SlackChannel> channels         = new HashMap<>();
-    protected Map<String, SlackUser>    users            = new HashMap<>();
-    protected Map<String, SlackBot>     bots             = new HashMap<>();
+    protected Map<String, SlackChannel> channels              = new HashMap<>();
+    protected Map<String, SlackUser>    users                 = new HashMap<>();
+    protected Map<String, SlackBot>     bots                  = new HashMap<>();
 
-    protected Set<SlackMessageListener> messageListeners = new HashSet<>();
+    protected Set<SlackMessageListener> messageListeners      = new HashSet<>();
 
     static final SlackChatConfiguration DEFAULT_CONFIGURATION = SlackChatConfiguration.getConfiguration().asUser();
 
@@ -59,7 +59,16 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackChannel findChannelById(String channelId)
     {
-        return channels.get(channelId);
+        SlackChannel toReturn = channels.get(channelId);
+        if (toReturn == null)
+        {
+            // direct channel case
+            if (channelId != null && channelId.startsWith("D"))
+            {
+                toReturn = new SlackChannelImpl(channelId, "", "", "");
+            }
+        }
+        return toReturn;
     }
 
     @Override
