@@ -2,14 +2,14 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
+import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
 
-public class SlackChannelCreatedImpl implements SlackChannelCreated
+public class SlackChannelUnarchivedImpl implements SlackChannelUnarchived
 {
     private SlackChannel slackChannel;
     private SlackUser slackuser;
     
-    SlackChannelCreatedImpl(SlackChannel slackChannel, SlackUser slackuser)
+    SlackChannelUnarchivedImpl(SlackChannel slackChannel, SlackUser slackuser)
     {
         this.slackChannel = slackChannel;
         this.slackuser = slackuser;
@@ -22,7 +22,7 @@ public class SlackChannelCreatedImpl implements SlackChannelCreated
     }
 
     @Override
-    public SlackUser getCreator()
+    public SlackUser getUser()
     {
         return slackuser;
     }

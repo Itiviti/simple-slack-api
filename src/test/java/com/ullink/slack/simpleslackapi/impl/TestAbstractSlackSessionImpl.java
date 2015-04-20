@@ -1,10 +1,10 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import org.junit.Test;
-import static org.assertj.core.api.Assertions.*;
 
 
 public class TestAbstractSlackSessionImpl

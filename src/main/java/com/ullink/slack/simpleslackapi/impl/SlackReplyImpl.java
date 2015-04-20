@@ -1,8 +1,8 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.SlackReply;
+import com.ullink.slack.simpleslackapi.events.SlackReplyEvent;
 
-class SlackReplyImpl implements SlackReply
+class SlackReplyImpl implements SlackReplyEvent
 {
 
     private boolean ok;

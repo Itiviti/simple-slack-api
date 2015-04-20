@@ -1,6 +1,7 @@
 package com.ullink.slack.simpleslackapi;
 
 import java.util.concurrent.TimeUnit;
+import com.ullink.slack.simpleslackapi.events.SlackReplyEvent;
 
 public interface SlackMessageHandle
 {
@@ -8,7 +9,7 @@ public interface SlackMessageHandle
     long getMessageId();
 
     // server response
-    SlackReply getSlackReply();
+    SlackReplyEvent getSlackReply();
 
     boolean isAcked();
 

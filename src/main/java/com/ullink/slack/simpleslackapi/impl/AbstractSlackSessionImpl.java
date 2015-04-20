@@ -1,5 +1,12 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -7,23 +14,33 @@ import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackMessageListener;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchiveListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreateListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeleteListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchiveListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackMessageSentListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
 
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
 
-    protected Map<String, SlackChannel> channels              = new HashMap<>();
-    protected Map<String, SlackUser>    users                 = new HashMap<>();
-    protected Map<String, SlackBot>     bots                  = new HashMap<>();
+    protected Map<String, SlackChannel>                     channels                  = new HashMap<>();
+    protected Map<String, SlackUser>                        users                     = new HashMap<>();
+    protected Map<String, SlackBot>                         bots                      = new HashMap<>();
 
-    protected Set<SlackMessageListener> messageListeners      = new HashSet<>();
+    protected Set<SlackMessageListener>                     oldMessageListeners       = new HashSet<>();
 
-    static final SlackChatConfiguration DEFAULT_CONFIGURATION = SlackChatConfiguration.getConfiguration().asUser();
+    protected List<SlackMessageSentListener>                messageSentListeners      = new ArrayList<>();
+    protected List<SlackMessageDeletedListener>             messageDeletedListeners   = new ArrayList<>();
+    protected List<SlackMessageUpdatedListener>             messageUpdatedListeners   = new ArrayList<>();
+
+    protected List<SlackChannelArchiveListener>             channelArchivedListener   = new ArrayList<>();
+    protected List<SlackChannelUnarchiveListener>           channelUnarchivedListener = new ArrayList<>();
+    protected List<SlackChannelCreateListener>              channelCreatedListener    = new ArrayList<>();
+    protected List<SlackChannelDeleteListener>              channelDeletedListener    = new ArrayList<>();
+
+    static final SlackChatConfiguration                     DEFAULT_CONFIGURATION     = SlackChatConfiguration.getConfiguration().asUser();
 
     @Override
     public Collection<SlackChannel> getChannels()
@@ -112,13 +129,13 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public void addMessageListener(SlackMessageListener listenerToAdd)
     {
-        messageListeners.add(listenerToAdd);
+        oldMessageListeners.add(listenerToAdd);
     }
 
     @Override
     public void removeMessageListener(SlackMessageListener listenerToRemove)
     {
-        messageListeners.add(listenerToRemove);
+        oldMessageListeners.add(listenerToRemove);
     }
 
     @Override
