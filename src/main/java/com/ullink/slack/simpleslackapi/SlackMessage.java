@@ -2,8 +2,9 @@ package com.ullink.slack.simpleslackapi;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.ullink.slack.simpleslackapi.events.SlackMessageEvent;
 
-public interface SlackMessage
+public interface SlackMessage extends SlackMessageEvent
 {
 
     public static enum SlackMessageSubType
@@ -52,4 +53,5 @@ public interface SlackMessage
     SlackChannel getChannel();
 
     SlackMessageSubType getSubType();
+
 }

@@ -48,8 +48,8 @@ session.addMessageListener(new SlackMessageListener()
 
 The SlackSession interface provides various methods to send/modify and delete messages on a given channel :
 ```java
-SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, 
-String userName, String iconURL);
+SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment);
+SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration);
 SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message);
 SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel)
 ```        
@@ -80,9 +80,7 @@ public class Example
         {
           //let's send a message
           SlackMessageHandle handle = session.sendMessage(slackMessage.getChannel(),
-                              slackMessage.getMessageContent(), null,
-                              slackMessage.getSender().getUserName(), 
-                              "http://youriconurl.com/icon.jpg");
+                              slackMessage.getMessageContent(), null);
           try
           {
               Thread.sleep(2000);

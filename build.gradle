@@ -2,26 +2,29 @@ buildscript {
     repositories {
         mavenCentral()
         mavenLocal()
+        jcenter()
     }
     dependencies {
-        classpath "net.saliman:gradle-cobertura-plugin:2.2.4"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
     }
 }
 
 repositories {
     mavenCentral()
     mavenLocal()
+    jcenter()
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven'
-apply plugin: 'cobertura'
 apply plugin: 'eclipse'
 apply plugin: 'signing'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
 
 group = 'com.ullink.slack'
-version = '0.3.1-SNAPSHOT-FORK'
+version = '0.4.0-SNAPSHOT-FORK'
 
 compileJava.options.encoding = 'UTF-8'
 task javadocJar(type: Jar) {
@@ -38,6 +41,69 @@ task sourcesJar(type: Jar) {
 artifacts {
     sourcesJar
 }
+
+signing {
+    sign configurations.archives
+}
+
+publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourcesJar 
+                artifact javadocJar
+                pom.withXml {
+                    def node = asNode()
+                    node.appendNode('name','Simple Slack API')
+                    node.appendNode('description','A simple API to build bot running on Slack')
+                    node.appendNode('url','https://github.com/Ullink/simple-slack-api')
+                    def licenseNode = node.appendNode('licenses').appendNode('license')
+                    licenseNode.appendNode('name','CC0 1.0 Universal (CC0 1.0)')
+                    licenseNode.appendNode('url','http://creativecommons.org/publicdomain/zero/1.0/')
+                    def developersNode = node.appendNode('developers')
+                    def bcorne = developersNode.appendNode('developer')
+                    bcorne.appendNode('id','bcorne')
+                    bcorne.appendNode('name','Benoit Corne')
+                    bcorne.appendNode('email','benoit.corne@gmail.com')
+                    def scm = node.appendNode('scm')
+                    scm.appendNode('connection','scm:git:git@github.com:Ullink/simple-slack-api.git')
+                    scm.appendNode('developerConnection','scm:git:git@github.com:Ullink/simple-slack-api.git')
+                    scm.appendNode('url','git@github.com:Ullink/simple-slack-api.git')
+                }
+            }
+        }
+    }
+
+    bintray {
+        user = bintray_user //this usually comes from gradle.properties file in ~/.gradle
+        key = bintray_api_key //this usually comes from gradle.properties file in ~/.gradle
+
+        publications = ['mavenJava'] //When uploading Maven-based publication files
+        dryRun = false //Whether to run this as dry-run, without deploying
+        publish = true //If version should be auto published after an upload
+        pkg {
+            repo = 'maven'
+            name = 'com.ullink.slack:simpleslackapi'
+            desc = 'simple slack API package!'
+            websiteUrl = 'https://github.com/Ullink/simple-slack-api'
+            issueTrackerUrl = 'https://github.com/Ullink/simple-slack-api/issues'
+            vcsUrl = 'https://github.com/Ullink/simple-slack-api.git'
+            licenses = ['Apache-2.0']
+            labels = ['slack']
+            publicDownloadNumbers = true
+            version {
+                name = project.version //Bintray logical version name
+                desc = ''
+                mavenCentralSync {
+                    sync = true //Optional (true by default). Determines whether to sync the version to Maven Central.
+                    user = ossrhUsername //OSS user token
+                    password = ossrhPassword //OSS user password
+                    close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+                }
+            }
+        }
+    }
+
 dependencies {
     compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.8.3'
     compile 'com.googlecode.json-simple:json-simple:1.1.1'

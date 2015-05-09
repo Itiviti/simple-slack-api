@@ -1,11 +1,12 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.ullink.slack.simpleslackapi.SlackPersona;
+import org.junit.Test;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import org.junit.Test;
-import static org.assertj.core.api.Assertions.*;
 
 
 public class TestAbstractSlackSessionImpl
@@ -17,11 +18,11 @@ public class TestAbstractSlackSessionImpl
         @Override
         public void connect()
         {
-            channels.put("channelid1",new SlackChannelImpl("channelid1", "testchannel1", "topicchannel1", "topicchannel1",false));
-            channels.put("channelid2",new SlackChannelImpl("channelid2", "testchannel2", "topicchannel2", "topicchannel2",false));
-            channels.put("channelid3",new SlackChannelImpl("channelid3", "testchannel3", "topicchannel3", "topicchannel3",false));
-            channels.put("channelid4",new SlackChannelImpl("channelid4", "testchannel4", "topicchannel4", "topicchannel4",false));
-            channels.put("channelid5",new SlackChannelImpl("channelid5", "testchannel5", "topicchannel5", "topicchannel5",false));
+            channels.put("channelid1",new SlackChannelImpl("channelid1", "testchannel1", "topicchannel1", "topicchannel1", false));
+            channels.put("channelid2",new SlackChannelImpl("channelid2", "testchannel2", "topicchannel2", "topicchannel2", false));
+            channels.put("channelid3",new SlackChannelImpl("channelid3", "testchannel3", "topicchannel3", "topicchannel3", false));
+            channels.put("channelid4",new SlackChannelImpl("channelid4", "testchannel4", "topicchannel4", "topicchannel4", false));
+            channels.put("channelid5",new SlackChannelImpl("channelid5", "testchannel5", "topicchannel5", "topicchannel5", false));
 
             users.put("userid1",new SlackUserImpl("userid1", "username1", "realname1","userid1@my.mail", false));
             users.put("userid2",new SlackUserImpl("userid2", "username2", "realname2","userid2@my.mail", false));
@@ -36,7 +37,7 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, String username, String iconURL)
+        public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
         {
             return null;
         }

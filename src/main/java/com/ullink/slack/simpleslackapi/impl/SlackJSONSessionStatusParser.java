@@ -1,17 +1,17 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.SlackBot;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import java.util.HashMap;
+import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.HashMap;
-import java.util.Map;
+import com.ullink.slack.simpleslackapi.SlackBot;
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.SlackPersona;
 
 class SlackJSONSessionStatusParser
 {
@@ -26,6 +26,8 @@ class SlackJSONSessionStatusParser
     private String                    webSocketURL;
 
     private String                    toParse;
+
+    private String                    error;
 
     SlackJSONSessionStatusParser(String toParse)
     {
@@ -52,12 +54,21 @@ class SlackJSONSessionStatusParser
         return webSocketURL;
     }
 
+    public String getError()
+    {
+        return error;
+    }
+    
     void parse() throws ParseException
     {
         LOGGER.debug("parsing session status : " + toParse);
         JSONParser parser = new JSONParser();
         JSONObject jsonResponse = (JSONObject) parser.parse(toParse);
-
+        Boolean ok = (Boolean)jsonResponse.get("ok");
+        if (Boolean.FALSE.equals(ok)) {
+            error = (String)jsonResponse.get("error");
+            return;
+        }
         JSONArray usersJson = (JSONArray) jsonResponse.get("users");
 
         for (Object jsonObject : usersJson)
