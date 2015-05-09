@@ -134,8 +134,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
-    public void removeMessageListener(SlackMessageListener listenerToRemove)
-    {
+    public void removeMessageListener(SlackMessageListener listenerToRemove) {
         oldMessageListeners.add(listenerToRemove);
     }
 

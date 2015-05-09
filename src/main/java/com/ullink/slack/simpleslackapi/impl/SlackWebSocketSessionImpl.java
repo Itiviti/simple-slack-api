@@ -47,6 +47,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
         void dispatch(SlackEvent event)
         {
+            if(SlackMessage.class.isAssignableFrom(event.getClass())) {
+                dispatch((SlackMessage)event);
+            }
             throw new IllegalArgumentException("unsupported event type : " + event.getClass());
         }
 
