@@ -252,19 +252,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             LOGGER.debug("starting connection monitoring");
             startConnectionMonitoring();
-        }        for (SlackMessageListener slackMessageListener : oldMessageListeners)
-        {
-            slackMessageListener.onSessionLoad(this);
-        }
-        if (websocketSession != null)
-        {
-            LOGGER.debug("websocket connection established");
-            LOGGER.info("slack session ready");
-        }
-        if (connectionMonitoringThread == null)
-        {
-            LOGGER.debug("starting connection monitoring");
-            startConnectionMonitoring();
         }
     }
 
