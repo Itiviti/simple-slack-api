@@ -25,7 +25,7 @@ class SlackJSONMessageParser
             if (channelId.startsWith("D"))
             {
                 // direct messaging, on the fly channel creation
-                channel = new SlackChannelImpl(channelId, userId != null ? userId : botId, "", "");
+                channel = new SlackChannelImpl(channelId, userId != null ? userId : botId, "", "", true);
             }
             else
             {

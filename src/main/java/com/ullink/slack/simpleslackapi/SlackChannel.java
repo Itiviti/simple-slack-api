@@ -14,4 +14,6 @@ public interface SlackChannel
 
     String getPurpose();
 
+    boolean isDirect();
+
 }

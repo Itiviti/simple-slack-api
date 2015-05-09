@@ -1,10 +1,7 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.SlackBot;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessageListener;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.*;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,6 +15,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected Map<String, SlackChannel> channels         = new HashMap<>();
     protected Map<String, SlackUser>    users            = new HashMap<>();
     protected Map<String, SlackBot>     bots             = new HashMap<>();
+    protected SlackPersona sessionPersona;
 
     protected Set<SlackMessageListener> messageListeners = new HashSet<>();
 
@@ -88,6 +86,11 @@ abstract class AbstractSlackSessionImpl implements SlackSession
             }
         }
         return null;
+    }
+
+    @Override
+    public SlackPersona sessionPersona() {
+        return sessionPersona;
     }
 
     @Override

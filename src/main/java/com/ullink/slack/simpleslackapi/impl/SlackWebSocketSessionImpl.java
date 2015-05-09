@@ -13,6 +13,8 @@ import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
+
+import com.ullink.slack.simpleslackapi.*;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -31,14 +33,6 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.common.io.CharStreams;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackGroupJoined;
-import com.ullink.slack.simpleslackapi.SlackMessage;
-import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackMessageListener;
-import com.ullink.slack.simpleslackapi.SlackReply;
-import com.ullink.slack.simpleslackapi.SlackSession;
 
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String>
 {
@@ -109,6 +103,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             sessionParser.parse();
             users = sessionParser.getUsers();
             bots = sessionParser.getBots();
+            sessionPersona = sessionParser.getSessionPersona();
             channels = sessionParser.getChannels();
             LOGGER.info(users.size() + " users found on this session");
             LOGGER.info(bots.size() + " bots found on this session");
@@ -282,7 +277,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         nameValuePairList.add(new BasicNameValuePair("text", message));
         try
         {
-            request.setEntity(new UrlEncodedFormEntity(nameValuePairList,"UTF-8"));
+            request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
             HttpResponse response = client.execute(request);
             String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
             LOGGER.debug("PostMessage return: " + jsonResponse);
@@ -334,6 +329,43 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
         return handle;
     }
+
+    @Override
+    public SlackPersona.SlackPresence getPresence(SlackPersona persona) {
+        HttpClient client = getHttpClient();
+        HttpPost request = new HttpPost("https://slack.com/api/users.getPresence");
+        List<NameValuePair> nameValuePairList = new ArrayList<>();
+        nameValuePairList.add(new BasicNameValuePair("token", authToken));
+        nameValuePairList.add(new BasicNameValuePair("user", persona.getId()));
+        try
+        {
+            request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
+            HttpResponse response = client.execute(request);
+            String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
+            LOGGER.debug("PostMessage return: " + jsonResponse);
+            JSONObject resultObject = parseObject(jsonResponse);
+
+            SlackReplyImpl reply = SlackJSONReplyParser.decode(resultObject);
+            if(!reply.isOk()) {
+                return SlackPersona.SlackPresence.UNKNOWN;
+            }
+            String presence = (String) resultObject.get("presence");
+
+            if("active".equals(presence)) {
+                return SlackPersona.SlackPresence.ACTIVE;
+            }
+            if("away".equals(presence)) {
+                return SlackPersona.SlackPresence.AWAY;
+            }
+        }
+        catch (Exception e)
+        {
+            // TODO : improve exception handling
+            e.printStackTrace();
+        }
+        return SlackPersona.SlackPresence.UNKNOWN;
+    }
+
 
     private synchronized long getNextMessageId()
     {

@@ -51,4 +51,15 @@ class SlackMessageImpl implements SlackMessage
     {
         return subType;
     }
+
+    @Override
+    public String toString() {
+        return "SlackMessageImpl{" +
+                "messageContent='" + messageContent + '\'' +
+                ", user=" + user +
+                ", bot=" + bot +
+                ", channel=" + channel +
+                ", subType=" + subType +
+                '}';
+    }
 }

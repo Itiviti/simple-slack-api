@@ -9,18 +9,20 @@ import java.util.Set;
 
 class SlackChannelImpl implements SlackChannel
 {
+    private final boolean direct;
     private String         id;
     private String         name;
     private Set<SlackUser> members = new HashSet<>();
     private String         topic;
     private String         purpose;
 
-    SlackChannelImpl(String id, String name, String topic, String purpose)
+    SlackChannelImpl(String id, String name, String topic, String purpose, boolean direct)
     {
         this.id = id;
         this.name = name;
         this.topic = topic;
         this.purpose = purpose;
+        this.direct = direct;
     }
 
     void addUser(SlackUser user)
@@ -58,8 +60,23 @@ class SlackChannelImpl implements SlackChannel
     }
 
     @Override
+    public String toString() {
+        return "SlackChannelImpl{" +
+                "topic='" + topic + '\'' +
+                ", purpose='" + purpose + '\'' +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
     public String getPurpose()
     {
         return purpose;
+    }
+
+    @Override
+    public boolean isDirect() {
+        return direct;
     }
 }

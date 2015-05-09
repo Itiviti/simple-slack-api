@@ -1,12 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessage;
-import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackReply;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.*;
 import org.assertj.core.api.Assertions;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -36,9 +30,9 @@ public class TestSlackJSONMessageParser
                 users.put(user2.getId(), user2);
                 users.put(user3.getId(), user3);
 
-                SlackChannel channel1 = new SlackChannelImpl("TESTCHANNEL1", "testchannel1", null, null);
-                SlackChannel channel2 = new SlackChannelImpl("TESTCHANNEL2", "testchannel2", null, null);
-                SlackChannel channel3 = new SlackChannelImpl("TESTCHANNEL3", "testchannel3", null, null);
+                SlackChannel channel1 = new SlackChannelImpl("TESTCHANNEL1", "testchannel1", null, null,false);
+                SlackChannel channel2 = new SlackChannelImpl("TESTCHANNEL2", "testchannel2", null, null,false);
+                SlackChannel channel3 = new SlackChannelImpl("TESTCHANNEL3", "testchannel3", null, null,false);
                 channels.put(channel1.getId(), channel1);
                 channels.put(channel2.getId(), channel2);
                 channels.put(channel3.getId(), channel3);
@@ -55,6 +49,12 @@ public class TestSlackJSONMessageParser
             {
                 throw new UnsupportedOperationException();
             }
+
+            @Override
+            public SlackPersona.SlackPresence getPresence(SlackPersona persona) {
+                return null;
+            }
+
 
             @Override
             public SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel)
