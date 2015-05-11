@@ -1,10 +1,5 @@
 package com.ullink.slack.simpleslackapi;
 
-public interface SlackBot
+public interface SlackBot extends SlackPersona
 {
-    String getId();
-
-    String getName();
-
-    boolean isDeleted();
 }

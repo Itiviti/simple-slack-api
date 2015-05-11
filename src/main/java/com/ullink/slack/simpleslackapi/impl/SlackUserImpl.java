@@ -6,6 +6,18 @@ class SlackUserImpl implements SlackUser
 {
 
     String  id;
+
+    @Override
+    public String toString() {
+        return "SlackUserImpl{" +
+                "id='" + id + '\'' +
+                ", userName='" + userName + '\'' +
+                ", realName='" + realName + '\'' +
+                ", userMail='" + userMail + '\'' +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
+
     String  userName;
     String  realName;
     String  userMail;

@@ -59,4 +59,15 @@ class SlackMessageImpl implements SlackMessage
     {
         return timestamp;
     }
+
+    @Override
+    public String toString() {
+        return "SlackMessageImpl{" +
+                "messageContent='" + messageContent + '\'' +
+                ", user=" + user +
+                ", bot=" + bot +
+                ", channel=" + channel +
+                ", subType=" + subType +
+                '}';
+    }
 }

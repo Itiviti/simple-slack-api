@@ -1,5 +1,9 @@
 {
   "ok": true,
+  "self" : {
+    "id": "SELF",
+    "name": "myself"
+  },
   "channels": [
     {
       "id": "CHANNELID1",

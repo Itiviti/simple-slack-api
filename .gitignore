@@ -5,3 +5,6 @@
 .classpath
 .project
 .settings/*
+.gradle/*
+build/*
+src/main/java/rebel.xml

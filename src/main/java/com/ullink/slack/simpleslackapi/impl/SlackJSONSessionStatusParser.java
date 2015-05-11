@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.SlackPersona;
 
 class SlackJSONSessionStatusParser
 {
@@ -19,6 +20,8 @@ class SlackJSONSessionStatusParser
     private Map<String, SlackChannel> channels = new HashMap<>();
     private Map<String, SlackUser>    users    = new HashMap<>();
     private Map<String, SlackBot>     bots     = new HashMap<>();
+
+    private SlackPersona sessionPersona;
 
     private String                    webSocketURL;
 
@@ -106,8 +109,15 @@ class SlackJSONSessionStatusParser
             channels.put(channel.getId(), channel);
         }
 
+        JSONObject selfJson = (JSONObject) jsonResponse.get("self");
+        sessionPersona = SlackJSONParsingUtils.buildSlackUser(selfJson);
+
+
         webSocketURL = (String) jsonResponse.get("url");
 
     }
 
+    public SlackPersona getSessionPersona() {
+        return sessionPersona;
+    }
 }

@@ -124,7 +124,7 @@ class SlackJSONMessageParser
             if (channelId.startsWith("D"))
             {
                 // direct messaging, on the fly channel creation
-                return new SlackChannelImpl(channelId, channelId, "", "");
+                return new SlackChannelImpl(channelId, channelId, "", "", true);
             }
             else
             {
@@ -166,7 +166,7 @@ class SlackJSONMessageParser
         System.out.println(name);
         String topic = null; // TODO
         String purpose = null; // TODO
-        return new SlackChannelImpl(id, name, topic, purpose);
+        return new SlackChannelImpl(id, name, topic, purpose, true);
     }
 
 }

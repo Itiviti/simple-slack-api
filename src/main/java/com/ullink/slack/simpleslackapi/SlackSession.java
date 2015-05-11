@@ -23,6 +23,8 @@ public interface SlackSession
 
     SlackUser findUserByEmail(String userMail);
 
+    SlackPersona sessionPersona();
+
     SlackBot findBotById(String botId);
 
     void connect() throws IOException;
@@ -40,5 +42,8 @@ public interface SlackSession
     void addMessageListener(SlackMessageListener listenerToAdd);
 
     void removeMessageListener(SlackMessageListener listenerToRemove);
+
+
+    SlackPersona.SlackPresence getPresence(SlackPersona persona);
 
 }

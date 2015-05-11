@@ -23,7 +23,7 @@ class SlackBotImpl implements SlackBot
     }
 
     @Override
-    public String getName()
+    public String getUserName()
     {
         return name;
     }

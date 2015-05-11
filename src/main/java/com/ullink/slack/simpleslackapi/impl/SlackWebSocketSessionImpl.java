@@ -33,29 +33,12 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.common.io.CharStreams;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessage;
-import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackMessageListener;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
-import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
-import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
-import com.ullink.slack.simpleslackapi.events.SlackEvent;
-import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
-import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackMessageUpdated;
-import com.ullink.slack.simpleslackapi.events.SlackReplyEvent;
+import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.events.*;
+import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchiveListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreateListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeleteListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchiveListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessageSentListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
+
+
 
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String>
 {
@@ -64,6 +47,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
         void dispatch(SlackEvent event)
         {
+            if(SlackMessage.class.isAssignableFrom(event.getClass())) {
+                dispatch((SlackMessage)event);
+            }
             throw new IllegalArgumentException("unsupported event type : " + event.getClass());
         }
 
@@ -225,6 +211,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         users = sessionParser.getUsers();
         bots = sessionParser.getBots();
         channels = sessionParser.getChannels();
+        sessionPersona = sessionParser.getSessionPersona();
         LOGGER.info(users.size() + " users found on this session");
         LOGGER.info(bots.size() + " bots found on this session");
         LOGGER.info(channels.size() + " channels found on this session");
@@ -458,6 +445,43 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
         return handle;
     }
+
+    @Override
+    public SlackPersona.SlackPresence getPresence(SlackPersona persona) {
+        HttpClient client = getHttpClient();
+        HttpPost request = new HttpPost("https://slack.com/api/users.getPresence");
+        List<NameValuePair> nameValuePairList = new ArrayList<>();
+        nameValuePairList.add(new BasicNameValuePair("token", authToken));
+        nameValuePairList.add(new BasicNameValuePair("user", persona.getId()));
+        try
+        {
+            request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
+            HttpResponse response = client.execute(request);
+            String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
+            LOGGER.debug("PostMessage return: " + jsonResponse);
+            JSONObject resultObject = parseObject(jsonResponse);
+
+            SlackReplyImpl reply = SlackJSONReplyParser.decode(resultObject);
+            if(!reply.isOk()) {
+                return SlackPersona.SlackPresence.UNKNOWN;
+            }
+            String presence = (String) resultObject.get("presence");
+
+            if("active".equals(presence)) {
+                return SlackPersona.SlackPresence.ACTIVE;
+            }
+            if("away".equals(presence)) {
+                return SlackPersona.SlackPresence.AWAY;
+            }
+        }
+        catch (Exception e)
+        {
+            // TODO : improve exception handling
+            e.printStackTrace();
+        }
+        return SlackPersona.SlackPresence.UNKNOWN;
+    }
+
 
     private synchronized long getNextMessageId()
     {
