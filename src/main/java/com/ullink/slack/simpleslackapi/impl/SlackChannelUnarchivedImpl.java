@@ -3,6 +3,7 @@ package com.ullink.slack.simpleslackapi.impl;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
+import com.ullink.slack.simpleslackapi.events.SlackEventType;
 
 public class SlackChannelUnarchivedImpl implements SlackChannelUnarchived
 {
@@ -25,6 +26,12 @@ public class SlackChannelUnarchivedImpl implements SlackChannelUnarchived
     public SlackUser getUser()
     {
         return slackuser;
+    }
+
+    @Override
+    public SlackEventType getEventType()
+    {
+        return SlackEventType.SLACK_CHANNEL_UNARCHIVED;
     }
 
 }

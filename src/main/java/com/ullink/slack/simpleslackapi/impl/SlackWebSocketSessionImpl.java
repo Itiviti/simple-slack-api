@@ -38,8 +38,6 @@ import com.ullink.slack.simpleslackapi.events.*;
 import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
 
-
-
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String>
 {
     public class EventDispatcher
@@ -47,88 +45,47 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
         void dispatch(SlackEvent event)
         {
-            if(SlackMessage.class.isAssignableFrom(event.getClass())) {
-                dispatch((SlackMessage)event);
+            switch (event.getEventType()) {
+                case SLACK_CHANNEL_ARCHIVED:
+                    dispatchImpl((SlackChannelArchived)event,channelArchiveListener);
+                    break;
+                case SLACK_CHANNEL_CREATED:
+                    dispatchImpl((SlackChannelCreated)event,channelCreateListener);
+                    break;
+                case SLACK_CHANNEL_DELETED:
+                    dispatchImpl((SlackChannelDeleted)event,channelDeleteListener);
+                    break;
+                case SLACK_CHANNEL_RENAMED:
+                    dispatchImpl((SlackChannelRenamed)event,channelRenamedListener);
+                    break;
+                case SLACK_CHANNEL_UNARCHIVED:
+                    dispatchImpl((SlackChannelUnarchived)event,channelUnarchiveListener);
+                    break;
+                case SLACK_GROUP_JOINED:
+                    dispatchImpl((SlackGroupJoined)event,groupJoinedListener);
+                    break;
+                case SLACK_MESSAGE_DELETED:
+                    dispatchImpl((SlackMessageDeleted)event,messageDeletedListener);
+                    break;
+                case SLACK_MESSAGE_POSTED:
+                    dispatchImpl((SlackMessagePosted)event,messagePostedListener);
+                    break;
+                case SLACK_MESSAGE_UPDATED:
+                    dispatchImpl((SlackMessageUpdated)event,messageUpdatedListener);
+                    break;
+                case SLACK_REPLY:
+                    dispatchImpl((SlackReplyEvent)event,slackReplyListener);
+                    break;
+                case UNKNOWN:
+                    throw new IllegalArgumentException("event not handled " + event);
             }
-            throw new IllegalArgumentException("unsupported event type : " + event.getClass());
         }
-
-        void dispatch(SlackMessage event)
-        {
-            for (SlackMessageListener listener : oldMessageListeners)
-            {
-                listener.onMessage(event);
-            }
-            for (SlackMessageSentListener listener : messageSentListeners)
-            {
+        
+        private <E extends SlackEvent, L extends SlackEventListener<E>>  void dispatchImpl(E event, List<L> listeners) {
+            for (L listener : listeners) {
                 listener.onEvent(event, SlackWebSocketSessionImpl.this);
             }
         }
-
-        void dispatch(SlackMessageDeleted event)
-        {
-            for (SlackMessageDeletedListener listener : messageDeletedListeners)
-            {
-                listener.onEvent(event, SlackWebSocketSessionImpl.this);
-            }
-        }
-
-        void dispatch(SlackMessageUpdated event)
-        {
-            for (SlackMessageUpdatedListener listener : messageUpdatedListeners)
-            {
-                listener.onEvent(event, SlackWebSocketSessionImpl.this);
-            }
-        }
-
-        void dispatch(SlackChannelArchived event)
-        {
-            for (SlackChannelArchiveListener listener : channelArchivedListener)
-            {
-                listener.onEvent(event, SlackWebSocketSessionImpl.this);
-            }
-        }
-
-        void dispatch(SlackChannelUnarchived event)
-        {
-            for (SlackChannelUnarchiveListener listener : channelUnarchivedListener)
-            {
-                listener.onEvent(event, SlackWebSocketSessionImpl.this);
-            }
-        }
-
-        void dispatch(SlackChannelCreated event)
-        {
-            for (SlackChannelCreateListener listener : channelCreatedListener)
-            {
-                listener.onEvent(event, SlackWebSocketSessionImpl.this);
-            }
-        }
-
-        void dispatch(SlackChannelDeleted event)
-        {
-            for (SlackChannelDeleteListener listener : channelDeletedListener)
-            {
-                listener.onEvent(event, SlackWebSocketSessionImpl.this);
-            }
-        }
-
-        void dispatch(SlackReplyEvent event)
-        {
-            SlackMessageHandleImpl handle = pendingMessageMap.get(event.getReplyTo());
-            handle.setSlackReply(event);
-            pendingMessageMap.remove(event.getReplyTo());
-        }
-
-        void dispatch(SlackGroupJoined event)
-        {
-            SlackChannel channel = event.getSlackChannel();
-            if (channel != null)
-            {
-                channels.put(channel.getId(), channel);
-            }
-        }
-
     }
 
     private static final Logger               LOGGER                     = LoggerFactory.getLogger(SlackWebSocketSessionImpl.class);
@@ -241,10 +198,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         catch (DeploymentException e)
         {
             LOGGER.error(e.toString());
-        }
-        for (SlackMessageListener slackMessageListener : oldMessageListeners)
-        {
-            slackMessageListener.onSessionLoad(this);
         }
         if (websocketSession != null)
         {
@@ -447,7 +400,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackPersona.SlackPresence getPresence(SlackPersona persona) {
+    public SlackPersona.SlackPresence getPresence(SlackPersona persona)
+    {
         HttpClient client = getHttpClient();
         HttpPost request = new HttpPost("https://slack.com/api/users.getPresence");
         List<NameValuePair> nameValuePairList = new ArrayList<>();
@@ -462,15 +416,18 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             JSONObject resultObject = parseObject(jsonResponse);
 
             SlackReplyImpl reply = SlackJSONReplyParser.decode(resultObject);
-            if(!reply.isOk()) {
+            if (!reply.isOk())
+            {
                 return SlackPersona.SlackPresence.UNKNOWN;
             }
             String presence = (String) resultObject.get("presence");
 
-            if("active".equals(presence)) {
+            if ("active".equals(presence))
+            {
                 return SlackPersona.SlackPresence.ACTIVE;
             }
-            if("away".equals(presence)) {
+            if ("away".equals(presence))
+            {
                 return SlackPersona.SlackPresence.AWAY;
             }
         }
@@ -481,7 +438,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
         return SlackPersona.SlackPresence.UNKNOWN;
     }
-
 
     private synchronized long getNextMessageId()
     {

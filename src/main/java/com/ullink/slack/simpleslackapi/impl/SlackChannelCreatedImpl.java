@@ -3,6 +3,7 @@ package com.ullink.slack.simpleslackapi.impl;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
+import com.ullink.slack.simpleslackapi.events.SlackEventType;
 
 public class SlackChannelCreatedImpl implements SlackChannelCreated
 {
@@ -25,6 +26,12 @@ public class SlackChannelCreatedImpl implements SlackChannelCreated
     public SlackUser getCreator()
     {
         return slackuser;
+    }
+
+    @Override
+    public SlackEventType getEventType()
+    {
+        return SlackEventType.SLACK_CHANNEL_CREATED;
     }
 
 }

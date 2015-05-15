@@ -1,6 +1,7 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.events.SlackEventType;
 import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
 
 class SlackMessageDeletedImpl implements SlackMessageDeleted
@@ -32,6 +33,12 @@ class SlackMessageDeletedImpl implements SlackMessageDeleted
     public String getTimeStamp()
     {
         return deleteTimestamp;
+    }
+
+    @Override
+    public SlackEventType getEventType()
+    {
+        return SlackEventType.SLACK_MESSAGE_DELETED;
     }
 
 }

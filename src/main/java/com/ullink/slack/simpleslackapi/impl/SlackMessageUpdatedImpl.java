@@ -1,6 +1,7 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.events.SlackEventType;
 import com.ullink.slack.simpleslackapi.events.SlackMessageUpdated;
 
 class SlackMessageUpdatedImpl implements SlackMessageUpdated
@@ -40,6 +41,12 @@ class SlackMessageUpdatedImpl implements SlackMessageUpdated
     public String getNewMessage()
     {
         return newMessage;
+    }
+
+    @Override
+    public SlackEventType getEventType()
+    {
+        return SlackEventType.SLACK_MESSAGE_UPDATED;
     }
 
 

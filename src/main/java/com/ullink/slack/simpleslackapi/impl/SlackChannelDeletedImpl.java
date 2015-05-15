@@ -2,6 +2,7 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
+import com.ullink.slack.simpleslackapi.events.SlackEventType;
 
 public class SlackChannelDeletedImpl implements SlackChannelDeleted
 {
@@ -18,4 +19,9 @@ public class SlackChannelDeletedImpl implements SlackChannelDeleted
         return slackChannel;
     }
 
+    @Override
+    public SlackEventType getEventType()
+    {
+        return SlackEventType.SLACK_CHANNEL_DELETED;
+    }
 }

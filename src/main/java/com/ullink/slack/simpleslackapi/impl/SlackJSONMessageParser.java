@@ -1,10 +1,10 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessage;
-import com.ullink.slack.simpleslackapi.SlackMessage.SlackMessageSubType;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.EventType;
@@ -18,6 +18,42 @@ import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
 
 class SlackJSONMessageParser
 {
+    public static enum SlackMessageSubType
+    {
+        CHANNEL_JOIN("channel_join"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), BOT_MESSAGE("bot_message"), OTHER("-");
+
+        private static final Map<String, SlackMessageSubType> CODE_MAP = new HashMap<>();
+
+        static
+        {
+            for (SlackMessageSubType enumValue : SlackMessageSubType.values())
+            {
+                CODE_MAP.put(enumValue.getCode(), enumValue);
+            }
+        }
+
+        String                                                code;
+
+        public static SlackMessageSubType getByCode(String code)
+        {
+            SlackMessageSubType toReturn = CODE_MAP.get(code);
+            if (toReturn == null)
+            {
+                return OTHER;
+            }
+            return toReturn;
+        }
+
+        SlackMessageSubType(String code)
+        {
+            this.code = code;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+    }
 
     static SlackEvent decode(SlackSession slackSession, JSONObject obj)
     {
@@ -97,7 +133,7 @@ class SlackJSONMessageParser
         SlackChannel channel = getChannel(slackSession, channelId);
 
         String ts = (String) obj.get("ts");
-        SlackMessageSubType subType = SlackMessage.SlackMessageSubType.getByCode((String) obj.get("subtype"));
+        SlackMessageSubType subType = SlackMessageSubType.getByCode((String) obj.get("subtype"));
         switch (subType)
         {
             case MESSAGE_CHANGED:
@@ -149,14 +185,14 @@ class SlackJSONMessageParser
         return new SlackMessageDeletedImpl(channel, deletedTs, ts);
     }
 
-    private static SlackMessageImpl parseMessagePublished(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession)
+    private static SlackMessagePostedImpl parseMessagePublished(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession)
     {
         String text = (String) obj.get("text");
         String userId = (String) obj.get("user");
         String botId = (String) obj.get("bot_id");
         SlackUser user = userId != null ? slackSession.findUserById(userId) : null;
         SlackBot bot = botId != null ? slackSession.findBotById(botId) : null;
-        return new SlackMessageImpl(text, bot, user, channel, SlackMessage.SlackMessageSubType.getByCode((String) obj.get("subtype")), ts);
+        return new SlackMessagePostedImpl(text, bot, user, channel, ts);
     }
 
     private static SlackChannel parseChannelDescription(JSONObject channelJSONObject)

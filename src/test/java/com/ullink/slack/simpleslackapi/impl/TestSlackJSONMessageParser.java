@@ -1,7 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import java.io.IOException;
-
 import com.ullink.slack.simpleslackapi.*;
 import org.assertj.core.api.Assertions;
 import org.json.simple.JSONObject;
@@ -15,6 +14,7 @@ import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
 import com.ullink.slack.simpleslackapi.events.SlackEvent;
 import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
 import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 
 public class TestSlackJSONMessageParser
 {
@@ -102,8 +102,8 @@ public class TestSlackJSONMessageParser
         JSONParser parser = new JSONParser();
         JSONObject object = (JSONObject) parser.parse(TEST_NEW_MESSAGE);
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
-        Assertions.assertThat(event).isInstanceOf(SlackMessage.class);
-        SlackMessage slackMessage = (SlackMessage) event;
+        Assertions.assertThat(event).isInstanceOf(SlackMessagePosted.class);
+        SlackMessagePosted slackMessage = (SlackMessagePosted) event;
         Assertions.assertThat(slackMessage.getSender().getId()).isEqualTo("TESTUSER1");
         Assertions.assertThat(slackMessage.getChannel().getId()).isEqualTo("TESTCHANNEL1");
         Assertions.assertThat(slackMessage.getMessageContent()).isEqualTo("Test text 1");

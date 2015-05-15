@@ -2,6 +2,7 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.events.SlackChannelRenamed;
+import com.ullink.slack.simpleslackapi.events.SlackEventType;
 
 public class SlackChannelRenamedImpl implements SlackChannelRenamed
 {
@@ -24,6 +25,12 @@ public class SlackChannelRenamedImpl implements SlackChannelRenamed
     public String getNewName()
     {
         return newName;
+    }
+
+    @Override
+    public SlackEventType getEventType()
+    {
+        return SlackEventType.SLACK_CHANNEL_RENAMED;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.ullink.slack.simpleslackapi.events.SlackEventType;
 import com.ullink.slack.simpleslackapi.events.SlackReplyEvent;
 
 class SlackReplyImpl implements SlackReplyEvent
@@ -32,6 +33,12 @@ class SlackReplyImpl implements SlackReplyEvent
     public String getTimestamp()
     {
         return timestamp;
+    }
+
+    @Override
+    public SlackEventType getEventType()
+    {
+        return SlackEventType.SLACK_REPLY;
     }
 
 }
