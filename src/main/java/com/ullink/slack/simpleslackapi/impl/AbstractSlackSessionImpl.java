@@ -6,11 +6,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchiveListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreateListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeleteListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchiveListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
@@ -24,11 +24,11 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected Map<String, SlackBot>               bots                     = new HashMap<>();
     protected SlackPersona                        sessionPersona;
 
-    protected List<SlackChannelArchiveListener>   channelArchiveListener   = new ArrayList<SlackChannelArchiveListener>();
-    protected List<SlackChannelCreateListener>    channelCreateListener    = new ArrayList<SlackChannelCreateListener>();
-    protected List<SlackChannelDeleteListener>    channelDeleteListener    = new ArrayList<SlackChannelDeleteListener>();
+    protected List<SlackChannelArchivedListener>   channelArchiveListener   = new ArrayList<SlackChannelArchivedListener>();
+    protected List<SlackChannelCreatedListener>    channelCreateListener    = new ArrayList<SlackChannelCreatedListener>();
+    protected List<SlackChannelDeletedListener>    channelDeleteListener    = new ArrayList<SlackChannelDeletedListener>();
     protected List<SlackChannelRenamedListener>   channelRenamedListener   = new ArrayList<SlackChannelRenamedListener>();
-    protected List<SlackChannelUnarchiveListener> channelUnarchiveListener = new ArrayList<SlackChannelUnarchiveListener>();
+    protected List<SlackChannelUnarchivedListener> channelUnarchiveListener = new ArrayList<SlackChannelUnarchivedListener>();
     protected List<SlackGroupJoinedListener>      groupJoinedListener      = new ArrayList<SlackGroupJoinedListener>();
     protected List<SlackMessageDeletedListener>   messageDeletedListener   = new ArrayList<SlackMessageDeletedListener>();
     protected List<SlackMessagePostedListener>    messagePostedListener    = new ArrayList<SlackMessagePostedListener>();
@@ -134,43 +134,43 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
-    public void addchannelArchiveListener(SlackChannelArchiveListener listener)
+    public void addchannelArchivedListener(SlackChannelArchivedListener listener)
     {
         channelArchiveListener.add(listener);
     }
 
     @Override
-    public void removeChannelArchiveListener(SlackChannelArchiveListener listener)
+    public void removeChannelArchivedListener(SlackChannelArchivedListener listener)
     {
         channelArchiveListener.remove(listener);
     }
 
     @Override
-    public void addchannelCreateListener(SlackChannelCreateListener listener)
+    public void addchannelCreatedListener(SlackChannelCreatedListener listener)
     {
         channelCreateListener.add(listener);
     }
 
     @Override
-    public void removeChannelCreateListener(SlackChannelCreateListener listener)
+    public void removeChannelCreatedListener(SlackChannelCreatedListener listener)
     {
         channelCreateListener.remove(listener);
     }
 
     @Override
-    public void addchannelDeleteListener(SlackChannelDeleteListener listener)
+    public void addchannelDeletedListener(SlackChannelDeletedListener listener)
     {
         channelDeleteListener.add(listener);
     }
 
     @Override
-    public void removeChannelDeleteListener(SlackChannelDeleteListener listener)
+    public void removeChannelDeletedListener(SlackChannelDeletedListener listener)
     {
         channelDeleteListener.remove(listener);
     }
 
     @Override
-    public void addchannelRenamedListener(SlackChannelRenamedListener listener)
+    public void addChannelRenamedListener(SlackChannelRenamedListener listener)
     {
         channelRenamedListener.add(listener);
     }
@@ -182,13 +182,13 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
-    public void addChannelUnarchiveListener(SlackChannelUnarchiveListener listener)
+    public void addChannelUnarchivedListener(SlackChannelUnarchivedListener listener)
     {
         channelUnarchiveListener.add(listener);
     }
 
     @Override
-    public void removeChannelUnarchiveListener(SlackChannelUnarchiveListener listener)
+    public void removeChannelUnarchivedListener(SlackChannelUnarchivedListener listener)
     {
         channelUnarchiveListener.remove(listener);
     }

@@ -5,7 +5,7 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
 
-public class SlackChannelArchivedImpl implements SlackChannelArchived
+class SlackChannelArchivedImpl implements SlackChannelArchived
 {
     private SlackChannel slackChannel;
     private SlackUser slackuser;

@@ -459,6 +459,14 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             JSONObject object = parseObject(message);
             SlackEvent slackEvent = SlackJSONMessageParser.decode(this, object);
+            if (slackEvent instanceof SlackChannelCreated) {
+                SlackChannelCreated slackChannelCreated = (SlackChannelCreated) slackEvent;
+                channels.put(slackChannelCreated.getSlackChannel().getId(), slackChannelCreated.getSlackChannel());
+            }
+            if (slackEvent instanceof SlackGroupJoined) {
+                SlackGroupJoined slackGroupJoined = (SlackGroupJoined) slackEvent;
+                channels.put(slackGroupJoined.getSlackChannel().getId(), slackGroupJoined.getSlackChannel());
+            }
             dispatcher.dispatch(slackEvent);
         }
     }

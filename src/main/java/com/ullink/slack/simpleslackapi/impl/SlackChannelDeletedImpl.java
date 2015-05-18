@@ -4,7 +4,7 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
 
-public class SlackChannelDeletedImpl implements SlackChannelDeleted
+class SlackChannelDeletedImpl implements SlackChannelDeleted
 {
     private SlackChannel slackChannel;
 

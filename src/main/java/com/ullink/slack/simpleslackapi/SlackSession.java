@@ -5,11 +5,11 @@ import java.util.Collection;
 import com.ullink.slack.simpleslackapi.events.SlackEvent;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchiveListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreateListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeleteListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchiveListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackEventListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
@@ -53,25 +53,25 @@ public interface SlackSession
 
     SlackPersona.SlackPresence getPresence(SlackPersona persona);
 
-    void addchannelArchiveListener(SlackChannelArchiveListener listener);
+    void addchannelArchivedListener(SlackChannelArchivedListener listener);
 
-    void removeChannelArchiveListener(SlackChannelArchiveListener listener);
+    void removeChannelArchivedListener(SlackChannelArchivedListener listener);
 
-    void addchannelCreateListener(SlackChannelCreateListener listener);
+    void addchannelCreatedListener(SlackChannelCreatedListener listener);
 
-    void removeChannelCreateListener(SlackChannelCreateListener listener);
+    void removeChannelCreatedListener(SlackChannelCreatedListener listener);
 
-    void addchannelDeleteListener(SlackChannelDeleteListener listener);
+    void addchannelDeletedListener(SlackChannelDeletedListener listener);
 
-    void removeChannelDeleteListener(SlackChannelDeleteListener listener);
+    void removeChannelDeletedListener(SlackChannelDeletedListener listener);
 
-    void addchannelRenamedListener(SlackChannelRenamedListener listener);
+    void addChannelRenamedListener(SlackChannelRenamedListener listener);
 
     void removeChannelRenamedListener(SlackChannelRenamedListener listener);
 
-    void addChannelUnarchiveListener(SlackChannelUnarchiveListener listener);
+    void addChannelUnarchivedListener(SlackChannelUnarchivedListener listener);
 
-    void removeChannelUnarchiveListener(SlackChannelUnarchiveListener listener);
+    void removeChannelUnarchivedListener(SlackChannelUnarchivedListener listener);
 
     void addMessageDeletedListener(SlackMessageDeletedListener listener);
 

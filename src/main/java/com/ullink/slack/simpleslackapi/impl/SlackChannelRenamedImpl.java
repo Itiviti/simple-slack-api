@@ -4,7 +4,7 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.events.SlackChannelRenamed;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
 
-public class SlackChannelRenamedImpl implements SlackChannelRenamed
+class SlackChannelRenamedImpl implements SlackChannelRenamed
 {
     private SlackChannel slackChannel;
     private String       newName;
