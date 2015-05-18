@@ -1,6 +1,8 @@
 # Simple Slack API
 
-This library allows an aplication to connect to [Slack](http://www.slack.com/) to receive and send messages from any channel as if it were a slack client. The main purpose of this library is to build slack bots able to react to channel events without having to configure any web hook. For now this library has very limited features and is quite experimental.
+This library allows an aplication to connect to [Slack](http://www.slack.com/) to receive and send messages from any channel as if it were a slack client. 
+
+The main purpose of this library is to build slack bots able to react to channel events without having to configure any web hook.
 
 
 ## Short example
@@ -28,22 +30,24 @@ session.connect();
 ### Listening to messages :
 
 Slack messages can be retrieved by attaching a SlackMessageListener to the session provided by the factory :
-```java
-session.addMessageListener(new SlackMessageListener()
-  {
-    @Override
-    public void onSessionLoad(SlackSession slackSession)
-    {
-      // is called when the session is connected
-    }
 
-    @Override
-    public void onMessage(SlackMessage slackMessage)
-    {
-      // is called every time a message is sent on a subscribed channel
-    }
+
+```java
+  session.addMessagePostedListener(new SlackMessagePostedListener()
+  {
+      @Override
+      public void onEvent(SlackMessagePosted event, SlackSession session)
+      {
+          session.sendMessageOverWebSocket(session.findChannelByName("general"), "Message sent : " + event.getMessageContent(), null);
+      }
   });
-```        
+```
+
+(Since v0.4.0, lambda friendly version)
+```java
+session.addMessagePostedListener((e, s) 
+  -> s.sendMessageOverWebSocket(s.findChannelByName("general"), "Message sent : " + e.getMessageContent(), null));
+```
 ### Message operation :
 
 The SlackSession interface provides various methods to send/modify and delete messages on a given channel :
@@ -54,6 +58,19 @@ SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String 
 SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel)
 ```        
 
+### Supported events :
+
+The following events are handled :
+
+* message post on a channel / group / to the bot
+* message update on a channel / group / to the bot
+* message delete on a channel / group / to the bot
+* channel creation
+* channel deletion
+* channel archiving
+* channel unarchiving
+* channel renaming
+* private group joining
  
 ## Full example :
 
@@ -67,16 +84,11 @@ public class Example
 
     final SlackSession session = SlackSessionFactory.
       createWebSocketSlackSession("authenticationtoken", Proxy.Type.HTTP, "myproxy", 1234, true);
-      
+    session.addMessagePostedListener(new SlackMessagePostedListener()      
     session.addMessageListener(new SlackMessageListener()
       {
         @Override
-        public void onSessionLoad(SlackSession slackSession)
-        {
-        }
-
-        @Override
-        public void onMessage(SlackMessage slackMessage)
+        public void onEvent(SlackMessagePosted event, SlackSession session)
         {
           //let's send a message
           SlackMessageHandle handle = session.sendMessage(slackMessage.getChannel(),
@@ -103,7 +115,6 @@ public class Example
         }
       });
     session.connect();
-
 
     while (true)
     {
