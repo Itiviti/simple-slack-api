@@ -6,9 +6,12 @@ import java.util.List;
 public class SlackAttachment
 {
     public String           title;
+    public String           titleLink;
     public String           fallback;
     public String           text;
     public String           pretext;
+
+    public String           color;
 
     public List<SlackField> fields;
 
@@ -48,5 +51,29 @@ public class SlackAttachment
             markdown_in = new ArrayList<>();
         }
         markdown_in.add(value);
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setTitleLink(String titleLink) {
+        this.titleLink = titleLink;
+    }
+
+    public void setFallback(String fallback) {
+        this.fallback = fallback;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setPretext(String pretext) {
+        this.pretext = pretext;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

@@ -1,12 +1,13 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.ullink.slack.simpleslackapi.SlackAttachment;
+import com.ullink.slack.simpleslackapi.SlackField;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackField;
 
 class SlackJSONAttachmentFormatter
 {
@@ -21,9 +22,17 @@ class SlackJSONAttachmentFormatter
             {
                 attachmentJSON.put("title", attachments[i].title);
             }
+            if (attachments[i].titleLink != null)
+            {
+                attachmentJSON.put("title_link", attachments[i].titleLink);
+            }
             if (attachments[i].text != null)
             {
                 attachmentJSON.put("text", attachments[i].text);
+            }
+            if (attachments[i].color != null)
+            {
+                attachmentJSON.put("color", attachments[i].color);
             }
             if (attachments[i].pretext != null)
             {
