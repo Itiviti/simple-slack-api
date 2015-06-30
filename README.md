@@ -84,9 +84,8 @@ public class Example
 
     final SlackSession session = SlackSessionFactory.
       createWebSocketSlackSession("authenticationtoken", Proxy.Type.HTTP, "myproxy", 1234, true);
-    session.addMessagePostedListener(new SlackMessagePostedListener()      
-    session.addMessageListener(new SlackMessageListener()
-      {
+    session.addMessagePostedListener(new SlackMessagePostedListener()
+    {
         @Override
         public void onEvent(SlackMessagePosted event, SlackSession session)
         {
