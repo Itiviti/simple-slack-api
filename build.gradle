@@ -41,6 +41,7 @@ artifacts {
 }
 
 signing {
+    required false
     sign configurations.archives
 }
 
@@ -78,30 +79,32 @@ publishing {
     }
 
     bintray {
-        user = bintray_user //this usually comes from gradle.properties file in ~/.gradle
-        key = bintray_api_key //this usually comes from gradle.properties file in ~/.gradle
+        if (this.hasProperty('bintray_user')) {
+            user = bintray_user //this usually comes from gradle.properties file in ~/.gradle
+            key = bintray_api_key //this usually comes from gradle.properties file in ~/.gradle
 
-        publications = ['mavenJava'] //When uploading Maven-based publication files
-        dryRun = false //Whether to run this as dry-run, without deploying
-        publish = true //If version should be auto published after an upload
-        pkg {
-            repo = 'maven'
-            name = 'com.ullink.slack:simpleslackapi'
-            desc = 'simple slack API package!'
-            websiteUrl = 'https://github.com/Ullink/simple-slack-api'
-            issueTrackerUrl = 'https://github.com/Ullink/simple-slack-api/issues'
-            vcsUrl = 'https://github.com/Ullink/simple-slack-api.git'
-            licenses = ['Apache-2.0']
-            labels = ['slack']
-            publicDownloadNumbers = true
-            version {
-                name = project.version //Bintray logical version name
-                desc = ''
-                mavenCentralSync {
-                    sync = true //Optional (true by default). Determines whether to sync the version to Maven Central.
-                    user = ossrhUsername //OSS user token
-                    password = ossrhPassword //OSS user password
-                    close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+            publications = ['mavenJava'] //When uploading Maven-based publication files
+            dryRun = false //Whether to run this as dry-run, without deploying
+            publish = true //If version should be auto published after an upload
+            pkg {
+                repo = 'maven'
+                name = 'com.ullink.slack:simpleslackapi'
+                desc = 'simple slack API package!'
+                websiteUrl = 'https://github.com/Ullink/simple-slack-api'
+                issueTrackerUrl = 'https://github.com/Ullink/simple-slack-api/issues'
+                vcsUrl = 'https://github.com/Ullink/simple-slack-api.git'
+                licenses = ['Apache-2.0']
+                labels = ['slack']
+                publicDownloadNumbers = true
+                version {
+                    name = project.version //Bintray logical version name
+                    desc = ''
+                    mavenCentralSync {
+                        sync = true //Optional (true by default). Determines whether to sync the version to Maven Central.
+                        user = ossrhUsername //OSS user token
+                        password = ossrhPassword //OSS user password
+                        close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+                    }
                 }
             }
         }
