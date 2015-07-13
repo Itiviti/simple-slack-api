@@ -23,7 +23,7 @@ apply plugin: 'maven-publish'
 
 group = 'com.ullink.slack'
 archivesBaseName = 'simpleslackapi'
-version = '0.4.1-SNAPSHOT'
+version = '0.4.2-SNAPSHOT'
 
 
 task javadocJar(type: Jar) {

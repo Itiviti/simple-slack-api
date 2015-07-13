@@ -18,6 +18,7 @@ import javax.websocket.Session;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -45,47 +46,50 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
         void dispatch(SlackEvent event)
         {
-            switch (event.getEventType()) {
+            switch (event.getEventType())
+            {
                 case SLACK_CHANNEL_ARCHIVED:
-                    dispatchImpl((SlackChannelArchived)event,channelArchiveListener);
+                    dispatchImpl((SlackChannelArchived) event, channelArchiveListener);
                     break;
                 case SLACK_CHANNEL_CREATED:
-                    dispatchImpl((SlackChannelCreated)event,channelCreateListener);
+                    dispatchImpl((SlackChannelCreated) event, channelCreateListener);
                     break;
                 case SLACK_CHANNEL_DELETED:
-                    dispatchImpl((SlackChannelDeleted)event,channelDeleteListener);
+                    dispatchImpl((SlackChannelDeleted) event, channelDeleteListener);
                     break;
                 case SLACK_CHANNEL_RENAMED:
-                    dispatchImpl((SlackChannelRenamed)event,channelRenamedListener);
+                    dispatchImpl((SlackChannelRenamed) event, channelRenamedListener);
                     break;
                 case SLACK_CHANNEL_UNARCHIVED:
-                    dispatchImpl((SlackChannelUnarchived)event,channelUnarchiveListener);
+                    dispatchImpl((SlackChannelUnarchived) event, channelUnarchiveListener);
                     break;
                 case SLACK_GROUP_JOINED:
-                    dispatchImpl((SlackGroupJoined)event,groupJoinedListener);
+                    dispatchImpl((SlackGroupJoined) event, groupJoinedListener);
                     break;
                 case SLACK_MESSAGE_DELETED:
-                    dispatchImpl((SlackMessageDeleted)event,messageDeletedListener);
+                    dispatchImpl((SlackMessageDeleted) event, messageDeletedListener);
                     break;
                 case SLACK_MESSAGE_POSTED:
-                    dispatchImpl((SlackMessagePosted)event,messagePostedListener);
+                    dispatchImpl((SlackMessagePosted) event, messagePostedListener);
                     break;
                 case SLACK_MESSAGE_UPDATED:
-                    dispatchImpl((SlackMessageUpdated)event,messageUpdatedListener);
+                    dispatchImpl((SlackMessageUpdated) event, messageUpdatedListener);
                     break;
                 case SLACK_REPLY:
-                    dispatchImpl((SlackReplyEvent)event,slackReplyListener);
+                    dispatchImpl((SlackReplyEvent) event, slackReplyListener);
                     break;
                 case SLACK_CONNECTED:
-                    dispatchImpl((SlackConnected)event,slackConnectedLinster);
+                    dispatchImpl((SlackConnected) event, slackConnectedLinster);
                     break;
                 case UNKNOWN:
                     throw new IllegalArgumentException("event not handled " + event);
             }
         }
-        
-        private <E extends SlackEvent, L extends SlackEventListener<E>>  void dispatchImpl(E event, List<L> listeners) {
-            for (L listener : listeners) {
+
+        private <E extends SlackEvent, L extends SlackEventListener<E>> void dispatchImpl(E event, List<L> listeners)
+        {
+            for (L listener : listeners)
+            {
                 listener.onEvent(event, SlackWebSocketSessionImpl.this);
             }
         }
@@ -132,22 +136,16 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public void connect() throws IOException
     {
-        long currentTime = System.nanoTime();
-        while (lastConnectionTime >= 0 && currentTime - lastConnectionTime < TimeUnit.SECONDS.toNanos(30))
-        {
-            LOGGER.warn("Previous connection was made less than 30s ago, waiting 10s before trying to connect");
-            try
-            {
-                Thread.sleep(10000);
-                currentTime = System.nanoTime();
-            }
-            catch (InterruptedException e)
-            {
-                // TODO: handle this case
-            }
-        }
+        connectImpl();
+        LOGGER.debug("starting connection monitoring");
+        startConnectionMonitoring();
+    }
+
+    private void connectImpl() throws IOException, ClientProtocolException, ConnectException
+    {
         LOGGER.info("connecting to slack");
-        lastConnectionTime = currentTime;
+        lastPingSent = 0;
+        lastPingAck = 0;
         HttpClient httpClient = getHttpClient();
         HttpGet request = new HttpGet(SLACK_HTTPS_AUTH_URL + authToken);
         HttpResponse response;
@@ -209,11 +207,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             LOGGER.debug("websocket connection established");
             LOGGER.info("slack session ready");
         }
-        if (connectionMonitoringThread == null)
-        {
-            LOGGER.debug("starting connection monitoring");
-            startConnectionMonitoring();
-        }
     }
 
     private void startConnectionMonitoring()
@@ -228,26 +221,55 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 {
                     try
                     {
-                        if (lastPingSent != lastPingAck)
+                        // heart beat of 30s (should be configurable in the future)
+                        Thread.sleep(30000);
+                        if (lastPingSent != lastPingAck || websocketSession == null)
                         {
                             // disconnection happened
                             LOGGER.warn("Connection lost...");
-                            websocketSession.close();
-                            lastPingSent = 0;
-                            lastPingAck = 0;
+                            try
+                            {
+                                websocketSession.close();
+                            }
+                            catch (IOException e)
+                            {
+                                LOGGER.error("exception while trying to close the websocket ", e);
+                            }
+                            websocketSession = null;
                             if (reconnectOnDisconnection)
                             {
-                                connect();
+                                connectImpl();
                                 continue;
+                            }
+                            else
+                            {
+                                this.interrupt();
                             }
                         }
                         else
                         {
                             lastPingSent = getNextMessageId();
                             LOGGER.debug("sending ping " + lastPingSent);
-                            websocketSession.getBasicRemote().sendText("{\"type\":\"ping\",\"id\":" + lastPingSent + "}");
+                            try
+                            {
+                                if (websocketSession.isOpen())
+                                {
+                                    websocketSession.getBasicRemote().sendText("{\"type\":\"ping\",\"id\":" + lastPingSent + "}");
+                                }
+                                else if (reconnectOnDisconnection)
+                                {
+                                    connectImpl();
+                                }
+                            }
+                            catch (IllegalStateException e)
+                            {
+                                // websocketSession might be closed in this case
+                                if (reconnectOnDisconnection)
+                                {
+                                    connectImpl();
+                                }
+                            }
                         }
-                        Thread.sleep(30000);
                     }
                     catch (InterruptedException e)
                     {
@@ -464,11 +486,13 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             JSONObject object = parseObject(message);
             SlackEvent slackEvent = SlackJSONMessageParser.decode(this, object);
-            if (slackEvent instanceof SlackChannelCreated) {
+            if (slackEvent instanceof SlackChannelCreated)
+            {
                 SlackChannelCreated slackChannelCreated = (SlackChannelCreated) slackEvent;
                 channels.put(slackChannelCreated.getSlackChannel().getId(), slackChannelCreated.getSlackChannel());
             }
-            if (slackEvent instanceof SlackGroupJoined) {
+            if (slackEvent instanceof SlackGroupJoined)
+            {
                 SlackGroupJoined slackGroupJoined = (SlackGroupJoined) slackEvent;
                 channels.put(slackGroupJoined.getSlackChannel().getId(), slackGroupJoined.getSlackChannel());
             }
