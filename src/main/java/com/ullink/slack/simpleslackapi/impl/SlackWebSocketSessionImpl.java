@@ -76,6 +76,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 case SLACK_REPLY:
                     dispatchImpl((SlackReplyEvent)event,slackReplyListener);
                     break;
+                case SLACK_CONNECTED:
+                    dispatchImpl((SlackConnected)event,slackConnectedLinster);
+                    break;
                 case UNKNOWN:
                     throw new IllegalArgumentException("event not handled " + event);
             }
@@ -201,6 +204,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
         if (websocketSession != null)
         {
+            SlackConnectedImpl slackConnectedImpl = new SlackConnectedImpl(sessionPersona);
+            dispatcher.dispatch(slackConnectedImpl);
             LOGGER.debug("websocket connection established");
             LOGGER.info("slack session ready");
         }

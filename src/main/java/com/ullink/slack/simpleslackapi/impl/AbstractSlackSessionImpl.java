@@ -11,6 +11,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
@@ -19,23 +20,24 @@ import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
 
-    protected Map<String, SlackChannel>           channels                 = new HashMap<>();
-    protected Map<String, SlackUser>              users                    = new HashMap<>();
-    protected Map<String, SlackBot>               bots                     = new HashMap<>();
-    protected SlackPersona                        sessionPersona;
+    protected Map<String, SlackChannel>            channels                 = new HashMap<>();
+    protected Map<String, SlackUser>               users                    = new HashMap<>();
+    protected Map<String, SlackBot>                bots                     = new HashMap<>();
+    protected SlackPersona                         sessionPersona;
 
     protected List<SlackChannelArchivedListener>   channelArchiveListener   = new ArrayList<SlackChannelArchivedListener>();
     protected List<SlackChannelCreatedListener>    channelCreateListener    = new ArrayList<SlackChannelCreatedListener>();
     protected List<SlackChannelDeletedListener>    channelDeleteListener    = new ArrayList<SlackChannelDeletedListener>();
-    protected List<SlackChannelRenamedListener>   channelRenamedListener   = new ArrayList<SlackChannelRenamedListener>();
+    protected List<SlackChannelRenamedListener>    channelRenamedListener   = new ArrayList<SlackChannelRenamedListener>();
     protected List<SlackChannelUnarchivedListener> channelUnarchiveListener = new ArrayList<SlackChannelUnarchivedListener>();
-    protected List<SlackGroupJoinedListener>      groupJoinedListener      = new ArrayList<SlackGroupJoinedListener>();
-    protected List<SlackMessageDeletedListener>   messageDeletedListener   = new ArrayList<SlackMessageDeletedListener>();
-    protected List<SlackMessagePostedListener>    messagePostedListener    = new ArrayList<SlackMessagePostedListener>();
-    protected List<SlackMessageUpdatedListener>   messageUpdatedListener   = new ArrayList<SlackMessageUpdatedListener>();
-    protected List<SlackReplyListener>            slackReplyListener       = new ArrayList<SlackReplyListener>();
+    protected List<SlackGroupJoinedListener>       groupJoinedListener      = new ArrayList<SlackGroupJoinedListener>();
+    protected List<SlackMessageDeletedListener>    messageDeletedListener   = new ArrayList<SlackMessageDeletedListener>();
+    protected List<SlackMessagePostedListener>     messagePostedListener    = new ArrayList<SlackMessagePostedListener>();
+    protected List<SlackMessageUpdatedListener>    messageUpdatedListener   = new ArrayList<SlackMessageUpdatedListener>();
+    protected List<SlackReplyListener>             slackReplyListener       = new ArrayList<SlackReplyListener>();
+    protected List<SlackConnectedListener>         slackConnectedLinster    = new ArrayList<SlackConnectedListener>();
 
-    static final SlackChatConfiguration           DEFAULT_CONFIGURATION    = SlackChatConfiguration.getConfiguration().asUser();
+    static final SlackChatConfiguration            DEFAULT_CONFIGURATION    = SlackChatConfiguration.getConfiguration().asUser();
 
     @Override
     public Collection<SlackChannel> getChannels()
