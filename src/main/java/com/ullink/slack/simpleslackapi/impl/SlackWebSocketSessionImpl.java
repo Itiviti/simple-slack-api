@@ -229,7 +229,10 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                             LOGGER.warn("Connection lost...");
                             try
                             {
-                                websocketSession.close();
+                                if (websocketSession != null)
+                                {
+                                    websocketSession.close();
+                                }
                             }
                             catch (IOException e)
                             {
