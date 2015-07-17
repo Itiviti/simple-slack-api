@@ -10,6 +10,7 @@ public class SlackAttachment
     public String           fallback;
     public String           text;
     public String           pretext;
+    public String           thumb_url;
 
     public String           color;
 
@@ -53,27 +54,33 @@ public class SlackAttachment
         markdown_in.add(value);
     }
 
-    public void setTitle(String title) {
+    public void setTitle(String title)
+    {
         this.title = title;
     }
 
-    public void setTitleLink(String titleLink) {
+    public void setTitleLink(String titleLink)
+    {
         this.titleLink = titleLink;
     }
 
-    public void setFallback(String fallback) {
+    public void setFallback(String fallback)
+    {
         this.fallback = fallback;
     }
 
-    public void setText(String text) {
+    public void setText(String text)
+    {
         this.text = text;
     }
 
-    public void setPretext(String pretext) {
+    public void setPretext(String pretext)
+    {
         this.pretext = pretext;
     }
 
-    public void setColor(String color) {
+    public void setColor(String color)
+    {
         this.color = color;
     }
 }

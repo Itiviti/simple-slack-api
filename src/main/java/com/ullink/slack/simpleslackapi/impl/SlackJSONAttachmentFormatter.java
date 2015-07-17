@@ -4,7 +4,6 @@ import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackField;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +20,10 @@ class SlackJSONAttachmentFormatter
             if (attachments[i].title != null)
             {
                 attachmentJSON.put("title", attachments[i].title);
+            }
+            if (attachments[i].thumb_url != null)
+            {
+                attachmentJSON.put("thumb_url", attachments[i].thumb_url);
             }
             if (attachments[i].titleLink != null)
             {
