@@ -57,6 +57,13 @@ SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttach
 SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message);
 SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel)
 ```        
+(Since v0.4.3, emoji reactions on channel messages)
+
+The SlackSession interface provides a method to add an emoji reaction to a message on a given channel :
+```java
+SlackMessageHandle addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode);
+```        
+
 
 ### Supported events :
 
