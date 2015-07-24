@@ -1,7 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ullink.slack.simpleslackapi.SlackPersona;
 import org.junit.Test;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
@@ -61,6 +60,12 @@ public class TestAbstractSlackSessionImpl
 
         @Override
         public SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message)
+        {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode)
         {
             return null;
         }

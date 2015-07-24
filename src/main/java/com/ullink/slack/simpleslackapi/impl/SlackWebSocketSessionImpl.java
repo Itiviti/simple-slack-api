@@ -391,6 +391,34 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return handle;
     }
 
+    @Override
+    public SlackMessageHandle addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode)
+    {
+        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        HttpClient client = getHttpClient();
+        HttpPost request = new HttpPost("https://slack.com/api/reactions.add");
+        List<NameValuePair> nameValuePairList = new ArrayList<>();
+        nameValuePairList.add(new BasicNameValuePair("token", authToken));
+        nameValuePairList.add(new BasicNameValuePair("channel", channel.getId()));
+        nameValuePairList.add(new BasicNameValuePair("timestamp", messageTimeStamp));
+        nameValuePairList.add(new BasicNameValuePair("name", emojiCode));
+        try
+        {
+            request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
+            HttpResponse response = client.execute(request);
+            String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
+            LOGGER.debug("PostMessage return: " + jsonResponse);
+            SlackReplyImpl reply = SlackJSONReplyParser.decode(parseObject(jsonResponse));
+            handle.setSlackReply(reply);
+        }
+        catch (Exception e)
+        {
+            // TODO : improve exception handling
+            e.printStackTrace();
+        }
+        return handle;
+    }
+
     private HttpClient getHttpClient()
     {
         HttpClient client = null;

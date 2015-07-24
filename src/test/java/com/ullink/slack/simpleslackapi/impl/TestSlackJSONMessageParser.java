@@ -85,6 +85,12 @@ public class TestSlackJSONMessageParser
                 return null;
             }
 
+            @Override
+            public SlackMessageHandle addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode)
+            {
+                return null;
+            }
+
         };
         try
         {

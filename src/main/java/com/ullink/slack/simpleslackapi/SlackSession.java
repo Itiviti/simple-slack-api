@@ -51,6 +51,8 @@ public interface SlackSession
 
     SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment);
 
+    SlackMessageHandle addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode);
+
     SlackPersona.SlackPresence getPresence(SlackPersona persona);
 
     void addchannelArchivedListener(SlackChannelArchivedListener listener);
