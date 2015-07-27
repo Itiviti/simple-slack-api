@@ -13,27 +13,35 @@ class SlackJSONParsingUtils
         // Helper class
     }
 
-    static final SlackUserImpl buildSlackUser(JSONObject jsonUser)
+    static final SlackUser buildSlackUser(JSONObject jsonUser)
     {
         String id = (String) jsonUser.get("id");
         String name = (String) jsonUser.get("name");
         String realName = (String) jsonUser.get("real_name");
-        Boolean deleted = (Boolean) jsonUser.get("deleted");
-        if(deleted == null) deleted = false;
+        Boolean deleted = ifNullFalse(jsonUser,"deleted");
+        Boolean admin = ifNullFalse(jsonUser,"is_admin");
+        Boolean owner = ifNullFalse(jsonUser,"is_owner");
+        Boolean primaryOwner = ifNullFalse(jsonUser,"is_primary_owner");
+        Boolean restricted = ifNullFalse(jsonUser,"is_restricted");
+        Boolean ultraRestricted = ifNullFalse(jsonUser,"is_ultra_restricted");
+        Boolean bot = ifNullFalse(jsonUser,"is_bot");
         JSONObject profileJSON = (JSONObject) jsonUser.get("profile");
         String email = "";
-        if(profileJSON != null) {
+        if (profileJSON != null)
+        {
             email = (String) profileJSON.get("email");
         }
-        return new SlackUserImpl(id, name, realName, email, deleted);
+        return new SlackUserImpl(id, name, realName, email, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot);
     }
 
-    static final SlackBotImpl buildSlackBot(JSONObject jsonBot)
+    private static Boolean ifNullFalse(JSONObject jsonUser, String field)
     {
-        String id = (String) jsonBot.get("id");
-        String name = (String) jsonBot.get("name");
-        Boolean deleted = (Boolean) jsonBot.get("deleted");
-        return new SlackBotImpl(id, name, deleted);
+        Boolean deleted = (Boolean) jsonUser.get(field);
+        if (deleted == null)
+        {
+            deleted = false;
+        }
+        return deleted;
     }
 
     static final SlackChannelImpl buildSlackChannel(JSONObject jsonChannel, Map<String, SlackUser> knownUsersById)

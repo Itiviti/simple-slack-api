@@ -22,7 +22,6 @@ abstract class AbstractSlackSessionImpl implements SlackSession
 
     protected Map<String, SlackChannel>            channels                 = new HashMap<>();
     protected Map<String, SlackUser>               users                    = new HashMap<>();
-    protected Map<String, SlackBot>                bots                     = new HashMap<>();
     protected SlackPersona                         sessionPersona;
 
     protected List<SlackChannelArchivedListener>   channelArchiveListener   = new ArrayList<SlackChannelArchivedListener>();
@@ -52,9 +51,16 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
+    @Deprecated
     public Collection<SlackBot> getBots()
     {
-        return new ArrayList<>(bots.values());
+        ArrayList<SlackBot> toReturn = new ArrayList<>();
+        for(SlackUser user : users.values()) {
+            if (user.isBot()) {
+                toReturn.add(user);
+            }
+        }
+        return toReturn;
     }
 
     @Override
@@ -124,9 +130,10 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
+    @Deprecated
     public SlackBot findBotById(String botId)
     {
-        return bots.get(botId);
+        return users.get(botId);
     }
 
     @Override

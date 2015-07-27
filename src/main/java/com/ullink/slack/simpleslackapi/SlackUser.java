@@ -1,7 +1,5 @@
 package com.ullink.slack.simpleslackapi;
 
-public interface SlackUser extends SlackPersona
+public interface SlackUser extends SlackPersona, SlackBot
 {
-    String getRealName();
-    String getUserMail();
 }

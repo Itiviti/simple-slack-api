@@ -192,24 +192,54 @@
       "is_bot": false,
       "has_files": false,
       "presence": "away"
-    }
-  ],
-  "bots": [
+    },
     {
       "id": "BOTID1",
-      "name": "testbotname1",
+      "name": "botid1",
       "deleted": false,
-      "icons": {
-        "image_48": "https:\/\/myimagehost.com\/mytestimage.png"
-      }
+      "status": null,
+      "color": "a72f79",
+      "profile" : {
+            "email": "userid4@my.email"
+      },
+      "real_name": "Test User 4",
+      "skype": null,
+      "phone": null,
+      "tz": "Europe\/Amsterdam",
+      "tz_label": "Central European Summer Time",
+      "tz_offset": 7200,
+      "is_admin": false,
+      "is_owner": false,
+      "is_primary_owner": false,
+      "is_restricted": false,
+      "is_ultra_restricted": false,
+      "is_bot": true,
+      "has_files": false,
+      "presence": "away"
     },
     {
       "id": "BOTID2",
-      "name": "testbotname2",
+      "name": "botid2",
       "deleted": false,
-      "icons": {
-        "image_48": "https:\/\/myimagehost.com\/mytestimage.png"
-      }
+      "status": null,
+      "color": "a72f79",
+      "profile" : {
+            "email": "userid4@my.email"
+      },
+      "real_name": "Test User 4",
+      "skype": null,
+      "phone": null,
+      "tz": "Europe\/Amsterdam",
+      "tz_label": "Central European Summer Time",
+      "tz_offset": 7200,
+      "is_admin": false,
+      "is_owner": false,
+      "is_primary_owner": false,
+      "is_restricted": false,
+      "is_ultra_restricted": false,
+      "is_bot": true,
+      "has_files": false,
+      "presence": "away"
     }
   ],
   "svn_rev": "26838",

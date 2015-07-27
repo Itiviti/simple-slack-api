@@ -2,35 +2,12 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackBot;
 
-class SlackBotImpl implements SlackBot
+@Deprecated
+class SlackBotImpl extends SlackPersonaImpl implements SlackBot
 {
-
-    private String  id;
-    private String  name;
-    private boolean deleted;
-
-    SlackBotImpl(String id, String name, boolean deleted)
+    SlackBotImpl(String id, String userName, String realName, String userMail, boolean deleted, boolean admin, boolean owner, boolean primaryOwner, boolean restricted, boolean ultraRestricted)
     {
-        this.id = id;
-        this.name = name;
-        this.deleted = deleted;
+        super(id, userName, realName, userMail, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, true);
     }
 
-    @Override
-    public String getId()
-    {
-        return id;
-    }
-
-    @Override
-    public String getUserName()
-    {
-        return name;
-    }
-
-    @Override
-    public boolean isDeleted()
-    {
-        return deleted;
-    }
 }

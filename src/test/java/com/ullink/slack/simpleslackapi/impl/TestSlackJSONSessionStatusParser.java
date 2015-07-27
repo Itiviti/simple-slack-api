@@ -23,8 +23,7 @@ public class TestSlackJSONSessionStatusParser
         SlackJSONSessionStatusParser parser = new SlackJSONSessionStatusParser(strBuilder.toString());
         parser.parse();
         Assertions.assertThat(parser.getChannels()).containsOnlyKeys("CHANNELID1","CHANNELID2","CHANNELID3","GROUPID1");
-        Assertions.assertThat(parser.getUsers()).containsOnlyKeys("USERID1","USERID2","USERID3","USERID4");
-        Assertions.assertThat(parser.getBots()).containsOnlyKeys("BOTID1","BOTID2");
+        Assertions.assertThat(parser.getUsers()).containsOnlyKeys("USERID1","USERID2","USERID3","USERID4","BOTID1","BOTID2");
         Assertions.assertThat(parser.getWebSocketURL()).isEqualTo("wss://mywebsocketurl");
     }
 }

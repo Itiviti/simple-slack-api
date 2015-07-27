@@ -167,11 +167,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             throw new ConnectException(sessionParser.getError());
         }
         users = sessionParser.getUsers();
-        bots = sessionParser.getBots();
         channels = sessionParser.getChannels();
         sessionPersona = sessionParser.getSessionPersona();
         LOGGER.info(users.size() + " users found on this session");
-        LOGGER.info(bots.size() + " bots found on this session");
         LOGGER.info(channels.size() + " channels found on this session");
         String wssurl = sessionParser.getWebSocketURL();
 
