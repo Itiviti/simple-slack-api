@@ -91,4 +91,10 @@ class SlackPersonaImpl implements SlackPersona
         return userMail;
     }
 
+    @Override
+    public String getRealName()
+    {
+        return realName;
+    }
+
 }

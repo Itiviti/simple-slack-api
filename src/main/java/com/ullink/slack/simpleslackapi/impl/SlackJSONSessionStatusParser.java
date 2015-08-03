@@ -19,7 +19,6 @@ class SlackJSONSessionStatusParser
 
     private Map<String, SlackChannel> channels = new HashMap<>();
     private Map<String, SlackUser>    users    = new HashMap<>();
-    private Map<String, SlackBot>     bots     = new HashMap<>();
 
     private SlackPersona sessionPersona;
 
@@ -32,11 +31,6 @@ class SlackJSONSessionStatusParser
     SlackJSONSessionStatusParser(String toParse)
     {
         this.toParse = toParse;
-    }
-
-    Map<String, SlackBot> getBots()
-    {
-        return bots;
     }
 
     Map<String, SlackChannel> getChannels()
@@ -76,6 +70,16 @@ class SlackJSONSessionStatusParser
             JSONObject jsonUser = (JSONObject) jsonObject;
             SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(jsonUser);
             LOGGER.debug("slack user found : " + slackUser.getId());
+            users.put(slackUser.getId(), slackUser);
+        }
+
+        JSONArray botsJson = (JSONArray) jsonResponse.get("bots");
+
+        for (Object jsonObject : botsJson)
+        {
+            JSONObject jsonBot = (JSONObject) jsonObject;
+            SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(jsonBot);
+            LOGGER.debug("slack bot found : " + slackUser.getId());
             users.put(slackUser.getId(), slackUser);
         }
 

@@ -7,6 +7,7 @@ public interface SlackPersona
     String getId();
 
     String getUserName();
+    String getRealName();
     String getUserMail();
     boolean isDeleted();
     boolean isAdmin();

@@ -140,6 +140,8 @@ class SlackJSONMessageParser
                 return parseMessageUpdated(obj, channel, ts);
             case MESSAGE_DELETED:
                 return parseMessageDeleted(obj, channel, ts);
+            case BOT_MESSAGE:
+                return parseBotMessage(obj, channel, ts, slackSession);
             default:
                 return parseMessagePublished(obj, channel, ts, slackSession);
         }
@@ -175,7 +177,7 @@ class SlackJSONMessageParser
         JSONObject message = (JSONObject) obj.get("message");
         String text = (String) message.get("text");
         String messageTs = (String) message.get("ts");
-        SlackMessageUpdatedImpl toto = new SlackMessageUpdatedImpl(channel,messageTs, ts, text);
+        SlackMessageUpdatedImpl toto = new SlackMessageUpdatedImpl(channel, messageTs, ts, text);
         return toto;
     }
 
@@ -185,14 +187,20 @@ class SlackJSONMessageParser
         return new SlackMessageDeletedImpl(channel, deletedTs, ts);
     }
 
+    private static SlackMessagePostedImpl parseBotMessage(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession)
+    {
+        String text = (String) obj.get("text");
+        String botId = (String) obj.get("bot_id");
+        SlackUser user = slackSession.findUserById(botId);
+        return new SlackMessagePostedImpl(text, user, user, channel, ts);
+    }
+
     private static SlackMessagePostedImpl parseMessagePublished(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession)
     {
         String text = (String) obj.get("text");
         String userId = (String) obj.get("user");
-        String botId = (String) obj.get("bot_id");
-        SlackUser user = userId != null ? slackSession.findUserById(userId) : null;
-        SlackBot bot = botId != null ? slackSession.findBotById(botId) : null;
-        return new SlackMessagePostedImpl(text, bot, user, channel, ts);
+        SlackUser user = slackSession.findUserById(userId);
+        return new SlackMessagePostedImpl(text, user, user, channel, ts);
     }
 
     private static SlackChannel parseChannelDescription(JSONObject channelJSONObject)
