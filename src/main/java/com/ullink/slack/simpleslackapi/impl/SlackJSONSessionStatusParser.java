@@ -74,13 +74,14 @@ class SlackJSONSessionStatusParser
         }
 
         JSONArray botsJson = (JSONArray) jsonResponse.get("bots");
-
-        for (Object jsonObject : botsJson)
-        {
-            JSONObject jsonBot = (JSONObject) jsonObject;
-            SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(jsonBot);
-            LOGGER.debug("slack bot found : " + slackUser.getId());
-            users.put(slackUser.getId(), slackUser);
+        if (botsJson != null) {
+            for (Object jsonObject : botsJson)
+            {
+                JSONObject jsonBot = (JSONObject) jsonObject;
+                SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(jsonBot);
+                LOGGER.debug("slack bot found : " + slackUser.getId());
+                users.put(slackUser.getId(), slackUser);
+            }
         }
 
         JSONArray channelsJson = (JSONArray) jsonResponse.get("channels");

@@ -53,6 +53,10 @@ public interface SlackSession
 
     SlackMessageHandle addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode);
 
+    SlackMessageHandle joinChannel(String channelName);
+
+    SlackMessageHandle leaveChannel(SlackChannel channel);
+
     SlackPersona.SlackPresence getPresence(SlackPersona persona);
 
     void addchannelArchivedListener(SlackChannelArchivedListener listener);

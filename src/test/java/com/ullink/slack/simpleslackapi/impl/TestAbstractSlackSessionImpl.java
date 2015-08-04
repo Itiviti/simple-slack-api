@@ -69,6 +69,18 @@ public class TestAbstractSlackSessionImpl
         {
             return null;
         }
+
+        @Override
+        public SlackMessageHandle joinChannel(String channelName)
+        {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle leaveChannel(SlackChannel channel)
+        {
+            return null;
+        }
     }
 
     @Test

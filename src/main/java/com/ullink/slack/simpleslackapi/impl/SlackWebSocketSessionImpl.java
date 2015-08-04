@@ -6,10 +6,10 @@ import java.net.ConnectException;
 import java.net.Proxy;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import javax.websocket.DeploymentException;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
@@ -41,6 +41,20 @@ import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
 
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String>
 {
+    private static final String SLACK_API_HTTPS_ROOT      = "https://slack.com/api/";
+
+    private static final String CHANNELS_LEAVE_COMMAND    = "channels.leave";
+
+    private static final String CHANNELS_JOIN_COMMAND     = "channels.join";
+
+    private static final String CHAT_POST_MESSAGE_COMMAND = "chat.postMessage";
+
+    private static final String CHAT_DELETE_COMMAND       = "chat.delete";
+
+    private static final String CHAT_UPDATE_COMMAND       = "chat.update";
+
+    private static final String REACTIONS_ADD_COMMAND     = "reactions.add";
+
     public class EventDispatcher
     {
 
@@ -291,46 +305,32 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
     {
         SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
-        HttpClient client = getHttpClient();
-        HttpPost request = new HttpPost("https://slack.com/api/chat.postMessage");
-        List<NameValuePair> nameValuePairList = new ArrayList<>();
-        nameValuePairList.add(new BasicNameValuePair("token", authToken));
-        nameValuePairList.add(new BasicNameValuePair("channel", channel.getId()));
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channel", channel.getId());
+        arguments.put("text", message);
         if (chatConfiguration.asUser)
         {
-            nameValuePairList.add(new BasicNameValuePair("as_user", "true"));
+            arguments.put("as_user", "true");
         }
-        nameValuePairList.add(new BasicNameValuePair("text", message));
         if (chatConfiguration.avatar == Avatar.ICON_URL)
         {
-            nameValuePairList.add(new BasicNameValuePair("icon_url", chatConfiguration.avatarDescription));
+            arguments.put("icon_url", chatConfiguration.avatarDescription);
         }
         if (chatConfiguration.avatar == Avatar.EMOJI)
         {
-            nameValuePairList.add(new BasicNameValuePair("icon_emoji", chatConfiguration.avatarDescription));
+            arguments.put("icon_emoji", chatConfiguration.avatarDescription);
         }
         if (chatConfiguration.userName != null)
         {
-            nameValuePairList.add(new BasicNameValuePair("username", chatConfiguration.userName));
+            arguments.put("username", chatConfiguration.userName);
         }
         if (attachment != null)
         {
-            nameValuePairList.add(new BasicNameValuePair("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachment).toString()));
+            arguments.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachment).toString());
         }
-        try
-        {
-            request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
-            HttpResponse response = client.execute(request);
-            String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
-            LOGGER.debug("PostMessage return: " + jsonResponse);
-            SlackReplyImpl reply = SlackJSONReplyParser.decode(parseObject(jsonResponse));
-            handle.setSlackReply(reply);
-        }
-        catch (Exception e)
-        {
-            // TODO : improve exception handling
-            e.printStackTrace();
-        }
+
+        postSlackCommand(arguments, CHAT_POST_MESSAGE_COMMAND, handle);
         return handle;
     }
 
@@ -338,26 +338,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     public SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel)
     {
         SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
-        HttpClient client = getHttpClient();
-        HttpPost request = new HttpPost("https://slack.com/api/chat.delete");
-        List<NameValuePair> nameValuePairList = new ArrayList<>();
-        nameValuePairList.add(new BasicNameValuePair("token", authToken));
-        nameValuePairList.add(new BasicNameValuePair("channel", channel.getId()));
-        nameValuePairList.add(new BasicNameValuePair("ts", timeStamp));
-        try
-        {
-            request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
-            HttpResponse response = client.execute(request);
-            String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
-            LOGGER.debug("PostMessage return: " + jsonResponse);
-            SlackReplyImpl reply = SlackJSONReplyParser.decode(parseObject(jsonResponse));
-            handle.setSlackReply(reply);
-        }
-        catch (Exception e)
-        {
-            // TODO : improve exception handling
-            e.printStackTrace();
-        }
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channel", channel.getId());
+        arguments.put("ts", timeStamp);
+        postSlackCommand(arguments, CHAT_DELETE_COMMAND, handle);
         return handle;
     }
 
@@ -365,27 +350,12 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     public SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message)
     {
         SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
-        HttpClient client = getHttpClient();
-        HttpPost request = new HttpPost("https://slack.com/api/chat.update");
-        List<NameValuePair> nameValuePairList = new ArrayList<>();
-        nameValuePairList.add(new BasicNameValuePair("token", authToken));
-        nameValuePairList.add(new BasicNameValuePair("ts", timeStamp));
-        nameValuePairList.add(new BasicNameValuePair("channel", channel.getId()));
-        nameValuePairList.add(new BasicNameValuePair("text", message));
-        try
-        {
-            request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
-            HttpResponse response = client.execute(request);
-            String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
-            LOGGER.debug("PostMessage return: " + jsonResponse);
-            SlackReplyImpl reply = SlackJSONReplyParser.decode(parseObject(jsonResponse));
-            handle.setSlackReply(reply);
-        }
-        catch (Exception e)
-        {
-            // TODO : improve exception handling
-            e.printStackTrace();
-        }
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("ts", timeStamp);
+        arguments.put("channel", channel.getId());
+        arguments.put("text", message);
+        postSlackCommand(arguments, CHAT_UPDATE_COMMAND, handle);
         return handle;
     }
 
@@ -393,13 +363,46 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     public SlackMessageHandle addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode)
     {
         SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channel", channel.getId());
+        arguments.put("timestamp", messageTimeStamp);
+        arguments.put("name", emojiCode);
+        postSlackCommand(arguments, REACTIONS_ADD_COMMAND, handle);
+        return handle;
+    }
+
+    @Override
+    public SlackMessageHandle joinChannel(String channelName)
+    {
+        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("name", channelName);
+        postSlackCommand(arguments, CHANNELS_JOIN_COMMAND, handle);
+        return handle;
+    }
+
+    @Override
+    public SlackMessageHandle leaveChannel(SlackChannel channel)
+    {
+        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channel", channel.getId());
+        postSlackCommand(arguments, CHANNELS_LEAVE_COMMAND, handle);
+        return handle;
+    }
+
+    private void postSlackCommand(Map<String, String> params, String command, SlackMessageHandleImpl handle)
+    {
         HttpClient client = getHttpClient();
-        HttpPost request = new HttpPost("https://slack.com/api/reactions.add");
+        HttpPost request = new HttpPost(SLACK_API_HTTPS_ROOT + command);
         List<NameValuePair> nameValuePairList = new ArrayList<>();
-        nameValuePairList.add(new BasicNameValuePair("token", authToken));
-        nameValuePairList.add(new BasicNameValuePair("channel", channel.getId()));
-        nameValuePairList.add(new BasicNameValuePair("timestamp", messageTimeStamp));
-        nameValuePairList.add(new BasicNameValuePair("name", emojiCode));
+        for (Map.Entry<String, String> arg : params.entrySet())
+        {
+            nameValuePairList.add(new BasicNameValuePair(arg.getKey(), arg.getValue()));
+        }
         try
         {
             request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
@@ -414,7 +417,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             // TODO : improve exception handling
             e.printStackTrace();
         }
-        return handle;
     }
 
     private HttpClient getHttpClient()
