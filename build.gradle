@@ -72,10 +72,13 @@ publishing {
                     csprecher.appendNode('name','Christian Sprecher')
                     csprecher.appendNode('email','kindofwhat@gmail.com')
                     csprecher.appendNode('url','https://github.com/kindofwhat')
+                    def jvidar = contributorsNode.appendNode('contributor')
+                    jvidar.appendNode('name','Jan Vidar Krey')
+                    jvidar.appendNode('email','janvidar@extatic.org')
                     def scm = node.appendNode('scm')
                     scm.appendNode('connection','scm:git:git@github.com:Ullink/simple-slack-api.git')
                     scm.appendNode('developerConnection','scm:git:git@github.com:Ullink/simple-slack-api.git')
-                    scm.appendNode('url','git@github.com:Ullink/simple-slack-api.git')
+                    scm.appendNode('url','https://github.com/Ullink/simple-slack-api')
                 }
             }
         }
