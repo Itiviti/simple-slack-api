@@ -126,6 +126,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private long                              lastConnectionTime         = -1;
 
     private boolean                           reconnectOnDisconnection;
+    private boolean                           wantDisconnect             = false;
 
     private Map<Long, SlackMessageHandleImpl> pendingMessageMap          = new ConcurrentHashMap<Long, SlackMessageHandleImpl>();
 
@@ -150,9 +151,19 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public void connect() throws IOException
     {
+        wantDisconnect = false;
         connectImpl();
         LOGGER.debug("starting connection monitoring");
         startConnectionMonitoring();
+    }
+
+    @Override
+    public void disconnect()
+    {
+        wantDisconnect = true;
+        LOGGER.debug("Disconnecting from the Slack server");
+        disconnectImpl();
+        stopConnectionMonitoring();
     }
 
     private void connectImpl() throws IOException, ClientProtocolException, ConnectException
@@ -221,6 +232,25 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
+    private void disconnectImpl()
+    {
+        if (websocketSession != null)
+        {
+            try
+            {
+                websocketSession.close();
+            }
+            catch (IOException ex)
+            {
+                // ignored.
+            }
+            finally
+            {
+                websocketSession = null;
+            }
+        }
+    }
+
     private void startConnectionMonitoring()
     {
         connectionMonitoringThread = new Thread()
@@ -235,6 +265,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                     {
                         // heart beat of 30s (should be configurable in the future)
                         Thread.sleep(30000);
+
+                        // disconnect() was called.
+                        if (wantDisconnect)
+                            this.interrupt();
+
                         if (lastPingSent != lastPingAck || websocketSession == null)
                         {
                             // disconnection happened
@@ -298,7 +333,29 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 LOGGER.debug("monitoring thread stopped");
             }
         };
-        connectionMonitoringThread.start();
+
+        if (!wantDisconnect)
+            connectionMonitoringThread.start();
+    }
+
+    private void stopConnectionMonitoring()
+    {
+        if (connectionMonitoringThread != null)
+        {
+            while (true)
+            {
+                try
+                {
+                    connectionMonitoringThread.interrupt();
+                    connectionMonitoringThread.join();
+                    break;
+                }
+                catch (InterruptedException ex)
+                {
+                    // ouch - let's try again!
+                }
+            }
+        }
     }
 
     @Override
