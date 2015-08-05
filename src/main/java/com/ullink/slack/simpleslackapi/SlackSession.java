@@ -41,6 +41,8 @@ public interface SlackSession
 
     void connect() throws IOException;
 
+    void disconnect() throws IOException;
+
     SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel);
 
     SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration);
