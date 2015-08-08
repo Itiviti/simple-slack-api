@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 class SlackJSONAttachmentFormatter
 {
@@ -44,6 +45,13 @@ class SlackJSONAttachmentFormatter
             if (attachments[i].fallback != null)
             {
                 attachmentJSON.put("fallback", attachments[i].fallback);
+            }
+            if (attachments[i].miscRootFields != null)
+            {
+                for (Map.Entry<String, String> entry : attachments[i].miscRootFields.entrySet())
+                {
+                    attachmentJSON.put(entry.getKey(), entry.getValue());
+                }
             }
             if (attachments[i].markdown_in != null && !attachments[i].markdown_in.isEmpty())
             {

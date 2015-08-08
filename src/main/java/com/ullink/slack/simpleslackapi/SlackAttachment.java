@@ -1,22 +1,26 @@
 package com.ullink.slack.simpleslackapi;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SlackAttachment
 {
-    public String           title;
-    public String           titleLink;
-    public String           fallback;
-    public String           text;
-    public String           pretext;
-    public String           thumb_url;
+    public String              title;
+    public String              titleLink;
+    public String              fallback;
+    public String              text;
+    public String              pretext;
+    public String              thumb_url;
 
-    public String           color;
+    public String              color;
 
-    public List<SlackField> fields;
+    public Map<String, String> miscRootFields;
 
-    public List<String>     markdown_in;
+    public List<SlackField>    fields;
+
+    public List<String>        markdown_in;
 
     public SlackAttachment()
     {
@@ -52,6 +56,15 @@ public class SlackAttachment
             markdown_in = new ArrayList<>();
         }
         markdown_in.add(value);
+    }
+
+    public void addMiscField(String key, String value)
+    {
+        if (miscRootFields == null)
+        {
+            miscRootFields = new HashMap<>();
+        }
+        miscRootFields.put(key, value);
     }
 
     public void setTitle(String title)
