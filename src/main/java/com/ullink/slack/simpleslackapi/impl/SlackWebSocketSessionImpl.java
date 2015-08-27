@@ -200,7 +200,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
         LOGGER.debug("retrieved websocket URL : " + wssurl);
         ClientManager client = ClientManager.createClient();
-        client.getProperties().put(ClientProperties.LOG_HTTP_UPGRADE, true);
         if (proxyAddress != null)
         {
             client.getProperties().put(ClientProperties.PROXY_URI, "http://" + proxyAddress + ":" + proxyPort);

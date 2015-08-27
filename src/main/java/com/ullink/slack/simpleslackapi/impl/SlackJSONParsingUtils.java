@@ -48,7 +48,6 @@ class SlackJSONParsingUtils
     {
         String id = (String) jsonChannel.get("id");
         String name = (String) jsonChannel.get("name");
-        System.out.println(name);
         String topic = null; // TODO
         String purpose = null; // TODO
         SlackChannelImpl toReturn = new SlackChannelImpl(id, name, topic, purpose, false);

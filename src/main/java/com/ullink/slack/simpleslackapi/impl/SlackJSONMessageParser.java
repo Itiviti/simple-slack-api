@@ -207,7 +207,6 @@ class SlackJSONMessageParser
     {
         String id = (String) channelJSONObject.get("id");
         String name = (String) channelJSONObject.get("name");
-        System.out.println(name);
         String topic = null; // TODO
         String purpose = null; // TODO
         return new SlackChannelImpl(id, name, topic, purpose, true);
