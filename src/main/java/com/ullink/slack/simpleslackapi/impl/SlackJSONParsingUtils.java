@@ -64,4 +64,14 @@ class SlackJSONParsingUtils
         return toReturn;
     }
 
+    static final SlackChannelImpl buildSlackImChannel(JSONObject jsonChannel, Map<String, SlackUser> knownUsersById)
+    {
+        String id = (String) jsonChannel.get("id");
+        SlackChannelImpl toReturn = new SlackChannelImpl(id, null, null, null, true);
+        String memberId = (String) jsonChannel.get("user");
+        SlackUser user = knownUsersById.get(memberId);
+        toReturn.addUser(user);
+        return toReturn;
+    }
+
 }
