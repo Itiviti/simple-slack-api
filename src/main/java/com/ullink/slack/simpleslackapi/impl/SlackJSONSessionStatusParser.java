@@ -8,7 +8,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.SlackPersona;
@@ -101,6 +100,16 @@ class SlackJSONSessionStatusParser
             JSONObject jsonChannel = (JSONObject) jsonObject;
             SlackChannelImpl channel = SlackJSONParsingUtils.buildSlackChannel(jsonChannel, users);
             LOGGER.debug("slack private group found : " + channel.getId());
+            channels.put(channel.getId(), channel);
+        }
+
+        JSONArray imsJson = (JSONArray) jsonResponse.get("ims");
+
+        for (Object jsonObject : imsJson)
+        {
+            JSONObject jsonChannel = (JSONObject) jsonObject;
+            SlackChannelImpl channel = SlackJSONParsingUtils.buildSlackImChannel(jsonChannel, users);
+            LOGGER.debug("slack im channel found : " + channel.getId());
             channels.put(channel.getId(), channel);
         }
 

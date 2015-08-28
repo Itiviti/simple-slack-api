@@ -96,6 +96,15 @@
       }
     }
   ],
+  "ims": [
+    {
+      "id": "DIM01",
+      "is_im": true,
+      "created": 1405080346,
+      "user": "USERID4",
+      "is_user_deleted": false
+    }
+  ],
   "users": [
     {
       "id": "USERID1",
