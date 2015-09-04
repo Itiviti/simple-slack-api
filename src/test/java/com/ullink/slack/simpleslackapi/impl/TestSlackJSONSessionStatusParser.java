@@ -3,7 +3,7 @@ package com.ullink.slack.simpleslackapi.impl;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
 
 public class TestSlackJSONSessionStatusParser
@@ -22,8 +22,11 @@ public class TestSlackJSONSessionStatusParser
         }
         SlackJSONSessionStatusParser parser = new SlackJSONSessionStatusParser(strBuilder.toString());
         parser.parse();
-        Assertions.assertThat(parser.getChannels()).containsOnlyKeys("CHANNELID1","CHANNELID2","CHANNELID3","GROUPID1","DIM01");
-        Assertions.assertThat(parser.getUsers()).containsOnlyKeys("USERID1","USERID2","USERID3","USERID4","BOTID1","BOTID2");
-        Assertions.assertThat(parser.getWebSocketURL()).isEqualTo("wss://mywebsocketurl");
+        assertThat(parser.getChannels()).containsOnlyKeys("CHANNELID1","CHANNELID2","CHANNELID3","GROUPID1","DIM01");
+        assertThat(parser.getUsers()).containsOnlyKeys("USERID1","USERID2","USERID3","USERID4","BOTID1","BOTID2");
+        assertThat(parser.getWebSocketURL()).isEqualTo("wss://mywebsocketurl");
+        assertThat(parser.getUsers().get("USERID1").getTimeZone()).isEqualTo("Europe/Amsterdam");
+        assertThat(parser.getUsers().get("USERID1").getTimeZoneLabel()).isEqualTo("Central European Summer Time");
+        assertThat(parser.getUsers().get("USERID1").getTimeZoneOffset()).isEqualTo(7200);
     }
 }

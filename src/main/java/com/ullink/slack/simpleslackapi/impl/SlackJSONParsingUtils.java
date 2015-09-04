@@ -18,20 +18,23 @@ class SlackJSONParsingUtils
         String id = (String) jsonUser.get("id");
         String name = (String) jsonUser.get("name");
         String realName = (String) jsonUser.get("real_name");
-        Boolean deleted = ifNullFalse(jsonUser,"deleted");
-        Boolean admin = ifNullFalse(jsonUser,"is_admin");
-        Boolean owner = ifNullFalse(jsonUser,"is_owner");
-        Boolean primaryOwner = ifNullFalse(jsonUser,"is_primary_owner");
-        Boolean restricted = ifNullFalse(jsonUser,"is_restricted");
-        Boolean ultraRestricted = ifNullFalse(jsonUser,"is_ultra_restricted");
-        Boolean bot = ifNullFalse(jsonUser,"is_bot");
+        String tz = (String) jsonUser.get("tz");
+        String tzLabel = (String) jsonUser.get("tz_label");
+        Long tzOffset = ((Long) jsonUser.get("tz_offset"));
+        Boolean deleted = ifNullFalse(jsonUser, "deleted");
+        Boolean admin = ifNullFalse(jsonUser, "is_admin");
+        Boolean owner = ifNullFalse(jsonUser, "is_owner");
+        Boolean primaryOwner = ifNullFalse(jsonUser, "is_primary_owner");
+        Boolean restricted = ifNullFalse(jsonUser, "is_restricted");
+        Boolean ultraRestricted = ifNullFalse(jsonUser, "is_ultra_restricted");
+        Boolean bot = ifNullFalse(jsonUser, "is_bot");
         JSONObject profileJSON = (JSONObject) jsonUser.get("profile");
         String email = "";
         if (profileJSON != null)
         {
             email = (String) profileJSON.get("email");
         }
-        return new SlackUserImpl(id, name, realName, email, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot);
+        return new SlackUserImpl(id, name, realName, email, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot, tz, tzLabel, tzOffset == null ? null : new Integer(tzOffset.intValue()));
     }
 
     private static Boolean ifNullFalse(JSONObject jsonUser, String field)
