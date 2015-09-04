@@ -48,6 +48,46 @@ signing {
     sign configurations.archives
 }
 
+def pomConfig = {
+    name 'Simple Slack API'
+    description 'A simple API to build bot running on Slack'
+    url 'https://github.com/Ullink/simple-slack-api'
+    licenses {
+        license {
+            name 'CC0 1.0 Universal (CC0 1.0)'
+            url 'http://creativecommons.org/publicdomain/zero/1.0/'
+        }
+    }
+    developers {
+        developer {
+            id 'bcorne'
+            name 'Benoit Corne'
+            email 'benoit.corne@gmail.com'
+        }
+    }
+    contributors {
+        contributor {
+            name 'Christian Sprecher'
+            email 'kindofwhat@gmail.com'
+            url 'https://github.com/kindofwhat'
+        }
+        contributor {
+            name 'Jan Vidar Krey'
+            email 'janvidar@extatic.org'
+        }
+        contributor {
+            name 'David Seebacher'
+            email 'dseebacher@gmail.com'
+            url 'https://github.com/dseebacher'
+        }
+    }
+    scm {
+        connection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
+        developerConnection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
+        url 'https://github.com/Ullink/simple-slack-api'
+    }
+}
+
 publishing {
         publications {
             mavenJava(MavenPublication) {
@@ -55,30 +95,7 @@ publishing {
                 artifact sourcesJar 
                 artifact javadocJar
                 pom.withXml {
-                    def node = asNode()
-                    node.appendNode('name','Simple Slack API')
-                    node.appendNode('description','A simple API to build bot running on Slack')
-                    node.appendNode('url','https://github.com/Ullink/simple-slack-api')
-                    def licenseNode = node.appendNode('licenses').appendNode('license')
-                    licenseNode.appendNode('name','CC0 1.0 Universal (CC0 1.0)')
-                    licenseNode.appendNode('url','http://creativecommons.org/publicdomain/zero/1.0/')
-                    def developersNode = node.appendNode('developers')
-                    def bcorne = developersNode.appendNode('developer')
-                    bcorne.appendNode('id','bcorne')
-                    bcorne.appendNode('name','Benoit Corne')
-                    bcorne.appendNode('email','benoit.corne@gmail.com')
-                    def contributorsNode = node.appendNode('contributors')
-                    def csprecher = contributorsNode.appendNode('contributor')
-                    csprecher.appendNode('name','Christian Sprecher')
-                    csprecher.appendNode('email','kindofwhat@gmail.com')
-                    csprecher.appendNode('url','https://github.com/kindofwhat')
-                    def jvidar = contributorsNode.appendNode('contributor')
-                    jvidar.appendNode('name','Jan Vidar Krey')
-                    jvidar.appendNode('email','janvidar@extatic.org')
-                    def scm = node.appendNode('scm')
-                    scm.appendNode('connection','scm:git:git@github.com:Ullink/simple-slack-api.git')
-                    scm.appendNode('developerConnection','scm:git:git@github.com:Ullink/simple-slack-api.git')
-                    scm.appendNode('url','https://github.com/Ullink/simple-slack-api')
+                    asNode().children().last() + pomConfig
                 }
             }
         }
