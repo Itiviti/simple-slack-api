@@ -50,7 +50,6 @@ signing {
 
 def pomConfig = {
     name 'Simple Slack API'
-    description 'A simple API to build bot running on Slack'
     url 'https://github.com/Ullink/simple-slack-api'
     licenses {
         license {
@@ -80,11 +79,15 @@ def pomConfig = {
             email 'dseebacher@gmail.com'
             url 'https://github.com/dseebacher'
         }
+        contributor {
+            name 'Wouter Vernaillen'
+            url 'http://www.vernaillen.com'
+        }
     }
     scm {
         connection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
         developerConnection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
-        url 'https://github.com/Ullink/simple-slack-api'
+        url 'git@github.com/Ullink/simple-slack-api'
     }
 }
 
@@ -95,6 +98,7 @@ publishing {
                 artifact sourcesJar 
                 artifact javadocJar
                 pom.withXml {
+                    asNode().appendNode('description', 'A simple API to build bot running on Slack')
                     asNode().children().last() + pomConfig
                 }
             }
