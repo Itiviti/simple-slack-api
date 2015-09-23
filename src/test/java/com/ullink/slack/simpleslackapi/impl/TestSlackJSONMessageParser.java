@@ -109,6 +109,12 @@ public class TestSlackJSONMessageParser
                 return null;
             }
 
+            @Override
+            public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
+            {
+                return null;
+            }
+
         };
         try
         {

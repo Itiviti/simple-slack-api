@@ -8,3 +8,7 @@
 .gradle/*
 build/*
 src/main/java/rebel.xml
+/bin/
+/build/
+/.settings/
+/.gradle/

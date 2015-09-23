@@ -38,6 +38,8 @@ public interface SlackSession
     SlackPersona sessionPersona();
 
     SlackBot findBotById(String botId);
+    
+    SlackMessageHandle inviteUser(String email, String firstName, boolean setActive);
 
     void connect() throws IOException;
 
