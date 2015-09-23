@@ -88,8 +88,8 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) {
-            // TODO Auto-generated method stub
+        public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
+        {
             return null;
         }
     }
