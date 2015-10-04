@@ -95,7 +95,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                     dispatchImpl((SlackReplyEvent) event, slackReplyListener);
                     break;
                 case SLACK_CONNECTED:
-                    dispatchImpl((SlackConnected) event, slackConnectedLinster);
+                    dispatchImpl((SlackConnected) event, slackConnectedListener);
                     break;
                 case UNKNOWN:
                     throw new IllegalArgumentException("event not handled " + event);

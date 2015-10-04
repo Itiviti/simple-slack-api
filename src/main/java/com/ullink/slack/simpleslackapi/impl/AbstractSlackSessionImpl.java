@@ -34,7 +34,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<SlackMessagePostedListener>     messagePostedListener    = new ArrayList<SlackMessagePostedListener>();
     protected List<SlackMessageUpdatedListener>    messageUpdatedListener   = new ArrayList<SlackMessageUpdatedListener>();
     protected List<SlackReplyListener>             slackReplyListener       = new ArrayList<SlackReplyListener>();
-    protected List<SlackConnectedListener>         slackConnectedLinster    = new ArrayList<SlackConnectedListener>();
+    protected List<SlackConnectedListener>         slackConnectedListener    = new ArrayList<SlackConnectedListener>();
 
     static final SlackChatConfiguration            DEFAULT_CONFIGURATION    = SlackChatConfiguration.getConfiguration().asUser();
 
@@ -260,4 +260,13 @@ abstract class AbstractSlackSessionImpl implements SlackSession
         slackReplyListener.remove(listener);
     }
 
+    @Override
+    public void addSlackConnectedListener(SlackConnectedListener listener) {
+      slackConnectedListener.add(listener);
+    }
+
+    @Override
+    public void removeSlackConnectedListener(SlackConnectedListener listener) {
+      slackConnectedListener.remove(listener);
+    }
 }
