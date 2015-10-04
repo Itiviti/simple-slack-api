@@ -1,12 +1,12 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import com.ullink.slack.simpleslackapi.SlackPersona;
 import org.junit.Test;
+
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-
+import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.events.SlackConnected;
 import com.ullink.slack.simpleslackapi.SlackSession;
@@ -218,7 +218,7 @@ public class TestAbstractSlackSessionImpl
         TestSlackSessionImpl slackSession = new TestSlackSessionImpl();
         slackSession.addSlackConnectedListener(listener);
 
-        assertThat(!slackSession.isListening(listener));
+        assertThat(slackSession.isListening(listener)).isTrue();
     }
 
     @Test
@@ -232,6 +232,6 @@ public class TestAbstractSlackSessionImpl
         slackSession.addSlackConnectedListener(listener);
         slackSession.removeSlackConnectedListener(listener);
 
-        assertThat(!slackSession.isListening(listener));
+        assertThat(slackSession.isListening(listener)).isFalse();
     }
 }
