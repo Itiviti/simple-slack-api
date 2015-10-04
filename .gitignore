@@ -13,3 +13,4 @@ src/main/java/rebel.xml
 /.settings/
 /.gradle/
 tags
+lib
