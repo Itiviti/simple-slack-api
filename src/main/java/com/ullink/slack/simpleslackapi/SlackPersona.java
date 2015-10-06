@@ -18,5 +18,5 @@ public interface SlackPersona
     boolean isBot();
     String getTimeZone();
     String getTimeZoneLabel();
-    int getTimeZoneOffset();
+    Integer getTimeZoneOffset();
 }

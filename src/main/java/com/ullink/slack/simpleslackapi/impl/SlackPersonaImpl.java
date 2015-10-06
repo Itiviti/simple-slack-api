@@ -116,7 +116,7 @@ class SlackPersonaImpl implements SlackPersona
     }
 
     @Override
-    public int getTimeZoneOffset()
+    public Integer getTimeZoneOffset()
     {
         return timeZoneOffset;
     }
