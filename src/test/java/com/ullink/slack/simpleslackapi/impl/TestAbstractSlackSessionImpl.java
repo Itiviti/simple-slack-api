@@ -1,12 +1,15 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import com.ullink.slack.simpleslackapi.SlackPersona;
 import org.junit.Test;
+
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-
+import com.ullink.slack.simpleslackapi.SlackPersona;
+import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
+import com.ullink.slack.simpleslackapi.events.SlackConnected;
+import com.ullink.slack.simpleslackapi.SlackSession;
 
 public class TestAbstractSlackSessionImpl
 {
@@ -91,6 +94,12 @@ public class TestAbstractSlackSessionImpl
         public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
         {
             return null;
+        }
+
+        // Helper method with access to abstract class properties.
+        public boolean isListening(SlackConnectedListener expectedListener) 
+        {
+          return slackConnectedListener.contains(expectedListener);
         }
     }
 
@@ -199,5 +208,30 @@ public class TestAbstractSlackSessionImpl
         assertThat(slackSession.findUserByUserName("unknownuser")).isNull();
     }
 
+    @Test
+    public void testAddConnectedListener() {
+        SlackConnectedListener listener = new SlackConnectedListener() {
+          public void onEvent(SlackConnected event, SlackSession session) {
+          }
+        };
 
+        TestSlackSessionImpl slackSession = new TestSlackSessionImpl();
+        slackSession.addSlackConnectedListener(listener);
+
+        assertThat(slackSession.isListening(listener)).isTrue();
+    }
+
+    @Test
+    public void testRemoveConnectedListener() {
+        SlackConnectedListener listener = new SlackConnectedListener() {
+          public void onEvent(SlackConnected event, SlackSession session) {
+          }
+        };
+
+        TestSlackSessionImpl slackSession = new TestSlackSessionImpl();
+        slackSession.addSlackConnectedListener(listener);
+        slackSession.removeSlackConnectedListener(listener);
+
+        assertThat(slackSession.isListening(listener)).isFalse();
+    }
 }

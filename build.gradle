@@ -28,6 +28,10 @@ group = 'com.ullink.slack'
 archivesBaseName = 'simpleslackapi'
 version = '0.4.6'
 
+task copyRuntimeLibs(type: Copy) {
+  into "lib"
+  from configurations.runtime
+}
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'

@@ -15,6 +15,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 
 public interface SlackSession
 {
@@ -99,4 +100,15 @@ public interface SlackSession
 
     void removeGroupJoinedListener(SlackGroupJoinedListener listener);
 
+    /*
+     * Subscribe to events related to the connection to the slack
+     * server. At this time a set of status information is exchanged that
+     * is useful to implementing bots.
+     * 
+     * For example, the current user that is connecting.
+     * knowing your own user id will help you stop answering your own
+     * questions.
+     */
+    void addSlackConnectedListener(SlackConnectedListener listner);
+    void removeSlackConnectedListener(SlackConnectedListener listener);
 }
