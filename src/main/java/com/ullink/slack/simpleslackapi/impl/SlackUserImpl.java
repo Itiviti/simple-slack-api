@@ -1,11 +1,12 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackUser;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 class SlackUserImpl extends SlackPersonaImpl implements SlackUser
 {
-
-    String id;
+    private static final Logger LOGGER   = LoggerFactory.getLogger(SlackUserImpl.class);
 
     @Override
     public String toString()
