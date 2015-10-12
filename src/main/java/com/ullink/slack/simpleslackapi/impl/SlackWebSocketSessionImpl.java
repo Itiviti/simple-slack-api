@@ -548,7 +548,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
     
     @Override
-    public void fetchHistoryOfChannel(String id){
+    public List<SlackMessagePosted> fetchHistoryOfChannel(String id){
         Map<String,String> params = new HashMap<>();
         params.put("token", authToken);
         params.put("channel", id);
@@ -556,14 +556,18 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         postSlackCommand(params, FETCH_CHANNEL_HISTORY_COMMAND, handle);
         SlackReplyEvent replyEv = handle.getSlackReply(); 
         JSONObject answer = replyEv.getPlainAnswer();
-        JSONArray messages = (JSONArray)answer.get("messages");
-        LOGGER.debug("*****************************************************************************************************************");
-        LOGGER.debug("yooooooooooooooo:"  + messages.toJSONString());
-        ChannelHistoryImpl history = new ChannelHistoryImpl(messages, this);
-        LOGGER.debug("" + history.getPostedMessageEvents().size());
-        for(SlackMessagePosted mess: history.getPostedMessageEvents()){
-            LOGGER.debug("message:" + mess.getMessageContent());
+        JSONArray events = (JSONArray)answer.get("messages");
+        List<SlackMessagePosted> messages = new ArrayList<>();
+        for (Object event : events) {
+            if (((JSONObject) event).get("subtype") == null) {
+                messages.add((SlackMessagePosted) SlackJSONMessageParser.decode(this, (JSONObject) event));
+            }
         }
+        LOGGER.debug("num of mssg: {}", messages.size());
+        for(SlackMessagePosted mssg : messages){
+            LOGGER.debug("mssg:  {}", mssg.toString());
+        }
+        return messages;
     }
 
 }

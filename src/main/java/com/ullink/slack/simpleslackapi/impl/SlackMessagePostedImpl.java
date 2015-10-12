@@ -66,14 +66,15 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
 
     public void setReactions(Map<String, Integer> reactions) {
         this.reactions = reactions;
-    }  
-    
+    }
+
     @Override
-    public Integer getTotalCountOfReactions(){
+    public Integer getTotalCountOfReactions() {
         Integer count = 0;
-        for(Integer tmpCount :reactions.values())
-            count =+ tmpCount;
+        for (Integer tmpCount : reactions.values()) {
+            count += tmpCount;
+        }
         return count;
     }
-    
+
 }

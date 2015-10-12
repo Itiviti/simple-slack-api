@@ -182,9 +182,6 @@ class SlackJSONMessageParser {
         Map<String, Integer> reacs = extractReactionsFromMessageJSON(obj);
         SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, user, user, channel, ts);
         message.setReactions(reacs);
-        LOGGER.debug("yoooooooooooooooooo tesxt:" + message.getMessageContent());
-        LOGGER.debug("yoooooooooooooooooo numba reacs:" + message.getTotalCountOfReactions());
-
         return message;
     }
 

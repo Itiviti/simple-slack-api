@@ -15,6 +15,7 @@ import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
 import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import java.io.IOException;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -126,7 +127,7 @@ public class TestSlackJSONMessageParser
             }
 
             @Override
-            public void fetchHistoryOfChannel(String id) {
+            public List<SlackMessagePosted> fetchHistoryOfChannel(String id) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 

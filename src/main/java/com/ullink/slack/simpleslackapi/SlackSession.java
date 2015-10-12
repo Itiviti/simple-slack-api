@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi;
 
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
@@ -12,6 +13,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 public interface SlackSession
 {
@@ -98,6 +100,6 @@ public interface SlackSession
     
     public void displayMessagesFromChannel(String channelName);
     
-    public void fetchHistoryOfChannel(String id);
+    public List<SlackMessagePosted> fetchHistoryOfChannel(String id);
 
 }

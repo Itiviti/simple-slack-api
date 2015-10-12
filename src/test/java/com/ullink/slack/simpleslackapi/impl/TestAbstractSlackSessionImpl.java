@@ -4,6 +4,8 @@ import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackPersona;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 
@@ -98,8 +100,9 @@ public class TestAbstractSlackSessionImpl
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
+
         @Override
-        public void fetchHistoryOfChannel(String id) {
+        public List<SlackMessagePosted> fetchHistoryOfChannel(String id) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }
