@@ -3,6 +3,7 @@ package com.ullink.slack.simpleslackapi.events;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import java.util.Map;
 
 public interface SlackMessagePosted extends SlackMessageEvent
 {
@@ -13,5 +14,9 @@ public interface SlackMessagePosted extends SlackMessageEvent
     SlackBot getBot();
 
     SlackChannel getChannel();
+    
+    Map<String, Integer> getReactions();
+    
+    Integer getTotalCountOfReactions();
 
 }

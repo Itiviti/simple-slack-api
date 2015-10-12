@@ -1,11 +1,11 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import org.junit.Test;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
+import com.ullink.slack.simpleslackapi.SlackPersona;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 
 public class TestAbstractSlackSessionImpl
@@ -91,6 +91,16 @@ public class TestAbstractSlackSessionImpl
         public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
         {
             return null;
+        }
+
+        @Override
+        public void displayMessagesFromChannel(String channelName) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void fetchHistoryOfChannel(String id) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }
 

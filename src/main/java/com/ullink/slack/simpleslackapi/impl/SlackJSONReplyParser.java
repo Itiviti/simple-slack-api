@@ -9,6 +9,6 @@ class SlackJSONReplyParser
         Boolean ok = (Boolean) obj.get("ok");
         Long replyTo = (Long) obj.get("reply_to");
         String timestamp = (String) obj.get("ts");
-        return new SlackReplyImpl(ok, replyTo != null ? replyTo : -1, timestamp);
+        return new SlackReplyImpl(ok, replyTo != null ? replyTo : -1, timestamp, obj);
     }
 }

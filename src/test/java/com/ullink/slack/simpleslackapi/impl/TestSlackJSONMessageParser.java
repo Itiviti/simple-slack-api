@@ -1,12 +1,11 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.io.IOException;
-import com.ullink.slack.simpleslackapi.*;
-import org.assertj.core.api.Assertions;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.junit.Before;
-import org.junit.Test;
+import com.ullink.slack.simpleslackapi.SlackAttachment;
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackMessageHandle;
+import com.ullink.slack.simpleslackapi.SlackPersona;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
 import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
 import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
@@ -15,6 +14,12 @@ import com.ullink.slack.simpleslackapi.events.SlackEvent;
 import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
 import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import java.io.IOException;
+import org.assertj.core.api.Assertions;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.junit.Before;
+import org.junit.Test;
 
 public class TestSlackJSONMessageParser
 {
@@ -113,6 +118,16 @@ public class TestSlackJSONMessageParser
             public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
             {
                 return null;
+            }
+
+            @Override
+            public void displayMessagesFromChannel(String channelName) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void fetchHistoryOfChannel(String id) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
         };
