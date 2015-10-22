@@ -1,0 +1,3 @@
+/home/ggs-hh.net/okozaczenko/dev/simple-slack-api/src/test/java/com/ullink/slack/simpleslackapi/impl/TestSlackJSONMessageParser.java
+/home/ggs-hh.net/okozaczenko/dev/simple-slack-api/src/test/java/com/ullink/slack/simpleslackapi/impl/TestSlackJSONSessionStatusParser.java
+/home/ggs-hh.net/okozaczenko/dev/simple-slack-api/src/test/java/com/ullink/slack/simpleslackapi/impl/TestAbstractSlackSessionImpl.java

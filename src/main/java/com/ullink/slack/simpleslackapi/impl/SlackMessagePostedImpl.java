@@ -69,12 +69,17 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
     }
 
     @Override
-    public Integer getTotalCountOfReactions() {
-        Integer count = 0;
+    public int getTotalCountOfReactions() {
+        int count = 0;
         for (Integer tmpCount : reactions.values()) {
             count += tmpCount;
         }
         return count;
+    }
+
+    @Override
+    public String getTimestamp() {
+        return timestamp;
     }
 
 }

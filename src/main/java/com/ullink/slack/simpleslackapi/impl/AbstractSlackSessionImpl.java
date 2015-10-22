@@ -1,6 +1,5 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.listeners.SlackReplyListener;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -9,6 +8,7 @@ import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.listeners.ReactionAddedListener;
+import com.ullink.slack.simpleslackapi.listeners.ReactionRemovedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
@@ -19,6 +19,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackReplyListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession {
     protected List<SlackReplyListener> slackReplyListener = new ArrayList<>();
     protected List<SlackConnectedListener> slackConnectedLinster = new ArrayList<>();
     protected List<ReactionAddedListener> reactionAddedListener = new ArrayList<>();
+    protected List<ReactionRemovedListener> reactionRemovedListener = new ArrayList<>();
 
     static final SlackChatConfiguration DEFAULT_CONFIGURATION = SlackChatConfiguration.getConfiguration().asUser();
 
@@ -232,6 +234,26 @@ abstract class AbstractSlackSessionImpl implements SlackSession {
 
     void removeSlackReplyListener(SlackReplyListener listener) {
         slackReplyListener.remove(listener);
+    }
+    
+    @Override
+    public void addReactionAddedListener(ReactionAddedListener listener) {
+        reactionAddedListener.add(listener);
+    }
+
+    @Override
+    public void removeReactionAddedListener(ReactionAddedListener listener) {
+        reactionAddedListener.remove(listener);
+    }
+    
+    @Override
+    public void addReactionRemovedListener(ReactionRemovedListener listener) {
+        reactionRemovedListener.add(listener);
+    }
+
+    @Override
+    public void removeReactionRemovedListener(ReactionRemovedListener listener) {
+        reactionRemovedListener.remove(listener);
     }
 
 }

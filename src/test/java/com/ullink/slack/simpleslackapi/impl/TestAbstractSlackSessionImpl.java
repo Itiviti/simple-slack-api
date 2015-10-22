@@ -4,8 +4,7 @@ import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import java.util.List;
+import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 
@@ -95,14 +94,15 @@ public class TestAbstractSlackSessionImpl
             return null;
         }
 
+
+
         @Override
-        public void displayMessagesFromChannel(String channelName) {
+        public long getNextMessageId() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
-
         @Override
-        public List<SlackMessagePosted> fetchHistoryOfChannel(String id) {
+        public void postSlackCommand(Map<String, String> params, String command, SlackMessageHandle handle) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }

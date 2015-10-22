@@ -4,6 +4,8 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.EventType;
+import com.ullink.slack.simpleslackapi.events.ReactionAdded;
+import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
 import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
 import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
 import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
@@ -74,9 +76,29 @@ class SlackJSONMessageParser {
                 return extractChannelUnarchiveEvent(slackSession, obj);
             case GROUP_JOINED:
                 return extractGroupJoinedEvent(slackSession, obj);
+            case REACTION_ADDED:
+                return extractReactionAddedEvent(slackSession, obj);
+            case REACTION_REMOVED:
+                return extractReactionRemovedEvent(slackSession, obj);
             default:
                 return SlackEvent.UNKNOWN_EVENT;
         }
+    }
+    
+    private static ReactionRemoved extractReactionRemovedEvent(SlackSession slackSession, JSONObject obj) {
+        JSONObject message = (JSONObject) obj.get("item");
+        String emojiName = (String) obj.get("reaction");
+        String messageId = (String) message.get("ts");
+        String channelId = (String) message.get("channel");
+        return new ReactionRemovedImpl(emojiName, messageId, slackSession.findChannelById(channelId));    
+    }
+
+    private static ReactionAdded extractReactionAddedEvent(SlackSession slackSession, JSONObject obj) {
+        JSONObject message = (JSONObject) obj.get("item");
+        String emojiName = (String) obj.get("reaction");
+        String messageId = (String) message.get("ts");
+        String channelId = (String) message.get("channel");
+        return new ReactionAddedImpl(emojiName, messageId, slackSession.findChannelById(channelId));
     }
 
     private static SlackGroupJoined extractGroupJoinedEvent(SlackSession slackSession, JSONObject obj) {
@@ -188,8 +210,8 @@ class SlackJSONMessageParser {
     private static SlackChannel parseChannelDescription(JSONObject channelJSONObject) {
         String id = (String) channelJSONObject.get("id");
         String name = (String) channelJSONObject.get("name");
-        String topic = null; // TODO
-        String purpose = null; // TODO
+        String topic = (String)((Map)channelJSONObject.get("topic")).get("value");
+        String purpose = (String) ((Map) channelJSONObject.get("purpose")).get("value");
         return new SlackChannelImpl(id, name, topic, purpose, true);
     }
 

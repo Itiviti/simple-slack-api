@@ -15,8 +15,10 @@ public interface SlackMessagePosted extends SlackMessageEvent
 
     SlackChannel getChannel();
     
+    String getTimestamp();
+    
     Map<String, Integer> getReactions();
     
-    Integer getTotalCountOfReactions();
+    int getTotalCountOfReactions();
 
 }

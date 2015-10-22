@@ -1,12 +1,12 @@
-/*
- * (c) Copyright by Goodgame Studios
- */
 package com.ullink.slack.simpleslackapi.events;
 
-/**
- *
- * @author okozaczenko
- */
+import com.ullink.slack.simpleslackapi.SlackChannel;
+
+
 public interface ReactionAdded extends SlackEvent{
+    
+    public String getEmojiName();
+    public SlackChannel getChannel();
+    public String getMessageID();
     
 }

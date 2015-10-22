@@ -14,5 +14,6 @@ public enum SlackEventType
     SLACK_REPLY,
     SLACK_CONNECTED,
     REACTION_ADDED,
+    REACTION_REMOVED,
     UNKNOWN;
 }
