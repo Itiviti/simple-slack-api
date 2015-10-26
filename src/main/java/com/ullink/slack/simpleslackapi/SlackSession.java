@@ -2,20 +2,18 @@ package com.ullink.slack.simpleslackapi;
 
 import java.io.IOException;
 import java.util.Collection;
-import com.ullink.slack.simpleslackapi.events.SlackEvent;
-import com.ullink.slack.simpleslackapi.events.SlackEventType;
+
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackEventListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 
 public interface SlackSession
 {
@@ -110,5 +108,12 @@ public interface SlackSession
      * questions.
      */
     void addSlackConnectedListener(SlackConnectedListener listner);
+    
     void removeSlackConnectedListener(SlackConnectedListener listener);
+
+    /**
+     * 
+     * @return true if connection is open
+     */
+    boolean isConnected();
 }

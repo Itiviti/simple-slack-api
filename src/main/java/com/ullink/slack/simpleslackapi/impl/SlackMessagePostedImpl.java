@@ -1,8 +1,10 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import org.json.simple.JSONObject;
+
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessage;
+import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
@@ -14,6 +16,8 @@ class SlackMessagePostedImpl implements SlackMessagePosted
     private SlackBot     bot;
     private SlackChannel channel;
     private String       timestamp;
+    private SlackFile    slackFile;
+    private JSONObject   jsonSource;
 
     SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp)
     {
@@ -22,6 +26,27 @@ class SlackMessagePostedImpl implements SlackMessagePosted
         this.user = user;
         this.bot = bot;
         this.timestamp = timestamp;
+    }
+    
+    SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, JSONObject jsonSource)
+    {
+        this.channel = channel;
+        this.messageContent = messageContent;
+        this.user = user;
+        this.bot = bot;
+        this.timestamp = timestamp;
+        this.jsonSource = jsonSource;
+    }
+    
+    SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, SlackFile slackFile, JSONObject jsonSource)
+    {
+        this.channel = channel;
+        this.messageContent = messageContent;
+        this.user = user;
+        this.bot = bot;
+        this.timestamp = timestamp;
+        this.jsonSource = jsonSource;
+        this.slackFile = slackFile;
     }
 
     @Override
@@ -65,4 +90,15 @@ class SlackMessagePostedImpl implements SlackMessagePosted
     {
         return SlackEventType.SLACK_MESSAGE_POSTED;
     }
+    
+    @Override
+    public JSONObject getJsonSource() {
+        return jsonSource;
+    }
+
+    @Override
+    public SlackFile getSlackFile() {
+        return slackFile;
+    }
+    
 }
