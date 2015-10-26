@@ -1,7 +1,5 @@
 package com.ullink.slack.simpleslackapi;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.ullink.slack.simpleslackapi.events.SlackMessageEvent;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 
