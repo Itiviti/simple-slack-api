@@ -97,8 +97,8 @@ public class Example
         public void onEvent(SlackMessagePosted event, SlackSession session)
         {
           //let's send a message
-          SlackMessageHandle handle = session.sendMessage(slackMessage.getChannel(),
-                              slackMessage.getMessageContent(), null);
+          SlackMessageHandle handle = session.sendMessage(session.getChannel(),
+                              event.getMessageContent(), null);
           try
           {
               Thread.sleep(2000);
@@ -107,8 +107,8 @@ public class Example
               e.printStackTrace();
           }
           //2 secs later, let's update the message (I can only update my own messages)
-          session.updateMessage(handle.getSlackReply().getTimestamp(),slackMessage.getChannel(),
-                                slackMessage.getMessageContent()+" UPDATED");
+          session.updateMessage(handle.getSlackReply().getTimestamp(),session.getChannel(),
+                                event.getMessageContent()+" UPDATED");
           try
           {
               Thread.sleep(2000);
@@ -117,7 +117,7 @@ public class Example
               e.printStackTrace();
           }
           //2 secs later, let's now delete the message (I can only delete my own messages)
-          session.deleteMessage(handle.getSlackReply().getTimestamp(),slackMessage.getChannel())
+          session.deleteMessage(handle.getSlackReply().getTimestamp(),session.getChannel())
         }
       });
     session.connect();
