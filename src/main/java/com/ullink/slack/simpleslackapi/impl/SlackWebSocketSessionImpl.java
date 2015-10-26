@@ -167,7 +167,12 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         disconnectImpl();
         stopConnectionMonitoring();
     }
-
+    
+    @Override
+    public boolean isConnected(){
+        return websocketSession!=null?websocketSession.isOpen():false;
+    }
+    
     private void connectImpl() throws IOException, ClientProtocolException, ConnectException
     {
         LOGGER.info("connecting to slack");
