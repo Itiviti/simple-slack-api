@@ -101,6 +101,11 @@ public class TestAbstractSlackSessionImpl
         {
           return slackConnectedListener.contains(expectedListener);
         }
+
+        @Override
+        public boolean isConnected() {
+            return true;
+        }
     }
 
     @Test

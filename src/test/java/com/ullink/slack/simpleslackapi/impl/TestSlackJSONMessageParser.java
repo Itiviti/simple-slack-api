@@ -115,6 +115,11 @@ public class TestSlackJSONMessageParser
                 return null;
             }
 
+            @Override
+            public boolean isConnected() {
+                return true;
+            }
+
         };
         try
         {
