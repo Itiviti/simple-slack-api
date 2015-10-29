@@ -31,13 +31,13 @@ public class TestSlackJSONMessageParser
     private static final String TEST_DELETED_MESSAGE    = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER1\",\"text\":\"Test text 1\",\"ts\":\"1413187521.000005\", \"subtype\": \"message_deleted\", \"deleted_ts\": \"1358878749.000002\"}";
     private static final String TEST_UPDATED_MESSAGE    = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"text\":\"Test text 1\",\"ts\":\"1358878755.001234\", \"subtype\": \"message_changed\", \"message\": {\"type:\" \"message\", \"user\": \"TESTUSER1\", \"text\": \"newtext\", \"ts\": \"1413187521.000005\", \"edited\": { \"user\": \"TESTUSER1\", \"ts\":\"1358878755.001234\"}}}";
 
-    private static final String TEST_CHANNEL_CREATED    = "{\"type\":\"channel_created\",\"channel\": { \"id\": \"NEWCHANNEL\", \"name\": \"new channel\", \"creator\": \"TESTUSER1\"}}";
+    private static final String TEST_CHANNEL_CREATED    = "{\"type\":\"channel_created\",\"channel\": { \"id\": \"NEWCHANNEL\", \"name\": \"new channel\", \"creator\": \"TESTUSER1\", \"topic\": {\"value\": \"Catz Wid Hatz\"}, \"purpose\": {\"value\": \"To post pictures of de Catz wid dem Hatz On\"}}}";
     private static final String TEST_CHANNEL_DELETED    = "{\"type\":\"channel_deleted\",\"channel\": \"TESTCHANNEL1\"}";
 
     private static final String TEST_CHANNEL_ARCHIVED   = "{\"type\":\"channel_archive\",\"channel\": \"TESTCHANNEL1\",\"user\":\"TESTUSER1\"}";
     private static final String TEST_CHANNEL_UNARCHIVED = "{\"type\":\"channel_unarchive\",\"channel\": \"TESTCHANNEL1\",\"user\":\"TESTUSER1\"}";
 
-    private static final String TEST_GROUP_JOINED       = "{\"type\":\"group_joined\",\"channel\": { \"id\": \"NEWCHANNEL\", \"name\": \"new channel\", \"creator\": \"TESTUSER1\"}}";
+    private static final String TEST_GROUP_JOINED       = "{\"type\":\"group_joined\",\"channel\": { \"id\": \"NEWCHANNEL\", \"name\": \"new channel\", \"creator\": \"TESTUSER1\", \"topic\": {\"value\": \"To have something new\"}, \"purpose\": {\"value\": \"This channel so new it aint even old yet\"}}}}";
 
     @Before
     public void setup()
@@ -194,6 +194,8 @@ public class TestSlackJSONMessageParser
         Assertions.assertThat(slackChannelCreated.getCreator().getId()).isEqualTo("TESTUSER1");
         Assertions.assertThat(slackChannelCreated.getSlackChannel().getName()).isEqualTo("new channel");
         Assertions.assertThat(slackChannelCreated.getSlackChannel().getId()).isEqualTo("NEWCHANNEL");
+        Assertions.assertThat(slackChannelCreated.getSlackChannel().getTopic()).isEqualTo("Catz Wid Hatz");
+        Assertions.assertThat(slackChannelCreated.getSlackChannel().getPurpose()).isEqualTo("To post pictures of de Catz wid dem Hatz On");
     }
 
     @Test
@@ -241,6 +243,8 @@ public class TestSlackJSONMessageParser
         SlackGroupJoined slackGroupJoined = (SlackGroupJoined) event;
         Assertions.assertThat(slackGroupJoined.getSlackChannel().getId()).isEqualTo("NEWCHANNEL");
         Assertions.assertThat(slackGroupJoined.getSlackChannel().getName()).isEqualTo("new channel");
+        Assertions.assertThat(slackGroupJoined.getSlackChannel().getTopic()).isEqualTo("To have something new");
+        Assertions.assertThat(slackGroupJoined.getSlackChannel().getPurpose()).isEqualTo("This channel so new it aint even old yet");        
     }
 
 }
