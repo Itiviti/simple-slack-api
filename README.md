@@ -15,7 +15,7 @@ The connection is made through the SlackSessionFactory class :
 
 ```java
 SlackSession session = SlackSessionFactory.
-  createWebSocketSlackSession("authenticationtoken",true);
+  createWebSocketSlackSession("authenticationtoken");
 session.connect();
 ```
 
@@ -23,7 +23,7 @@ session.connect();
 
 ```java
 SlackSession session = SlackSessionFactory.
-  createWebSocketSlackSession("authenticationtoken", Proxy.Type.HTTP, "myproxy", 1234,true);
+  createWebSocketSlackSession("authenticationtoken", Proxy.Type.HTTP, "myproxy", 1234);
 session.connect();
 ```
 
