@@ -23,6 +23,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected Map<String, SlackChannel>            channels                 = new HashMap<>();
     protected Map<String, SlackUser>               users                    = new HashMap<>();
     protected SlackPersona                         sessionPersona;
+    protected SlackTeam                            team;
 
     protected List<SlackChannelArchivedListener>   channelArchiveListener   = new ArrayList<SlackChannelArchivedListener>();
     protected List<SlackChannelCreatedListener>    channelCreateListener    = new ArrayList<SlackChannelCreatedListener>();

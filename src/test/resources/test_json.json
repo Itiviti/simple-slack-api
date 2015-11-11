@@ -4,6 +4,11 @@
     "id": "SELF",
     "name": "myself"
   },
+  "team": {
+    "id": "TEAM",
+    "name": "Example Team",
+    "domain": "example"
+  },
   "channels": [
     {
       "id": "CHANNELID1",

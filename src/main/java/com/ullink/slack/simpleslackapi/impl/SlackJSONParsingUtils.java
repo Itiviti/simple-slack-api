@@ -1,6 +1,7 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import java.util.Map;
+import com.ullink.slack.simpleslackapi.SlackTeam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackUser;
@@ -77,4 +78,11 @@ class SlackJSONParsingUtils
         return toReturn;
     }
 
+    static final SlackTeam buildSlackTeam(JSONObject jsonTeam)
+    {
+        String id = (String) jsonTeam.get("id");
+        String name = (String) jsonTeam.get("name");
+        String domain = (String) jsonTeam.get("domain");
+        return new SlackTeamImpl(id, name, domain);
+    }
 }
