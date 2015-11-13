@@ -87,6 +87,16 @@ def pomConfig = {
             name 'Wouter Vernaillen'
             url 'http://www.vernaillen.com'
         }
+        contributor {
+            name 'Claudio Comandini'
+            email 'c.comandini@gmail.com'
+            url 'https://twitter.com/c_comandini'
+        }
+        contributor {
+            name 'Maxim Gurkin'
+            email 'redmax3d@gmail.com'
+            url 'http://redcraft.net'
+        }
     }
     scm {
         connection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
