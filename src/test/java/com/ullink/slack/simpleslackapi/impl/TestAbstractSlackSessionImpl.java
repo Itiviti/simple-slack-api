@@ -1,15 +1,17 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
-
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
-import com.ullink.slack.simpleslackapi.events.SlackConnected;
 import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.events.SlackConnected;
+import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
+import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAbstractSlackSessionImpl
 {
@@ -86,6 +88,18 @@ public class TestAbstractSlackSessionImpl
 
         @Override
         public SlackMessageHandle leaveChannel(SlackChannel channel)
+        {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
+        {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users)
         {
             return null;
         }

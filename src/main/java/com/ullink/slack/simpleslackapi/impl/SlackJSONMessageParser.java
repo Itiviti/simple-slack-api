@@ -1,10 +1,5 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.simple.JSONObject;
-
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackSession;
@@ -17,6 +12,10 @@ import com.ullink.slack.simpleslackapi.events.SlackChannelRenamed;
 import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
 import com.ullink.slack.simpleslackapi.events.SlackEvent;
 import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
+import org.json.simple.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 class SlackJSONMessageParser
 {
@@ -62,7 +61,7 @@ class SlackJSONMessageParser
         String type = (String) obj.get("type");
         if (type == null)
         {
-            return parseSlackReply(obj);
+            return SlackEvent.UNKNOWN_EVENT;
         }
         EventType eventType = EventType.getByCode(type);
         switch (eventType)
@@ -151,13 +150,6 @@ class SlackJSONMessageParser
         }
     }
 
-    private static SlackEvent parseSlackReply(JSONObject obj)
-    {
-        Boolean ok = (Boolean) obj.get("ok");
-        Long replyTo = (Long) obj.get("reply_to");
-        String timestamp = (String) obj.get("ts");
-        return new SlackReplyImpl(ok, replyTo != null ? replyTo : -1, timestamp);
-    }
 
     private static SlackChannel getChannel(SlackSession slackSession, String channelId)
     {

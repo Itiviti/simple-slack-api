@@ -1,15 +1,16 @@
 package com.ullink.slack.simpleslackapi;
 
-import java.util.concurrent.TimeUnit;
-import com.ullink.slack.simpleslackapi.events.SlackReplyEvent;
+import com.ullink.slack.simpleslackapi.replies.SlackReply;
 
-public interface SlackMessageHandle
+import java.util.concurrent.TimeUnit;
+
+public interface SlackMessageHandle<T extends SlackReply>
 {
     // the id given to the message sent
     long getMessageId();
 
     // server response
-    SlackReplyEvent getSlackReply();
+    T getReply();
 
     boolean isAcked();
 

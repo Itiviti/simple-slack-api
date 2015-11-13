@@ -1,17 +1,18 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackTeam;
+import com.ullink.slack.simpleslackapi.SlackUser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.SlackPersona;
+
+import java.util.HashMap;
+import java.util.Map;
 
 class SlackJSONSessionStatusParser
 {

@@ -4,6 +4,7 @@ import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackField;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;

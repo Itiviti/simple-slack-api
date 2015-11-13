@@ -1,21 +1,20 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.SlackAttachment;
+import com.ullink.slack.simpleslackapi.SlackBot;
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackMessageHandle;
+import com.ullink.slack.simpleslackapi.SlackPersona;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.SlackTeam;
+import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.listeners.*;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
 
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
@@ -34,7 +33,6 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<SlackMessageDeletedListener>    messageDeletedListener   = new ArrayList<SlackMessageDeletedListener>();
     protected List<SlackMessagePostedListener>     messagePostedListener    = new ArrayList<SlackMessagePostedListener>();
     protected List<SlackMessageUpdatedListener>    messageUpdatedListener   = new ArrayList<SlackMessageUpdatedListener>();
-    protected List<SlackReplyListener>             slackReplyListener       = new ArrayList<SlackReplyListener>();
     protected List<SlackConnectedListener>         slackConnectedListener    = new ArrayList<SlackConnectedListener>();
 
     static final SlackChatConfiguration            DEFAULT_CONFIGURATION    = SlackChatConfiguration.getConfiguration().asUser();
@@ -249,16 +247,6 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public void removeGroupJoinedListener(SlackGroupJoinedListener listener)
     {
         groupJoinedListener.remove(listener);
-    }
-
-    void addSlackReplyListener(SlackReplyListener listener)
-    {
-        slackReplyListener.add(listener);
-    }
-
-    void removeSlackReplyListener(SlackReplyListener listener)
-    {
-        slackReplyListener.remove(listener);
     }
 
     @Override

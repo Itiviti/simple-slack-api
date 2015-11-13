@@ -1,7 +1,8 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.net.Proxy;
 import com.ullink.slack.simpleslackapi.SlackSession;
+
+import java.net.Proxy;
 
 public class SlackSessionFactory
 {

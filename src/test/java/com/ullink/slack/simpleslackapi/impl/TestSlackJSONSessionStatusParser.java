@@ -1,10 +1,12 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import static org.assertj.core.api.Assertions.*;
-import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestSlackJSONSessionStatusParser
 {

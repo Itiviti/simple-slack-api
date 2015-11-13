@@ -1,12 +1,11 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.io.IOException;
-import com.ullink.slack.simpleslackapi.*;
-import org.assertj.core.api.Assertions;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.junit.Before;
-import org.junit.Test;
+import com.ullink.slack.simpleslackapi.SlackAttachment;
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackMessageHandle;
+import com.ullink.slack.simpleslackapi.SlackPersona;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
 import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
 import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
@@ -15,6 +14,14 @@ import com.ullink.slack.simpleslackapi.events.SlackEvent;
 import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
 import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
+import org.assertj.core.api.Assertions;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
 
 public class TestSlackJSONMessageParser
 {
@@ -105,6 +112,18 @@ public class TestSlackJSONMessageParser
 
             @Override
             public SlackMessageHandle leaveChannel(SlackChannel channel)
+            {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
+            {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users)
             {
                 return null;
             }
