@@ -4,6 +4,7 @@ import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackPersona;
+import com.ullink.slack.simpleslackapi.SlackUser;
 import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
@@ -33,6 +34,8 @@ public class TestAbstractSlackSessionImpl
             users.put("botid1",new SlackUserImpl("botid1", "botname1", "real bot name 1", null,false,false,false,false,false,false,true,"tz","tzLabel",new Integer(0)));
             users.put("botid2",new SlackUserImpl("botid2", "botname2", "real bot name 2", null,false,false,false,false,false,false,true,"tz","tzLabel",new Integer(0)));
             users.put("botid3",new SlackUserImpl("botid3", "botname3", "real bot name 3", null, true,false,false,false,false,false,true,"tz","tzLabel",new Integer(0)));
+            
+            
 
         }
 
@@ -103,6 +106,16 @@ public class TestAbstractSlackSessionImpl
 
         @Override
         public void postSlackCommand(Map<String, String> params, String command, SlackMessageHandle handle) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public SlackMessageHandle sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public SlackMessageHandle sendMessageToUser(String userName, String message, SlackAttachment attachment) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }

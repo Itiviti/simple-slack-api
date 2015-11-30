@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ullink.slack</groupId>
     <artifactId>simpleslackapi</artifactId>
-    <version>0.4.6-ggs</version>
+    <version>0.4.7-ggs</version>
     <dependencies>
         <dependency>
             <groupId>commons-codec</groupId>

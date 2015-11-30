@@ -6,6 +6,7 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.ReactionAdded;
 import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
 import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
@@ -28,6 +29,7 @@ import java.net.ConnectException;
 import java.net.Proxy;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,16 +75,55 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private static final String REACTIONS_ADD_COMMAND = "reactions.add";
 
     private static final String INVITE_USER_COMMAND = "users.admin.invite";
+    
+    private static final String CREATE_IM_CHANNEL_COMMAND = "im.open";
+    
 
-//    @Override
-//    public void addReactionRemovedListener(ReactionRemovedListener listener) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-//    @Override
-//    public void removeReactionRemovedListener(ReactionRemovedListener listener) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
+    @Override
+    public SlackMessageHandle sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
+        SlackChannel iMChannel = getIMChannelForUser(user);
+        return sendMessage(iMChannel, message, attachment, DEFAULT_CONFIGURATION);
+    }
+
+    @Override
+    public SlackMessageHandle sendMessageToUser(String userName, String message, SlackAttachment attachment) {
+        return sendMessageToUser(findUserByUserName(userName), message, attachment);
+    }
+
+    private List<SlackChannel> getAllIMChannels() {
+        Collection<SlackChannel> allChannels = getChannels();
+        List<SlackChannel> iMChannels = new ArrayList<>();
+        for (SlackChannel channel : allChannels) {
+            if (channel.isDirect()) {
+                iMChannels.add(channel);
+            }
+        }
+        return iMChannels;
+    }
+
+    private SlackChannel getIMChannelForUser(SlackUser user) {
+        List<SlackChannel> imcs = getAllIMChannels();
+        for (SlackChannel channel : imcs) {
+            if (channel.getMembers().contains(user)) {
+                return channel;
+            }
+        }
+        return createIMChannelForUser(user);
+    }
+
+    private SlackChannel createIMChannelForUser(SlackUser user) {
+        Map<String, String> params = new HashMap<>();
+        SlackMessageHandle handle = new SlackMessageHandleImpl(getNextMessageId());
+        params.put("token", authToken);
+        params.put("user", user.getId());
+        postSlackCommand(params, CREATE_IM_CHANNEL_COMMAND, handle);
+        String channelInfo =  handle.getSlackReply().getPlainAnswer().get("channel").toString();
+        String id =  parseObject(channelInfo).get("id").toString();
+        SlackChannel channel = new SlackChannelImpl(id, null, null, null, true);
+        channel.getMembers().add(user);
+        channels.put(id, channel);
+        return channel;
+    }
 
     public class EventDispatcher {
 

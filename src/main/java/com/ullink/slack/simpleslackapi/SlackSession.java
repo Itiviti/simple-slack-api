@@ -51,6 +51,10 @@ public interface SlackSession {
     SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration);
 
     SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment);
+    
+    SlackMessageHandle sendMessageToUser(SlackUser user, String message, SlackAttachment attachment);
+    
+    SlackMessageHandle sendMessageToUser(String userName, String message, SlackAttachment attachment);
 
     SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message);
 

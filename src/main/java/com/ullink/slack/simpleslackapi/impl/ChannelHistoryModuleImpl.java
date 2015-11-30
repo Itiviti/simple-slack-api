@@ -68,9 +68,11 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
         JSONObject answer = replyEv.getPlainAnswer();
         JSONArray events = (JSONArray) answer.get("messages");
         List<SlackMessagePosted> messages = new ArrayList<>();
-        for (Object event : events) {
-            if (((JSONObject) event).get("subtype") == null) {
-                messages.add((SlackMessagePosted) SlackJSONMessageParser.decode(session, (JSONObject) event));
+        if (events != null) {
+            for (Object event : events) {
+                if ((((JSONObject) event).get("subtype") == null)) {
+                    messages.add((SlackMessagePosted) SlackJSONMessageParser.decode(session, (JSONObject) event));
+                }
             }
         }
         return messages;
