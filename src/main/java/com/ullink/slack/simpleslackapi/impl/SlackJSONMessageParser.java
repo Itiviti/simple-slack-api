@@ -4,18 +4,11 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.events.EventType;
-import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
-import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
-import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackChannelRenamed;
-import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
-import com.ullink.slack.simpleslackapi.events.SlackEvent;
-import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
+import com.ullink.slack.simpleslackapi.events.*;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 class SlackJSONMessageParser
 {
@@ -83,6 +76,18 @@ class SlackJSONMessageParser
             default:
                 return SlackEvent.UNKNOWN_EVENT;
         }
+    }
+
+    static SlackChannelHistory decodeChannelHistory(SlackSession slackSession, SlackChannel slackChannel, JSONObject jsonObject) {
+        String latest = (String) jsonObject.get("latest");
+        boolean hasMore = (Boolean) jsonObject.get("has_more");
+        JSONArray messages = (JSONArray) jsonObject.get("messages");
+        List<SlackEvent> historyMessages = new ArrayList<>(messages.size());
+        for (Object message : messages) {
+            SlackEvent slackEvent = extractMessageEvent(slackSession, (JSONObject) message);
+            historyMessages.add(slackEvent);
+        }
+        return new SlackChannelHistoryImpl(slackChannel, historyMessages, latest, hasMore);
     }
 
     private static SlackGroupJoined extractGroupJoinedEvent(SlackSession slackSession, JSONObject obj)
