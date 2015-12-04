@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi;
 
+import com.ullink.slack.simpleslackapi.events.SlackChannelHistory;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
 import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
@@ -114,4 +115,9 @@ public interface SlackSession
      * @return true if connection is open
      */
     boolean isConnected();
+
+    /**
+     * Fetches channel history
+     */
+    SlackChannelHistory fetchChannelHistory(SlackChannel slackChannel);
 }

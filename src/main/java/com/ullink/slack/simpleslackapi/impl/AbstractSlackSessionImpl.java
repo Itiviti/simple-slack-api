@@ -8,13 +8,10 @@ import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackTeam;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.events.SlackChannelHistory;
 import com.ullink.slack.simpleslackapi.listeners.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
@@ -47,6 +44,11 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public Collection<SlackUser> getUsers()
     {
         return new ArrayList<>(users.values());
+    }
+
+    @Override
+    public SlackChannelHistory fetchChannelHistory(SlackChannel slackChannel) {
+        return new SlackChannelHistoryImpl(slackChannel, Collections.EMPTY_LIST, String.valueOf(System.currentTimeMillis()), true);
     }
 
     @Override
