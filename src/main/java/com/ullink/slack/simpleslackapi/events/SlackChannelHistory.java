@@ -10,7 +10,7 @@ import java.util.Collection;
  */
 public interface SlackChannelHistory {
 
-    public Collection<? extends SlackEvent> getChannelEvents();
+    public Collection<? extends SlackMessageEvent> getChannelEvents();
 
     public SlackChannel getChannel();
 

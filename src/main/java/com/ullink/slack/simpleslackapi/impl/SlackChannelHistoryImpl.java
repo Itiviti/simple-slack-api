@@ -3,6 +3,7 @@ package com.ullink.slack.simpleslackapi.impl;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.events.SlackChannelHistory;
 import com.ullink.slack.simpleslackapi.events.SlackEvent;
+import com.ullink.slack.simpleslackapi.events.SlackMessageEvent;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,11 +15,11 @@ import java.util.List;
 public class SlackChannelHistoryImpl implements SlackChannelHistory {
 
     private SlackChannel slackChannel;
-    private final List<SlackEvent> historyMessages;
+    private final List<SlackMessageEvent> historyMessages;
     private final String latest;
     private final boolean hasMore;
 
-    public SlackChannelHistoryImpl(SlackChannel slackChannel, List<SlackEvent> historyMessages, String latest, boolean hasMore) {
+    public SlackChannelHistoryImpl(SlackChannel slackChannel, List<SlackMessageEvent> historyMessages, String latest, boolean hasMore) {
         this.slackChannel = slackChannel;
         this.historyMessages = historyMessages;
         this.latest = latest;
@@ -26,7 +27,7 @@ public class SlackChannelHistoryImpl implements SlackChannelHistory {
     }
 
     @Override
-    public Collection<? extends SlackEvent> getChannelEvents() {
+    public Collection<? extends SlackMessageEvent> getChannelEvents() {
         return historyMessages;
     }
 

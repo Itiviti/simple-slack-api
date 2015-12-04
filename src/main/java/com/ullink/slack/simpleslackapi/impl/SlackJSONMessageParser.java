@@ -82,9 +82,9 @@ class SlackJSONMessageParser
         String latest = (String) jsonObject.get("latest");
         boolean hasMore = (Boolean) jsonObject.get("has_more");
         JSONArray messages = (JSONArray) jsonObject.get("messages");
-        List<SlackEvent> historyMessages = new ArrayList<>(messages.size());
+        List<SlackMessageEvent> historyMessages = new ArrayList<>(messages.size());
         for (Object message : messages) {
-            SlackEvent slackEvent = extractMessageEvent(slackSession, (JSONObject) message);
+            SlackMessageEvent slackEvent = (SlackMessageEvent) extractMessageEvent(slackSession, (JSONObject) message);
             historyMessages.add(slackEvent);
         }
         return new SlackChannelHistoryImpl(slackChannel, historyMessages, latest, hasMore);
