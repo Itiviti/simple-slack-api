@@ -371,11 +371,18 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackChannelHistory fetchChannelHistory(SlackChannel slackChannel) {
+    public SlackChannelHistory fetchChannelHistory(SlackChannel slackChannel, String oldest, String latest) {
         SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("channel", slackChannel.getId());
+        if (latest != null) {
+            arguments.put("latest", latest);
+        }
+        if (oldest != null) {
+            arguments.put("oldest", oldest);
+        }
+        arguments.put("count", "1000");
 
         String jsonResponse = postSlackCommand(arguments, CHANNELS_HISTORY, handle);
         JSONObject historyJson = parseObject(jsonResponse);

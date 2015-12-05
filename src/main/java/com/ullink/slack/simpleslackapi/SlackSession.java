@@ -117,7 +117,14 @@ public interface SlackSession
     boolean isConnected();
 
     /**
-     * Fetches channel history
+     * Fetches history messages from channel
+     *
+     * @param slackChannel
+     * @param oldest - timestamp (epoch seconds) of oldest message. Optional, if null will be ignored
+     * @param latest - timestamp (epoch seconds) of latest message. Optional, if null will be ignored
+     *
+     * @return history with collection of channel events, flag if there more messages, timestamp.
      */
-    SlackChannelHistory fetchChannelHistory(SlackChannel slackChannel);
+
+    SlackChannelHistory fetchChannelHistory(SlackChannel slackChannel, String oldest, String latest);
 }
