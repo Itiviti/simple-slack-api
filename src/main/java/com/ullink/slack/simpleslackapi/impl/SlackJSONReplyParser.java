@@ -17,13 +17,17 @@ class SlackJSONReplyParser
         if (isMpim(obj) || isIm(obj) || isChannel(obj) || isGroup(obj)) {
             return buildSlackChannelReply(ok,obj,session);
         }
-        // that's a message reply
-        Long replyTo = (Long) obj.get("reply_to");
-        String timestamp = (String) obj.get("ts");
-        return new SlackMessageReplyImpl(ok, replyTo != null ? replyTo : -1, timestamp);
+        if(isMessageReply(obj))
+        {
+            Long replyTo = (Long) obj.get("reply_to");
+            String timestamp = (String) obj.get("ts");
+            return new SlackMessageReplyImpl(ok, replyTo != null ? replyTo : -1, timestamp);
+        }
+        return new SlackReplyImpl(ok);
     }
 
-    private static SlackChannelReply buildSlackChannelReply(Boolean ok, JSONObject obj, SlackSession session) {
+    private static SlackChannelReply buildSlackChannelReply(Boolean ok, JSONObject obj, SlackSession session) 
+    {
         String id = (String)obj.get("id");
         if (id != null) {
             return new SlackChannelReplyImpl(ok, session.findChannelById(id));
@@ -33,6 +37,11 @@ class SlackJSONReplyParser
         return new SlackChannelReplyImpl(ok, session.findChannelById(id));
     }
 
+    private static boolean isMessageReply(JSONObject obj)
+    {
+        return obj.get("reply_to") != null;
+    }
+    
     private static boolean isMpim(JSONObject obj)
     {
         Boolean isMpim = (Boolean)obj.get("is_mpim");

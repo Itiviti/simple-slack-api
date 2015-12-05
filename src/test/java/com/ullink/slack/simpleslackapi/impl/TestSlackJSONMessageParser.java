@@ -144,6 +144,12 @@ public class TestSlackJSONMessageParser
               return null;
             }
 
+            @Override
+            public SlackMessageHandle<SlackReply> archiveChannel(SlackChannel channel) 
+            {
+              return null;
+            }
+
         };
         try
         {
@@ -255,5 +261,4 @@ public class TestSlackJSONMessageParser
         Assertions.assertThat(slackGroupJoined.getSlackChannel().getId()).isEqualTo("NEWCHANNEL");
         Assertions.assertThat(slackGroupJoined.getSlackChannel().getName()).isEqualTo("new channel");
     }
-
 }

@@ -125,6 +125,12 @@ public class TestAbstractSlackSessionImpl
         public SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user) {
           return null;
         }
+
+        @Override
+        public SlackMessageHandle<SlackReply> archiveChannel(SlackChannel channel) 
+        {
+          return null;
+        }
     }
 
     @Test
