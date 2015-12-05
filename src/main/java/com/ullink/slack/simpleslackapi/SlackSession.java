@@ -53,6 +53,8 @@ public interface SlackSession
     SlackMessageHandle<SlackChannelReply> joinChannel(String channelName);
 
     SlackMessageHandle<SlackChannelReply> leaveChannel(SlackChannel channel);
+    
+    SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user);
 
     SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user);
 

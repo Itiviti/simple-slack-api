@@ -139,6 +139,11 @@ public class TestSlackJSONMessageParser
                 return true;
             }
 
+            @Override
+            public SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user) {
+              return null;
+            }
+
         };
         try
         {

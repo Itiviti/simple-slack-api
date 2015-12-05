@@ -120,6 +120,11 @@ public class TestAbstractSlackSessionImpl
         public boolean isConnected() {
             return true;
         }
+
+        @Override
+        public SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user) {
+          return null;
+        }
     }
 
     @Test
@@ -230,6 +235,7 @@ public class TestAbstractSlackSessionImpl
     @Test
     public void testAddConnectedListener() {
         SlackConnectedListener listener = new SlackConnectedListener() {
+          @Override
           public void onEvent(SlackConnected event, SlackSession session) {
           }
         };
@@ -243,6 +249,7 @@ public class TestAbstractSlackSessionImpl
     @Test
     public void testRemoveConnectedListener() {
         SlackConnectedListener listener = new SlackConnectedListener() {
+          @Override
           public void onEvent(SlackConnected event, SlackSession session) {
           }
         };
