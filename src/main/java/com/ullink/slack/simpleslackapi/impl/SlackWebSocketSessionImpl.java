@@ -60,6 +60,10 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private static final String CHANNELS_LEAVE_COMMAND    = "channels.leave";
 
     private static final String CHANNELS_JOIN_COMMAND     = "channels.join";
+    
+    private static final String CHANNELS_INVITE_COMMAND     = "channels.invite";
+    
+    private static final String CHANNELS_ARCHIVE_COMMAND     = "channels.archive";
 
     private static final String CHAT_POST_MESSAGE_COMMAND = "chat.postMessage";
 
@@ -469,8 +473,30 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("channel", channel.getId());
         postSlackCommand(arguments, CHANNELS_LEAVE_COMMAND, handle);
         return handle;
-    }
+    }  
 
+    @Override
+    public SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user) {
+      SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+      Map<String, String> arguments = new HashMap<>();
+      arguments.put("token", authToken);
+      arguments.put("channel", channel.getId());
+      arguments.put("user", user.getId());
+      postSlackCommand(arguments, CHANNELS_INVITE_COMMAND, handle);
+      return handle;
+    }
+    
+    @Override
+    public SlackMessageHandle<SlackReply> archiveChannel(SlackChannel channel) 
+    {
+      SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+      Map<String, String> arguments = new HashMap<>();
+      arguments.put("token", authToken);
+      arguments.put("channel", channel.getId());
+      postSlackCommand(arguments, CHANNELS_ARCHIVE_COMMAND, handle);
+      return handle;
+    }
+    
     @Override
     public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
     {

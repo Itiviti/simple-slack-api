@@ -4,6 +4,7 @@ import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
 import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+import com.ullink.slack.simpleslackapi.replies.SlackReply;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -53,6 +54,10 @@ public interface SlackSession
     SlackMessageHandle<SlackChannelReply> joinChannel(String channelName);
 
     SlackMessageHandle<SlackChannelReply> leaveChannel(SlackChannel channel);
+    
+    SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user);
+    
+    SlackMessageHandle<SlackReply> archiveChannel(SlackChannel channel);
 
     SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user);
 
