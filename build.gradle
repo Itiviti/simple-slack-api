@@ -5,8 +5,12 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
     }
 }
+
+apply plugin: 'eu.appsatori.fatjar'
+apply plugin: 'java'
 
 repositories {
     mavenCentral()
@@ -106,50 +110,50 @@ def pomConfig = {
 }
 
 publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-                artifact sourcesJar 
-                artifact javadocJar
-                pom.withXml {
-                    asNode().appendNode('description', 'A simple API to build bot running on Slack')
-                    asNode().children().last() + pomConfig
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar 
+            artifact javadocJar
+            pom.withXml {
+                asNode().appendNode('description', 'A simple API to build bot running on Slack')
+                asNode().children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    if (this.hasProperty('bintray_user')) {
+        user = bintray_user //this usually comes from gradle.properties file in ~/.gradle
+        key = bintray_api_key //this usually comes from gradle.properties file in ~/.gradle
+
+        publications = ['mavenJava'] //When uploading Maven-based publication files
+        dryRun = false //Whether to run this as dry-run, without deploying
+        publish = true //If version should be auto published after an upload
+        pkg {
+            repo = 'maven'
+            name = 'com.ullink.slack:simpleslackapi'
+            desc = 'simple slack API package!'
+            websiteUrl = 'https://github.com/Ullink/simple-slack-api'
+            issueTrackerUrl = 'https://github.com/Ullink/simple-slack-api/issues'
+            vcsUrl = 'https://github.com/Ullink/simple-slack-api.git'
+            licenses = ['Apache-2.0']
+            labels = ['slack']
+            publicDownloadNumbers = true
+            version {
+                name = project.version //Bintray logical version name
+                desc = ''
+                mavenCentralSync {
+                    sync = true //Optional (true by default). Determines whether to sync the version to Maven Central.
+                    user = ossrhUsername //OSS user token
+                    password = ossrhPassword //OSS user password
+                    close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
                 }
             }
         }
     }
-
-    bintray {
-        if (this.hasProperty('bintray_user')) {
-            user = bintray_user //this usually comes from gradle.properties file in ~/.gradle
-            key = bintray_api_key //this usually comes from gradle.properties file in ~/.gradle
-
-            publications = ['mavenJava'] //When uploading Maven-based publication files
-            dryRun = false //Whether to run this as dry-run, without deploying
-            publish = true //If version should be auto published after an upload
-            pkg {
-                repo = 'maven'
-                name = 'com.ullink.slack:simpleslackapi'
-                desc = 'simple slack API package!'
-                websiteUrl = 'https://github.com/Ullink/simple-slack-api'
-                issueTrackerUrl = 'https://github.com/Ullink/simple-slack-api/issues'
-                vcsUrl = 'https://github.com/Ullink/simple-slack-api.git'
-                licenses = ['Apache-2.0']
-                labels = ['slack']
-                publicDownloadNumbers = true
-                version {
-                    name = project.version //Bintray logical version name
-                    desc = ''
-                    mavenCentralSync {
-                        sync = true //Optional (true by default). Determines whether to sync the version to Maven Central.
-                        user = ossrhUsername //OSS user token
-                        password = ossrhPassword //OSS user password
-                        close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
-                    }
-                }
-            }
-        }
-    }
+}
 
 dependencies {
     compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.8.3'
@@ -157,9 +161,18 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'org.apache.httpcomponents:httpclient:4.4'
     compile 'com.google.guava:guava:18.0'
+    compile 'ch.qos.logback:logback-classic:1.1.3'
+    compile 'org.threeten:threetenbp:1.3.1'
 
     testCompile 'org.jmockit:jmockit:1.12'
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'junit:junit:4.11'
     testCompile 'org.slf4j:slf4j-simple:1.7.7'
+}
+
+test {   
+    testLogging {        
+        exceptionFormat = 'full'  
+        showStackTraces = "true"
+    }   
 }

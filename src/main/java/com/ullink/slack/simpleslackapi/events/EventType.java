@@ -12,6 +12,8 @@ public enum EventType
     CHANNEL_ARCHIVE("channel_archive"),
     CHANNEL_UNARCHIVE("channel_unarchive"),
     GROUP_JOINED("group_joined"),
+    REACTION_ADDED("reaction_added"),
+    REACTION_REMOVED("reaction_removed"),
     OTHER("-");
 
     private static final Map<String, EventType> CODE_MAP = new HashMap<>();

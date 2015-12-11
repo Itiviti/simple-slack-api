@@ -13,5 +13,7 @@ public enum SlackEventType
     SLACK_MESSAGE_POSTED,
     SLACK_REPLY,
     SLACK_CONNECTED,
+    REACTION_ADDED,
+    REACTION_REMOVED,
     UNKNOWN;
 }
