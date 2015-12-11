@@ -1,9 +1,9 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackReply;
-import org.json.simple.JSONObject;
 
 class SlackJSONReplyParser
 {
@@ -21,20 +21,20 @@ class SlackJSONReplyParser
         {
             Long replyTo = (Long) obj.get("reply_to");
             String timestamp = (String) obj.get("ts");
-            return new SlackMessageReplyImpl(ok, replyTo != null ? replyTo : -1, timestamp);
+            return new SlackMessageReplyImpl(ok, obj, replyTo != null ? replyTo : -1, timestamp);
         }
-        return new SlackReplyImpl(ok);
+        return new GenericSlackReplyImpl(obj);
     }
 
     private static SlackChannelReply buildSlackChannelReply(Boolean ok, JSONObject obj, SlackSession session) 
     {
         String id = (String)obj.get("id");
         if (id != null) {
-            return new SlackChannelReplyImpl(ok, session.findChannelById(id));
+            return new SlackChannelReplyImpl(ok,obj, session.findChannelById(id));
         }
         JSONObject channelObj = (JSONObject) obj.get("channel");
         id = (String)channelObj.get("id");
-        return new SlackChannelReplyImpl(ok, session.findChannelById(id));
+        return new SlackChannelReplyImpl(ok,obj, session.findChannelById(id));
     }
 
     private static boolean isMessageReply(JSONObject obj)

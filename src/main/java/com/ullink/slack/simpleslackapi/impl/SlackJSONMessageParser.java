@@ -1,10 +1,16 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.EventType;
+import com.ullink.slack.simpleslackapi.events.ReactionAdded;
+import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
 import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
 import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
 import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
@@ -12,13 +18,11 @@ import com.ullink.slack.simpleslackapi.events.SlackChannelRenamed;
 import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
 import com.ullink.slack.simpleslackapi.events.SlackEvent;
 import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
-import org.json.simple.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 class SlackJSONMessageParser
 {
+    
+
     public static enum SlackMessageSubType
     {
         CHANNEL_JOIN("channel_join"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), BOT_MESSAGE("bot_message"), OTHER("-"), FILE_SHARE("file_share");
@@ -56,16 +60,13 @@ class SlackJSONMessageParser
         }
     }
 
-    static SlackEvent decode(SlackSession slackSession, JSONObject obj)
-    {
+    static SlackEvent decode(SlackSession slackSession, JSONObject obj) {
         String type = (String) obj.get("type");
-        if (type == null)
-        {
+        if (type == null) {
             return SlackEvent.UNKNOWN_EVENT;
         }
         EventType eventType = EventType.getByCode(type);
-        switch (eventType)
-        {
+        switch (eventType) {
             case MESSAGE:
                 return extractMessageEvent(slackSession, obj);
             case CHANNEL_CREATED:
@@ -80,11 +81,16 @@ class SlackJSONMessageParser
                 return extractChannelUnarchiveEvent(slackSession, obj);
             case GROUP_JOINED:
                 return extractGroupJoinedEvent(slackSession, obj);
+            case REACTION_ADDED:
+                return extractReactionAddedEvent(slackSession, obj);
+            case REACTION_REMOVED:
+                return extractReactionRemovedEvent(slackSession, obj);
             default:
                 return SlackEvent.UNKNOWN_EVENT;
         }
     }
-
+    
+    
     private static SlackGroupJoined extractGroupJoinedEvent(SlackSession slackSession, JSONObject obj)
     {
         JSONObject channelJSONObject = (JSONObject) obj.get("channel");
@@ -150,7 +156,6 @@ class SlackJSONMessageParser
         }
     }
 
-
     private static SlackChannel getChannel(SlackSession slackSession, String channelId)
     {
         if (channelId != null)
@@ -191,14 +196,16 @@ class SlackJSONMessageParser
         return new SlackMessagePostedImpl(text, user, user, channel, ts);
     }
 
-    private static SlackMessagePostedImpl parseMessagePublished(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession)
-    {
+    private static SlackMessagePostedImpl parseMessagePublished(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession) {
         String text = (String) obj.get("text");
         String userId = (String) obj.get("user");
         SlackUser user = slackSession.findUserById(userId);
-        return new SlackMessagePostedImpl(text, user, user, channel, ts,obj);
+        Map<String, Integer> reacs = extractReactionsFromMessageJSON(obj);
+        SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, user, user, channel, ts);
+        message.setReactions(reacs);
+        return message;
     }
-    
+
     private final static String COMMENT_PLACEHOLDER = "> and commented:";
     
     private static SlackMessagePostedImpl parseMessagePublishedWithFile(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession)
@@ -254,13 +261,44 @@ class SlackJSONMessageParser
         return new SlackMessagePostedImpl(text, user, user, channel, ts,file,obj);
     }
 
-    private static SlackChannel parseChannelDescription(JSONObject channelJSONObject)
-    {
+    private static SlackChannel parseChannelDescription(JSONObject channelJSONObject) {
         String id = (String) channelJSONObject.get("id");
         String name = (String) channelJSONObject.get("name");
-        String topic = null; // TODO
-        String purpose = null; // TODO
+        String topic = (String)((Map)channelJSONObject.get("topic")).get("value");
+        String purpose = (String) ((Map) channelJSONObject.get("purpose")).get("value");
         return new SlackChannelImpl(id, name, topic, purpose, true);
     }
 
+
+    
+    private static ReactionRemoved extractReactionRemovedEvent(SlackSession slackSession, JSONObject obj) {
+        JSONObject message = (JSONObject) obj.get("item");
+        String emojiName = (String) obj.get("reaction");
+        String messageId = (String) message.get("ts");
+        String channelId = (String) message.get("channel");
+        return new ReactionRemovedImpl(emojiName, messageId, slackSession.findChannelById(channelId));    
+    }
+
+    private static ReactionAdded extractReactionAddedEvent(SlackSession slackSession, JSONObject obj) {
+        JSONObject message = (JSONObject) obj.get("item");
+        String emojiName = (String) obj.get("reaction");
+        String messageId = (String) message.get("ts");
+        String channelId = (String) message.get("channel");
+        return new ReactionAddedImpl(emojiName, messageId, slackSession.findChannelById(channelId));
+    }
+
+    private static Map<String, Integer> extractReactionsFromMessageJSON(JSONObject obj) {
+        Map<String, Integer> reacs = new HashMap<>();
+        JSONArray rawReactions = (JSONArray) obj.get("reactions");
+        if (rawReactions != null) {
+            for (int i = 0; i < rawReactions.size(); i++) {
+                JSONObject reaction = (JSONObject) rawReactions.get(i);
+                String emojiCode = reaction.get("name").toString();
+                Integer count = Integer.valueOf(reaction.get("count").toString());
+                reacs.put(emojiCode, count);
+            }
+        }
+        return reacs;
+    }
 }
+

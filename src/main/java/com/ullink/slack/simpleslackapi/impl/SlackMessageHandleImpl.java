@@ -1,11 +1,10 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import java.util.concurrent.TimeUnit;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.replies.SlackReply;
 
-import java.util.concurrent.TimeUnit;
-
-class SlackMessageHandleImpl<T extends SlackReply> implements SlackMessageHandle
+class SlackMessageHandleImpl<T extends SlackReply> implements SlackMessageHandle<T>
 {
 
     private long                messageId;
@@ -55,5 +54,4 @@ class SlackMessageHandleImpl<T extends SlackReply> implements SlackMessageHandle
             }
         }
     }
-
 }
