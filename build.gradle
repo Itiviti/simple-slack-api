@@ -105,6 +105,12 @@ def pomConfig = {
             name 'Ole Kozaczenko'
             email 'olkozacz@gmail.com'
         }
+        contributor {
+            name 'Georges Gomes'
+        }
+        contributor {
+            name 'François Valdy'
+        }
     }
     scm {
         connection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
