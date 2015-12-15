@@ -90,13 +90,13 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
 
     @Override
-    public SlackMessageHandle sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
+    public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
         SlackChannel iMChannel = getIMChannelForUser(user);
         return sendMessage(iMChannel, message, attachment, DEFAULT_CONFIGURATION);
     }
 
     @Override
-    public SlackMessageHandle sendMessageToUser(String userName, String message, SlackAttachment attachment) {
+    public SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, String message, SlackAttachment attachment) {
         return sendMessageToUser(findUserByUserName(userName), message, attachment);
     }
 
@@ -193,12 +193,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private long                              messageId                  = 0;
 
-    private long                              lastConnectionTime         = -1;
-
     private boolean                           reconnectOnDisconnection;
     private boolean                           wantDisconnect             = false;
-
-    private Map<Long, SlackMessageHandleImpl> pendingMessageMap          = new ConcurrentHashMap<Long, SlackMessageHandleImpl>();
 
     private Thread                            connectionMonitoringThread = null;
     private EventDispatcher                   dispatcher                 = new EventDispatcher();
@@ -437,7 +433,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
     {
-        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("channel", channel.getId());
@@ -470,7 +466,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, SlackChannel channel)
     {
-        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("channel", channel.getId());
@@ -482,7 +478,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message)
     {
-        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("ts", timeStamp);
@@ -495,7 +491,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public SlackMessageHandle<SlackMessageReply> addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode)
     {
-        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("channel", channel.getId());
@@ -508,7 +504,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public SlackMessageHandle<SlackChannelReply> joinChannel(String channelName)
     {
-        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        SlackMessageHandleImpl<SlackChannelReply> handle = new SlackMessageHandleImpl<SlackChannelReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("name", channelName);
@@ -519,7 +515,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public SlackMessageHandle<SlackChannelReply> leaveChannel(SlackChannel channel)
     {
-        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        SlackMessageHandleImpl<SlackChannelReply> handle = new SlackMessageHandleImpl<SlackChannelReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("channel", channel.getId());
@@ -529,7 +525,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     @Override
     public SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user) {
-      SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+      SlackMessageHandleImpl<SlackChannelReply> handle = new SlackMessageHandleImpl<SlackChannelReply>(getNextMessageId());
       Map<String, String> arguments = new HashMap<>();
       arguments.put("token", authToken);
       arguments.put("channel", channel.getId());
@@ -541,7 +537,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public SlackMessageHandle<SlackReply> archiveChannel(SlackChannel channel) 
     {
-      SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+      SlackMessageHandleImpl<SlackReply> handle = new SlackMessageHandleImpl<SlackReply>(getNextMessageId());
       Map<String, String> arguments = new HashMap<>();
       arguments.put("token", authToken);
       arguments.put("channel", channel.getId());
@@ -552,7 +548,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
     {
-        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        SlackMessageHandleImpl<SlackChannelReply> handle = new SlackMessageHandleImpl<SlackChannelReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("user", user.getId());
@@ -563,7 +559,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users)
     {
-        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        SlackMessageHandleImpl<SlackChannelReply> handle = new SlackMessageHandleImpl<SlackChannelReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         StringBuilder strBuilder = new StringBuilder();
@@ -611,8 +607,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         List<NameValuePair> nameValuePairList = new ArrayList<>();
         for (Map.Entry<String, String> arg : params.entrySet())
         {
-            nameValuePairList.add(new BasicNameValuePair(arg.getKey(), arg.getValue()));
+            if (!"token".equals(arg.getKey())) {
+                nameValuePairList.add(new BasicNameValuePair(arg.getKey(), arg.getValue()));
+            }
         }
+        nameValuePairList.add(new BasicNameValuePair("token", authToken));
         try
         {
             SlackMessageHandleImpl<GenericSlackReply> handle = new SlackMessageHandleImpl<>(getNextMessageId());
@@ -647,9 +646,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment)
+    public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment)
     {
-        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
         try
         {
             JSONObject messageJSON = new JSONObject();
@@ -760,9 +759,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) {
+    public SlackMessageHandle<GenericSlackReply> inviteUser(String email, String firstName, boolean setActive) {
 
-        SlackMessageHandleImpl handle = new SlackMessageHandleImpl(getNextMessageId());
+        SlackMessageHandleImpl<GenericSlackReply> handle = new SlackMessageHandleImpl<GenericSlackReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("email", email);

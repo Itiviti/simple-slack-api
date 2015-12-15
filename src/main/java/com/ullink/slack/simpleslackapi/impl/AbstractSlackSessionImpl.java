@@ -27,6 +27,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
@@ -49,9 +50,6 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<SlackConnectedListener> slackConnectedLinster = new ArrayList<>();
     protected List<ReactionAddedListener> reactionAddedListener = new ArrayList<>();
     protected List<ReactionRemovedListener> reactionRemovedListener = new ArrayList<>();
-
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSlackSessionImpl.class);
 
     static final SlackChatConfiguration DEFAULT_CONFIGURATION = SlackChatConfiguration.getConfiguration().asUser();
 
@@ -155,7 +153,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
-    public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment)
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment)
     {
         return sendMessage(channel, message, attachment, DEFAULT_CONFIGURATION);
     }

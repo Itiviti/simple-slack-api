@@ -45,7 +45,7 @@ public interface SlackSession {
     SlackBot findBotById(String botId);
     
 
-    SlackMessageHandle inviteUser(String email, String firstName, boolean setActive);
+    SlackMessageHandle<GenericSlackReply> inviteUser(String email, String firstName, boolean setActive);
 
     void connect() throws IOException;
 

@@ -15,7 +15,7 @@ class GenericSlackReplyImpl implements GenericSlackReply
     @Override
     public JSONObject getPlainAnswer()
     {
-        return null;
+        return obj;
     }
 
 }
