@@ -101,6 +101,10 @@ def pomConfig = {
             email 'redmax3d@gmail.com'
             url 'http://redcraft.net'
         }
+        contributor {
+            name 'Ole Kozaczenko'
+            email 'olkozacz@gmail.com'
+        }
     }
     scm {
         connection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
