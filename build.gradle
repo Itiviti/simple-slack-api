@@ -30,7 +30,7 @@ targetCompatibility = 1.7
 
 group = 'com.ullink.slack'
 archivesBaseName = 'simpleslackapi'
-version = '0.5.0'
+version = '0.5.1'
 
 task copyRuntimeLibs(type: Copy) {
   into "lib"
@@ -109,7 +109,12 @@ def pomConfig = {
             name 'Georges Gomes'
         }
         contributor {
-            name 'François Valdy'
+            name 'Franï¿½ois Valdy'
+        }
+        contributor {
+            name 'Harry Fox'
+            email 'harry.fox.ic@icloud.com'
+            url 'https://github.com/ParaPenguin'
         }
     }
     scm {

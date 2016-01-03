@@ -172,6 +172,7 @@ Many thanks to everyone who has contributed to this library :
 * Ole Kozaczenko
 * Georges Gomes
 * François Valdy
+* Harry Fox
 
 (Let me know if I forgot someone, I'll fix that ASAP ;) )
 
