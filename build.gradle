@@ -109,7 +109,7 @@ def pomConfig = {
             name 'Georges Gomes'
         }
         contributor {
-            name 'Fran�ois Valdy'
+            name 'François Valdy'
         }
         contributor {
             name 'Harry Fox'
