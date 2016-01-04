@@ -431,7 +431,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
     {
         SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
@@ -457,6 +457,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         if (attachment != null)
         {
             arguments.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachment).toString());
+        }
+        if (!unfurl)
+        {
+            arguments.put("unfurl_links", "false");
+            arguments.put("unfurl_media", "false");
         }
 
         postSlackCommand(arguments, CHAT_POST_MESSAGE_COMMAND, handle);

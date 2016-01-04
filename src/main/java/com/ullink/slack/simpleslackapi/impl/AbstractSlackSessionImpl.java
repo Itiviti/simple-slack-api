@@ -52,7 +52,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<ReactionRemovedListener> reactionRemovedListener = new ArrayList<>();
 
     static final SlackChatConfiguration DEFAULT_CONFIGURATION = SlackChatConfiguration.getConfiguration().asUser();
-
+    static final boolean DEFAULT_UNFURL = true;
 
     @Override
     public Collection<SlackChannel> getChannels()
@@ -156,6 +156,30 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment)
     {
         return sendMessage(channel, message, attachment, DEFAULT_CONFIGURATION);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message)
+    {
+        return sendMessage(channel, message, DEFAULT_UNFURL);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, boolean unfurl)
+    {
+        return sendMessage(channel, message, null, DEFAULT_CONFIGURATION, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, boolean unfurl)
+    {
+        return sendMessage(channel, message, attachment, DEFAULT_CONFIGURATION, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
+    {
+        return sendMessage(channel, message, null, chatConfiguration, DEFAULT_UNFURL);
     }
 
     @Override
