@@ -10,19 +10,22 @@ class SlackJSONReplyParser
     static SlackReply decode(JSONObject obj, SlackSession session)
     {
         Boolean ok = (Boolean) obj.get("ok");
+
         String presence = (String)obj.get("presence");
         if (presence != null) {
             return new SlackUserPresenceReplyImpl(ok, "active".equals(presence));
         }
+
         if (isMpim(obj) || isIm(obj) || isChannel(obj) || isGroup(obj)) {
             return buildSlackChannelReply(ok,obj,session);
         }
-        if(isMessageReply(obj))
-        {
+
+        if(isMessageReply(obj)) {
             Long replyTo = (Long) obj.get("reply_to");
             String timestamp = (String) obj.get("ts");
             return new SlackMessageReplyImpl(ok, obj, replyTo != null ? replyTo : -1, timestamp);
         }
+
         return new GenericSlackReplyImpl(obj);
     }
 
@@ -32,7 +35,12 @@ class SlackJSONReplyParser
         if (id != null) {
             return new SlackChannelReplyImpl(ok,obj, session.findChannelById(id));
         }
+
         JSONObject channelObj = (JSONObject) obj.get("channel");
+        if (channelObj == null) {
+            channelObj = (JSONObject) obj.get("group");
+        }
+
         id = (String)channelObj.get("id");
         return new SlackChannelReplyImpl(ok,obj, session.findChannelById(id));
     }
@@ -63,7 +71,12 @@ class SlackJSONReplyParser
     private static boolean isGroup(JSONObject obj)
     {
         Boolean isGroup = (Boolean)obj.get("is_group");
-        return isGroup != null && isGroup.equals(Boolean.TRUE);
+        if (isGroup != null) {
+            return isGroup;
+        }
+
+        Object group = obj.get("group");
+        return group != null && group instanceof JSONObject;
     }
 
 }

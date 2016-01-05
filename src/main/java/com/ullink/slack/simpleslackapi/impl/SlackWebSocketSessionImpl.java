@@ -576,6 +576,19 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
         arguments.put("users", strBuilder.toString());
         postSlackCommand(arguments, MULTIPARTY_DIRECT_MESSAGE_OPEN_CHANNEL_COMMAND, handle);
+
+        SlackMessageHandleImpl<?> check = handle;
+        SlackReply reply = check.getReply();
+        if (reply instanceof GenericSlackReply) {
+            JSONObject obj = ((GenericSlackReply) reply).getPlainAnswer();
+
+            Object ok = obj.get("ok");
+            if (ok != null && ok instanceof Boolean && !((Boolean) ok)) {
+                LOGGER.debug("Error occurred while performing command: '" + obj.get("error") + "'");
+                return null;
+            }
+        }
+
         return handle;
     }
 
