@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -27,6 +25,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 
 abstract class AbstractSlackSessionImpl implements SlackSession
@@ -46,10 +45,10 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<SlackMessageDeletedListener>    messageDeletedListener   = new ArrayList<SlackMessageDeletedListener>();
     protected List<SlackMessagePostedListener>     messagePostedListener    = new ArrayList<SlackMessagePostedListener>();
     protected List<SlackMessageUpdatedListener>    messageUpdatedListener   = new ArrayList<SlackMessageUpdatedListener>();
-    protected List<SlackConnectedListener>         slackConnectedListener    = new ArrayList<SlackConnectedListener>();
-    protected List<SlackConnectedListener> slackConnectedLinster = new ArrayList<>();
-    protected List<ReactionAddedListener> reactionAddedListener = new ArrayList<>();
-    protected List<ReactionRemovedListener> reactionRemovedListener = new ArrayList<>();
+    protected List<SlackConnectedListener>         slackConnectedListener   = new ArrayList<SlackConnectedListener>();
+    protected List<ReactionAddedListener>          reactionAddedListener    = new ArrayList<>();
+    protected List<ReactionRemovedListener>        reactionRemovedListener  = new ArrayList<>();
+    protected List<SlackUserChangeListener>        slackUserChangeListener  = new ArrayList<>();
 
     static final SlackChatConfiguration DEFAULT_CONFIGURATION = SlackChatConfiguration.getConfiguration().asUser();
     static final boolean DEFAULT_UNFURL = true;
@@ -320,5 +319,14 @@ abstract class AbstractSlackSessionImpl implements SlackSession
         reactionRemovedListener.remove(listener);
     }
 
+    @Override
+    public void addSlackUserChangeListener(SlackUserChangeListener listener) {
+        slackUserChangeListener.add(listener);
+    }
+
+    @Override
+    public void removeSlackUserChangeListener(SlackUserChangeListener listener) {
+        slackUserChangeListener.remove(listener);
+    }
 }
 

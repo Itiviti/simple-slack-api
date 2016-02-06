@@ -18,6 +18,7 @@ import com.ullink.slack.simpleslackapi.events.SlackChannelRenamed;
 import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
 import com.ullink.slack.simpleslackapi.events.SlackEvent;
 import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
+import com.ullink.slack.simpleslackapi.events.SlackUserChange;
 
 class SlackJSONMessageParser
 {
@@ -85,6 +86,8 @@ class SlackJSONMessageParser
                 return extractReactionAddedEvent(slackSession, obj);
             case REACTION_REMOVED:
                 return extractReactionRemovedEvent(slackSession, obj);
+            case USER_CHANGE:
+                return extractUserChangeEvent(slackSession, obj);
             default:
                 return SlackEvent.UNKNOWN_EVENT;
         }
@@ -299,6 +302,12 @@ class SlackJSONMessageParser
             }
         }
         return reacs;
+    }
+
+    private static SlackUserChange extractUserChangeEvent(SlackSession slackSession, JSONObject obj) {
+        JSONObject user = (JSONObject) obj.get("user");
+        SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(user);
+        return new SlackUserChangeImpl(slackUser);
     }
 }
 
