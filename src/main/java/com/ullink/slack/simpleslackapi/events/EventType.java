@@ -14,6 +14,8 @@ public enum EventType
     GROUP_JOINED("group_joined"),
     REACTION_ADDED("reaction_added"),
     REACTION_REMOVED("reaction_removed"),
+    PIN_ADDED("pin_added"),
+    PIN_REMOVED("pin_removed"),
     OTHER("-");
 
     private static final Map<String, EventType> CODE_MAP = new HashMap<>();

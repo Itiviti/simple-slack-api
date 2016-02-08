@@ -15,6 +15,8 @@ import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackTeam;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.listeners.PinAddedListener;
+import com.ullink.slack.simpleslackapi.listeners.PinRemovedListener;
 import com.ullink.slack.simpleslackapi.listeners.ReactionAddedListener;
 import com.ullink.slack.simpleslackapi.listeners.ReactionRemovedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
@@ -50,6 +52,8 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<SlackConnectedListener> slackConnectedLinster = new ArrayList<>();
     protected List<ReactionAddedListener> reactionAddedListener = new ArrayList<>();
     protected List<ReactionRemovedListener> reactionRemovedListener = new ArrayList<>();
+    protected List<PinAddedListener> pinAddedListener = new ArrayList<>();
+    protected List<PinRemovedListener> pinRemovedListener = new ArrayList<>();
 
     static final SlackChatConfiguration DEFAULT_CONFIGURATION = SlackChatConfiguration.getConfiguration().asUser();
     static final boolean DEFAULT_UNFURL = true;
@@ -179,7 +183,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
     {
-        return sendMessage(channel, message, null, chatConfiguration, DEFAULT_UNFURL);
+        return sendMessage(channel, message, attachment, chatConfiguration, DEFAULT_UNFURL);
     }
 
     @Override
@@ -318,6 +322,26 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public void removeReactionRemovedListener(ReactionRemovedListener listener) {
         reactionRemovedListener.remove(listener);
+    }
+
+    @Override
+    public void addPinAddedListener(PinAddedListener listener) {
+        pinAddedListener.add(listener);
+    }
+
+    @Override
+    public void removePinAddedListener(PinAddedListener listener) {
+        pinAddedListener.remove(listener);
+    }
+    
+    @Override
+    public void addPinRemovedListener(PinRemovedListener listener) {
+        pinRemovedListener.add(listener);
+    }
+
+    @Override
+    public void removePinRemovedListener(PinRemovedListener listener) {
+        pinRemovedListener.remove(listener);
     }
 
 }

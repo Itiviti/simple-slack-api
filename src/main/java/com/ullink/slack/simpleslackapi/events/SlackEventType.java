@@ -15,5 +15,7 @@ public enum SlackEventType
     SLACK_CONNECTED,
     REACTION_ADDED,
     REACTION_REMOVED,
+    PIN_ADDED,
+    PIN_REMOVED,
     UNKNOWN;
 }

@@ -41,6 +41,8 @@ import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.events.PinAdded;
+import com.ullink.slack.simpleslackapi.events.PinRemoved;
 import com.ullink.slack.simpleslackapi.events.ReactionAdded;
 import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
 import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
@@ -165,7 +167,14 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 case REACTION_REMOVED:
                     dispatchImpl((ReactionRemoved) event, reactionRemovedListener);
                     break;
-                case UNKNOWN:
+                case PIN_ADDED:
+                    dispatchImpl((PinAdded) event, pinAddedListener);
+                    break;
+                case PIN_REMOVED:
+                    dispatchImpl((PinRemoved) event, pinRemovedListener);
+                    break;
+
+	    case UNKNOWN:
                     throw new IllegalArgumentException("event not handled " + event);
             }
         }
