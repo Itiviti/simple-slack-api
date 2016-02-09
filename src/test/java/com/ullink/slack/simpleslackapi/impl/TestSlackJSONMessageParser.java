@@ -25,6 +25,7 @@ import com.ullink.slack.simpleslackapi.events.SlackEvent;
 import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
 import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import com.ullink.slack.simpleslackapi.events.SlackUserChange;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackReply;
@@ -49,6 +50,8 @@ public class TestSlackJSONMessageParser {
     private static final String TEST_REACTION = " \"reaction\":\"thumbsup\", \"item\": {\"channel\":\"NEWCHANNEL\",\"ts\":\"1360782804.083113\"}";
     private static final String TEST_REACTION_ADDED = "{\"type\":\"reaction_added\", " + TEST_REACTION + "}";
     private static final String TEST_REACTION_REMOVED = "{\"type\":\"reaction_removed\", " + TEST_REACTION + "}";
+
+    private static final String TEST_USER_CHANGE = "{\"type\": \"user_change\",\"user\": {\"id\": \"TESTUSER1\", \"name\": \"test user 1\"}}";
 
     @Before
     public void setup() {
@@ -302,5 +305,18 @@ public class TestSlackJSONMessageParser {
         Assert.assertTrue(channel.getName().equals("new channel"));
         Assert.assertTrue(channel.getPurpose().equals("This channel so new it aint even old yet"));
         Assert.assertTrue(channel.getTopic().equals("To have something new"));
+    }
+
+    @Test
+    public void testUserChange() throws ParseException {
+        JSONParser parser = new JSONParser();
+        JSONObject object = (JSONObject) parser.parse(TEST_USER_CHANGE);
+        SlackEvent event = SlackJSONMessageParser.decode(session, object);
+        Assertions.assertThat(event).isInstanceOf(SlackUserChange.class);
+        SlackUserChange slackUserChange = (SlackUserChange)event;
+        SlackUser user = slackUserChange.getUser();
+        Assertions.assertThat(user).isNotNull();
+        Assertions.assertThat(user.getId()).isEqualTo("TESTUSER1");
+        Assertions.assertThat(session.findUserById("TESTUSER1").getUserName()).isEqualTo(user.getUserName());
     }
 }

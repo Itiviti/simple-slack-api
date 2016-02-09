@@ -10,12 +10,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.websocket.DeploymentException;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
+import com.google.common.io.CharStreams;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -34,7 +34,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.common.io.CharStreams;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
@@ -54,6 +53,7 @@ import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
 import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.events.SlackMessageUpdated;
+import com.ullink.slack.simpleslackapi.events.SlackUserChange;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
 import com.ullink.slack.simpleslackapi.listeners.SlackEventListener;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
@@ -165,6 +165,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 case REACTION_REMOVED:
                     dispatchImpl((ReactionRemoved) event, reactionRemovedListener);
                     break;
+                case SLACK_USER_CHANGE:
+                    dispatchImpl((SlackUserChange) event, slackUserChangeListener);
                 case UNKNOWN:
                     throw new IllegalArgumentException("event not handled " + event);
             }
@@ -756,6 +758,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             {
                 SlackGroupJoined slackGroupJoined = (SlackGroupJoined) slackEvent;
                 channels.put(slackGroupJoined.getSlackChannel().getId(), slackGroupJoined.getSlackChannel());
+            }
+            if (slackEvent instanceof SlackUserChange)
+            {
+                SlackUserChange slackUserChange = (SlackUserChange) slackEvent;
+                users.put(slackUserChange.getUser().getId(), slackUserChange.getUser());
             }
             dispatcher.dispatch(slackEvent);
         }
