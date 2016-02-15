@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
+import com.ullink.slack.simpleslackapi.listeners.PinAddedListener;
+import com.ullink.slack.simpleslackapi.listeners.PinRemovedListener;
 import com.ullink.slack.simpleslackapi.listeners.ReactionAddedListener;
 import com.ullink.slack.simpleslackapi.listeners.ReactionRemovedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
@@ -160,4 +162,11 @@ public interface SlackSession {
 
     void removeSlackUserChangeListener(SlackUserChangeListener listener);
 
+    void addPinAddedListener(PinAddedListener listener);
+
+    void removePinAddedListener(PinAddedListener listener);
+
+    void addPinRemovedListener(PinRemovedListener listener);
+  
+    void removePinRemovedListener(PinRemovedListener listener);
 }
