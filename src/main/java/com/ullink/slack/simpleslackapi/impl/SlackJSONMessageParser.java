@@ -9,6 +9,8 @@ import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.EventType;
+import com.ullink.slack.simpleslackapi.events.PinAdded;
+import com.ullink.slack.simpleslackapi.events.PinRemoved;
 import com.ullink.slack.simpleslackapi.events.ReactionAdded;
 import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
 import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
@@ -88,6 +90,10 @@ class SlackJSONMessageParser
                 return extractReactionRemovedEvent(slackSession, obj);
             case USER_CHANGE:
                 return extractUserChangeEvent(slackSession, obj);
+            case PIN_ADDED:
+                return extractPinAddedEvent(slackSession, obj);
+            case PIN_REMOVED:
+                return extractPinRemovedEvent(slackSession, obj);
             default:
                 return SlackEvent.UNKNOWN_EVENT;
         }
@@ -211,6 +217,34 @@ class SlackJSONMessageParser
 
     private final static String COMMENT_PLACEHOLDER = "> and commented:";
     
+
+     private static void parseSlackFileFromRaw(JSONObject rawFile, SlackFile file) {
+        file.setId((String) rawFile.get("id"));
+        file.setName((String) rawFile.get("name"));
+        file.setTitle((String) rawFile.get("title"));
+        file.setMimetype((String) rawFile.get("mimetype"));
+        file.setFiletype((String) rawFile.get("filetype"));
+        file.setUrl((String) rawFile.get("url"));
+        file.setUrlDownload((String) rawFile.get("url_download"));
+        file.setUrlPrivate((String) rawFile.get("url_private"));
+        file.setUrlPrivateDownload((String) rawFile.get("url_private_download"));
+        file.setThumb64((String) rawFile.get("thumb_64"));
+        file.setThumb80((String) rawFile.get("thumb_80"));
+        file.setThumb160((String) rawFile.get("thumb_160"));
+        file.setThumb360((String) rawFile.get("thumb_360"));
+        file.setThumb480((String) rawFile.get("thumb_480"));
+        file.setThumb720((String) rawFile.get("thumb_720"));
+        try{
+            file.setOriginalH((Long) rawFile.get("original_h"));
+            file.setOriginalW((Long) rawFile.get("original_w"));
+            file.setImageExifRotation((Long) rawFile.get("image_exif_rotation"));
+        } catch(Exception e){
+            //this properties will be null if something goes wrong
+        }
+        file.setPermalink((String) rawFile.get("permalink"));
+        file.setPermalinkPublic((String) rawFile.get("permalink_public"));
+    }
+  
     private static SlackMessagePostedImpl parseMessagePublishedWithFile(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession)
     {
         /*
@@ -218,32 +252,9 @@ class SlackJSONMessageParser
         {"type":"message","subtype":"file_share","text":"<@U024SEY12|ben> uploaded a file: <https://test-team.slack.com/files/ben/F0D34F799/1388485488946.png|1388485488946.png>","file":{"id":"F0D34F799","created":1445615453,"timestamp":1445615453,"name":"1388485488946.png","title":"1388485488946.png","mimetype":"image/png","filetype":"png","pretty_type":"PNG","user":"U024SEY12","editable":false,"size":467034,"mode":"hosted","is_external":false,"external_type":"","is_public":false,"public_url_shared":false,"display_as_bot":false,"username":"","url":"https://slack-files.com/files-pub/T01234567-F0D34F799-dfacea79ee/1388485488946.png","url_download":"https://slack-files.com/files-pub/T01234567-F0D34F799-dfacea79ee/download/1388485488946.png","url_private":"https://files.slack.com/files-pri/T01234567-F0D34F799/1388485488946.png","url_private_download":"https://files.slack.com/files-pri/T01234567-F0D34F799/download/1388485488946.png","thumb_64":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_64.png","thumb_80":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_80.png","thumb_360":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_360.png","thumb_360_w":360,"thumb_360_h":244,"thumb_480":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_480.png","thumb_480_w":480,"thumb_480_h":325,"thumb_160":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_160.png","thumb_720":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_720.png","thumb_720_w":720,"thumb_720_h":488,"image_exif_rotation":1,"original_w":797,"original_h":540,"permalink":"https://bentest1.slack.com/files/ben/F0D34F799/1388485488946.png","permalink_public":"https://slack-files.com/T01234567-F0D34F799-dfacea79ee","channels":[],"groups":[],"ims":[],"comments_count":0},"user":"U024SEY12","upload":true,"display_as_bot":false,"username":"<@U024SEY12|ben>","bot_id":null,"channel":"D0251JL9Y","ts":"1445615455.000002"}
         */
         SlackFile file = new SlackFile();
-        if(obj.get("file")!=null){
+        if (obj.get("file")!=null){
             JSONObject rawFile = (JSONObject) obj.get("file");
-            file.setId((String) rawFile.get("id"));
-            file.setName((String) rawFile.get("name"));
-            file.setTitle((String) rawFile.get("title"));
-            file.setMimetype((String) rawFile.get("mimetype"));
-            file.setFiletype((String) rawFile.get("filetype"));
-            file.setUrl((String) rawFile.get("url"));
-            file.setUrlDownload((String) rawFile.get("url_download"));
-            file.setUrlPrivate((String) rawFile.get("url_private"));
-            file.setUrlPrivateDownload((String) rawFile.get("url_private_download"));
-            file.setThumb64((String) rawFile.get("thumb_64"));
-            file.setThumb80((String) rawFile.get("thumb_80"));
-            file.setThumb160((String) rawFile.get("thumb_160"));
-            file.setThumb360((String) rawFile.get("thumb_360"));
-            file.setThumb480((String) rawFile.get("thumb_480"));
-            file.setThumb720((String) rawFile.get("thumb_720"));
-            try{
-                file.setOriginalH((Long) rawFile.get("original_h"));
-                file.setOriginalW((Long) rawFile.get("original_w"));
-                file.setImageExifRotation((Long) rawFile.get("image_exif_rotation"));
-            }catch(Exception e){
-                //this properties will be null if something goes wrong
-            }
-            file.setPermalink((String) rawFile.get("permalink"));
-            file.setPermalinkPublic((String) rawFile.get("permalink_public"));
+	    parseSlackFileFromRaw(rawFile, file);
         }
         
         String text = (String) obj.get("text");
@@ -273,7 +284,20 @@ class SlackJSONMessageParser
     }
 
 
-    
+    private static ReactionAdded extractReactionAddedEvent(SlackSession slackSession, JSONObject obj) {
+        JSONObject message = (JSONObject) obj.get("item");
+        String emojiName = (String) obj.get("reaction");
+        String messageId = (String) message.get("ts");
+        String channelId = (String) message.get("channel");
+        return new ReactionAddedImpl(emojiName, messageId, slackSession.findChannelById(channelId));
+    }
+
+    private static SlackUserChange extractUserChangeEvent(SlackSession slackSession, JSONObject obj) {
+        JSONObject user = (JSONObject) obj.get("user");
+        SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(user);
+        return new SlackUserChangeImpl(slackUser);
+    }
+
     private static ReactionRemoved extractReactionRemovedEvent(SlackSession slackSession, JSONObject obj) {
         JSONObject message = (JSONObject) obj.get("item");
         String emojiName = (String) obj.get("reaction");
@@ -282,12 +306,49 @@ class SlackJSONMessageParser
         return new ReactionRemovedImpl(emojiName, messageId, slackSession.findChannelById(channelId));    
     }
 
-    private static ReactionAdded extractReactionAddedEvent(SlackSession slackSession, JSONObject obj) {
-        JSONObject message = (JSONObject) obj.get("item");
-        String emojiName = (String) obj.get("reaction");
-        String messageId = (String) message.get("ts");
-        String channelId = (String) message.get("channel");
-        return new ReactionAddedImpl(emojiName, messageId, slackSession.findChannelById(channelId));
+    private static PinRemoved extractPinRemovedEvent(SlackSession slackSession, JSONObject obj) {
+        String senderId = (String) obj.get("user");
+        SlackUser sender = slackSession.findUserById(senderId);
+
+        String channelId = (String) obj.get("channel_id");
+	SlackChannel channel = slackSession.findChannelById(channelId);
+
+	JSONObject item = (JSONObject) obj.get("item");
+	String messageType = (String) item.get("type");
+	SlackFile file = null;
+	String message = null;
+	if ("file".equals(messageType)) {
+	  file = new SlackFile();
+	  parseSlackFileFromRaw((JSONObject) item.get("file"), file);
+	} else if ("message".equals(messageType)) {
+	  JSONObject messageObj = (JSONObject) item.get("message");
+	  message = (String) messageObj.get("text");
+	}
+	String timestamp = (String) obj.get("event_ts");
+        return new PinRemovedImpl(sender, channel, timestamp, file, message);
+    }
+
+    private static PinAdded extractPinAddedEvent(SlackSession slackSession, JSONObject obj) {
+        String senderId = (String) obj.get("user");
+        SlackUser sender = slackSession.findUserById(senderId);
+
+        String channelId = (String) obj.get("channel_id");
+	SlackChannel channel = slackSession.findChannelById(channelId);
+
+	JSONObject item = (JSONObject) obj.get("item");
+	String messageType = (String) item.get("type");
+	SlackFile file = null;
+	String message = null;
+	if ("file".equals(messageType)) {
+	  file = new SlackFile();
+	  parseSlackFileFromRaw((JSONObject) item.get("file"), file);
+	} else if ("message".equals(messageType)) {
+	  JSONObject messageObj = (JSONObject) item.get("message");
+	  message = (String) messageObj.get("text");
+	}
+	String timestamp = (String) obj.get("event_ts");
+	
+        return new PinAddedImpl(sender, channel, timestamp, file, message);       
     }
 
     private static Map<String, Integer> extractReactionsFromMessageJSON(JSONObject obj) {
@@ -303,11 +364,6 @@ class SlackJSONMessageParser
         }
         return reacs;
     }
-
-    private static SlackUserChange extractUserChangeEvent(SlackSession slackSession, JSONObject obj) {
-        JSONObject user = (JSONObject) obj.get("user");
-        SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(user);
-        return new SlackUserChangeImpl(slackUser);
-    }
 }
+
 
