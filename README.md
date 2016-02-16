@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/Ullink/simple-slack-api.svg?branch=master)](https://travis-ci.org/Ullink/simple-slack-api)
+[![GitHub release](https://img.shields.io/github/release/Ullink/simple-slack-api.svg)](https://github.com/Ullink/simple-slack-api/releases)
 
 # Simple Slack API
 
