@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/Ullink/simple-slack-api.svg?branch=master)](https://travis-ci.org/Ullink/simple-slack-api)
+[![GitHub release](https://img.shields.io/github/release/Ullink/simple-slack-api.svg)](https://github.com/Ullink/simple-slack-api/releases)
+[![Join the chat at https://gitter.im/Ullink/simple-slack-api](https://badges.gitter.im/Ullink/simple-slack-api.svg)](https://gitter.im/Ullink/simple-slack-api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 # Simple Slack API
 
 This library allows an aplication to connect to [Slack](http://www.slack.com/) to receive and send messages from any channel as if it were a slack client. 

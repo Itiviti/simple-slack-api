@@ -14,6 +14,7 @@ public enum EventType
     GROUP_JOINED("group_joined"),
     REACTION_ADDED("reaction_added"),
     REACTION_REMOVED("reaction_removed"),
+    USER_CHANGE("user_change"),
     PIN_ADDED("pin_added"),
     PIN_REMOVED("pin_removed"),
     OTHER("-");

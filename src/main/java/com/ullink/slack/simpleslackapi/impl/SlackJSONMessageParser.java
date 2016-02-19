@@ -20,6 +20,7 @@ import com.ullink.slack.simpleslackapi.events.SlackChannelRenamed;
 import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
 import com.ullink.slack.simpleslackapi.events.SlackEvent;
 import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
+import com.ullink.slack.simpleslackapi.events.SlackUserChange;
 
 class SlackJSONMessageParser
 {
@@ -87,8 +88,10 @@ class SlackJSONMessageParser
                 return extractReactionAddedEvent(slackSession, obj);
             case REACTION_REMOVED:
                 return extractReactionRemovedEvent(slackSession, obj);
-	    case PIN_ADDED:
-	        return extractPinAddedEvent(slackSession, obj);
+            case USER_CHANGE:
+                return extractUserChangeEvent(slackSession, obj);
+            case PIN_ADDED:
+                return extractPinAddedEvent(slackSession, obj);
             case PIN_REMOVED:
                 return extractPinRemovedEvent(slackSession, obj);
             default:
@@ -281,21 +284,26 @@ class SlackJSONMessageParser
     }
 
 
-    
-    private static ReactionRemoved extractReactionRemovedEvent(SlackSession slackSession, JSONObject obj) {
-        JSONObject message = (JSONObject) obj.get("item");
-        String emojiName = (String) obj.get("reaction");
-        String messageId = (String) message.get("ts");
-        String channelId = (String) message.get("channel");
-        return new ReactionRemovedImpl(emojiName, messageId, slackSession.findChannelById(channelId));    
-    }
-
     private static ReactionAdded extractReactionAddedEvent(SlackSession slackSession, JSONObject obj) {
         JSONObject message = (JSONObject) obj.get("item");
         String emojiName = (String) obj.get("reaction");
         String messageId = (String) message.get("ts");
         String channelId = (String) message.get("channel");
         return new ReactionAddedImpl(emojiName, messageId, slackSession.findChannelById(channelId));
+    }
+
+    private static SlackUserChange extractUserChangeEvent(SlackSession slackSession, JSONObject obj) {
+        JSONObject user = (JSONObject) obj.get("user");
+        SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(user);
+        return new SlackUserChangeImpl(slackUser);
+    }
+
+    private static ReactionRemoved extractReactionRemovedEvent(SlackSession slackSession, JSONObject obj) {
+        JSONObject message = (JSONObject) obj.get("item");
+        String emojiName = (String) obj.get("reaction");
+        String messageId = (String) message.get("ts");
+        String channelId = (String) message.get("channel");
+        return new ReactionRemovedImpl(emojiName, messageId, slackSession.findChannelById(channelId));    
     }
 
     private static PinRemoved extractPinRemovedEvent(SlackSession slackSession, JSONObject obj) {
@@ -357,4 +365,5 @@ class SlackJSONMessageParser
         return reacs;
     }
 }
+
 

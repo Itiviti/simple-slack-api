@@ -18,6 +18,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
@@ -156,6 +157,10 @@ public interface SlackSession {
     void addReactionRemovedListener(ReactionRemovedListener listener);
     
     void removeReactionRemovedListener(ReactionRemovedListener listener);
+
+    void addSlackUserChangeListener(SlackUserChangeListener listener);
+
+    void removeSlackUserChangeListener(SlackUserChangeListener listener);
 
     void addPinAddedListener(PinAddedListener listener);
 
