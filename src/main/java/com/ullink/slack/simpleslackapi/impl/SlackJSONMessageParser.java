@@ -280,16 +280,20 @@ class SlackJSONMessageParser
         String name = (String) channelJSONObject.get("name");
         String topic = (String)((Map)channelJSONObject.get("topic")).get("value");
         String purpose = (String) ((Map) channelJSONObject.get("purpose")).get("value");
-        return new SlackChannelImpl(id, name, topic, purpose, true);
+        return new SlackChannelImpl(id, name, topic, purpose, id.startsWith("D"));
     }
 
 
     private static ReactionAdded extractReactionAddedEvent(SlackSession slackSession, JSONObject obj) {
-        JSONObject message = (JSONObject) obj.get("item");
+        JSONObject item = (JSONObject) obj.get("item");
         String emojiName = (String) obj.get("reaction");
-        String messageId = (String) message.get("ts");
-        String channelId = (String) message.get("channel");
-        return new ReactionAddedImpl(emojiName, messageId, slackSession.findChannelById(channelId));
+        String messageId = (String) item.get("ts");	
+        String fileId = (String) item.get("file");
+        String fileCommentId = (String) item.get("file_comment");
+        String channelId = (String) item.get("channel");
+        SlackChannel channel = (channelId != null) ? slackSession.findChannelById(channelId) : null;
+        SlackUser user = slackSession.findUserById((String) obj.get("user"));
+        return new ReactionAddedImpl(emojiName, user, channel, messageId, fileId, fileCommentId);
     }
 
     private static SlackUserChange extractUserChangeEvent(SlackSession slackSession, JSONObject obj) {
@@ -299,11 +303,15 @@ class SlackJSONMessageParser
     }
 
     private static ReactionRemoved extractReactionRemovedEvent(SlackSession slackSession, JSONObject obj) {
-        JSONObject message = (JSONObject) obj.get("item");
+        JSONObject item = (JSONObject) obj.get("item");
         String emojiName = (String) obj.get("reaction");
-        String messageId = (String) message.get("ts");
-        String channelId = (String) message.get("channel");
-        return new ReactionRemovedImpl(emojiName, messageId, slackSession.findChannelById(channelId));    
+        String messageId = (String) item.get("ts");	
+        String fileId = (String) item.get("file");
+        String fileCommentId = (String) item.get("file_comment");
+        String channelId = (String) item.get("channel");
+        SlackChannel channel = (channelId != null) ? slackSession.findChannelById(channelId) : null;
+        SlackUser user = slackSession.findUserById((String) obj.get("user"));
+        return new ReactionRemovedImpl(emojiName, user, channel, messageId, fileId, fileCommentId);
     }
 
     private static PinRemoved extractPinRemovedEvent(SlackSession slackSession, JSONObject obj) {
