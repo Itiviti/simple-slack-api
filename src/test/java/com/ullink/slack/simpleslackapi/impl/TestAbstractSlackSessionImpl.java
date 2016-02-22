@@ -55,7 +55,7 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment)
+        public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message)
         {
             return null;
         }
