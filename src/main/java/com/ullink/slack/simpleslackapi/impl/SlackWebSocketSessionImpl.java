@@ -674,7 +674,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment)
+    public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message)
     {
         SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
         try
@@ -683,10 +683,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             messageJSON.put("type", "message");
             messageJSON.put("channel", channel.getId());
             messageJSON.put("text", message);
-            if (attachment != null)
-            {
-                messageJSON.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachment));
-            }
+
             websocketSession.getBasicRemote().sendText(messageJSON.toJSONString());
         }
         catch (Exception e)

@@ -86,7 +86,7 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment) {
+            public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message) {
                 throw new UnsupportedOperationException();
             }
 
