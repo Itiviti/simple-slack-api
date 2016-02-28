@@ -8,6 +8,9 @@ This library allows an aplication to connect to [Slack](http://www.slack.com/) t
 
 The main purpose of this library is to build slack bots able to react to channel events without having to configure any web hook.
 
+## Maven/Gradle
+
+You can add this library as a dependency to your Maven or Gradle project through [JitPack](https://jitpack.io/#Ullink/simple-slack-api).
 
 ## Short example
 
