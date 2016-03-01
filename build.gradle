@@ -116,6 +116,10 @@ def pomConfig = {
             email 'harry.fox.ic@icloud.com'
             url 'https://github.com/ParaPenguin'
         }
+        contributor {
+            name 'Logan Clément'
+            email 'logs.be@gmail.com'
+        }
     }
     scm {
         connection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
