@@ -1,0 +1,177 @@
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+apply plugin: 'signing'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+group = 'com.ullink.slack'
+archivesBaseName = 'simpleslackapi'
+version = '0.5.1-SNAPSHOT'
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom.withXml {
+                asNode().appendNode('description', 'A simple API to build bot running on Slack')
+                asNode().children().last() + pomConfig
+            }
+        }
+    }
+}
+
+
+task copyRuntimeLibs(type: Copy) {
+    into "lib"
+    from configurations.runtime
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    required false
+    sign configurations.archives
+}
+
+def pomConfig = {
+    name 'Simple Slack API'
+    url 'https://github.com/Ullink/simple-slack-api'
+    licenses {
+        license {
+            name 'CC0 1.0 Universal (CC0 1.0)'
+            url 'http://creativecommons.org/publicdomain/zero/1.0/'
+        }
+    }
+    developers {
+        developer {
+            id 'bcorne'
+            name 'Benoit Corne'
+            email 'benoit.corne@gmail.com'
+        }
+    }
+    contributors {
+        contributor {
+            name 'Christian Sprecher'
+            email 'kindofwhat@gmail.com'
+            url 'https://github.com/kindofwhat'
+        }
+        contributor {
+            name 'Jan Vidar Krey'
+            email 'janvidar@extatic.org'
+        }
+        contributor {
+            name 'David Seebacher'
+            email 'dseebacher@gmail.com'
+            url 'https://github.com/dseebacher'
+        }
+        contributor {
+            name 'Wouter Vernaillen'
+            url 'http://www.vernaillen.com'
+        }
+        contributor {
+            name 'Claudio Comandini'
+            email 'c.comandini@gmail.com'
+            url 'https://twitter.com/c_comandini'
+        }
+        contributor {
+            name 'Maxim Gurkin'
+            email 'redmax3d@gmail.com'
+            url 'http://redcraft.net'
+        }
+        contributor {
+            name 'Ole Kozaczenko'
+            email 'olkozacz@gmail.com'
+        }
+        contributor {
+            name 'Georges Gomes'
+        }
+        contributor {
+            name 'François Valdy'
+        }
+        contributor {
+            name 'Harry Fox'
+            email 'harry.fox.ic@icloud.com'
+            url 'https://github.com/ParaPenguin'
+        }
+        contributor {
+            name 'Logan Clément'
+            email 'logs.be@gmail.com'
+        }
+    }
+    scm {
+        connection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
+        developerConnection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
+        url 'git@github.com/Ullink/simple-slack-api'
+    }
+}
+
+bintray {
+    if (this.hasProperty('bintray_user')) {
+        user = bintray_user //this usually comes from gradle.properties file in ~/.gradle
+        key = bintray_api_key //this usually comes from gradle.properties file in ~/.gradle
+
+        publications = ['mavenJava'] //When uploading Maven-based publication files
+        dryRun = false //Whether to run this as dry-run, without deploying
+        publish = true //If version should be auto published after an upload
+        pkg {
+            repo = 'maven'
+            name = 'com.ullink.slack:simpleslackapi'
+            desc = 'simple slack API package!'
+            websiteUrl = 'https://github.com/Ullink/simple-slack-api'
+            issueTrackerUrl = 'https://github.com/Ullink/simple-slack-api/issues'
+            vcsUrl = 'https://github.com/Ullink/simple-slack-api.git'
+            licenses = ['Apache-2.0']
+            labels = ['slack']
+            publicDownloadNumbers = true
+            version {
+                name = project.version //Bintray logical version name
+                desc = ''
+                mavenCentralSync {
+                    sync = true //Optional (true by default). Determines whether to sync the version to Maven Central.
+                    user = ossrhUsername //OSS user token
+                    password = ossrhPassword //OSS user password
+                    close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+                }
+            }
+        }
+    }
+}
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+        showStackTraces = "true"
+    }
+}
+
+
+
+dependencies {
+    compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.8.3'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'org.apache.httpcomponents:httpclient:4.4'
+    compile 'com.google.guava:guava:18.0'
+    compile 'ch.qos.logback:logback-classic:1.1.3'
+    compile 'org.threeten:threetenbp:1.3.1'
+
+    testCompile 'org.jmockit:jmockit:1.12'
+    testCompile 'org.assertj:assertj-core:1.7.0'
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.slf4j:slf4j-simple:1.7.7'
+}

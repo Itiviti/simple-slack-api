@@ -14,11 +14,11 @@ You can add this library as a dependency to your Maven or Gradle project through
 
 ## Short example
 
-### Slack connection :
+### Slack actions :
 
-The connection is made through the SlackSessionFactory class :
+The actions is made through the SlackSessionFactory class :
 
-#### Direct connection :
+#### Direct actions :
 
 ```java
 SlackSession session = SlackSessionFactory.
