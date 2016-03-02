@@ -1,5 +1,5 @@
 rootProject.name = 'simpleslackapi'
-include ':simpleslackapi',':samples/connection',':samples/actions'
-project(':simpleslackapi').name = rootProject.name
+include ':sources',':samples/connection',':samples/actions'
+project(':sources').name = "${rootProject.name}-lib"
 project(':samples/connection').name = "${rootProject.name}-samples-connection"
 project(':samples/actions').name = "${rootProject.name}-samples-actions"

@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
+    }
+}
+
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'signing'
