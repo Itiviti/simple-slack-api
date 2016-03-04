@@ -4,123 +4,19 @@
 
 # Simple Slack API
 
-This library allows an aplication to connect to [Slack](http://www.slack.com/) to receive and send messages from any channel as if it were a slack client. 
+This library allows an application to connect to [Slack](http://www.slack.com/) to receive and send messages from any channel as if it were a slack client.
 
-The main purpose of this library is to build slack bots able to react to channel events without having to configure any web hook.
+The main purpose of this library is to build Slack bots able to react to channel events without having to configure any web hook.
+
+With this library you should be able to connect to Slack and to send some messages in less than 20 lines (no one-liners).
 
 ## Maven/Gradle
 
 You can add this library as a dependency to your Maven or Gradle project through [JitPack](https://jitpack.io/#Ullink/simple-slack-api).
 
-## Short example
+## How to use it ?
 
-### Slack actions :
-
-The actions is made through the SlackSessionFactory class :
-
-#### Direct actions :
-
-```java
-SlackSession session = SlackSessionFactory.
-  createWebSocketSlackSession("authenticationtoken");
-session.connect();
-```
-
-#### Through a proxy :
-
-```java
-SlackSession session = SlackSessionFactory.
-  createWebSocketSlackSession("authenticationtoken", Proxy.Type.HTTP, "myproxy", 1234);
-session.connect();
-```
-
-### Listening to messages :
-
-Slack messages can be retrieved by attaching a SlackMessageListener to the session provided by the factory :
-
-
-```java
-  session.addMessagePostedListener(new SlackMessagePostedListener()
-  {
-      @Override
-      public void onEvent(SlackMessagePosted event, SlackSession session)
-      {
-          session.sendMessageOverWebSocket(session.findChannelByName("general"), "Message sent : " + event.getMessageContent(), null);
-      }
-  });
-```
-
-(Since v0.4.0, lambda friendly version)
-```java
-session.addMessagePostedListener((e, s) 
-  -> s.sendMessageOverWebSocket(s.findChannelByName("general"), "Message sent : " + e.getMessageContent(), null));
-```
-### Message operation :
-
-The SlackSession interface provides various methods to send/modify and delete messages on a given channel :
-```java
-SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment);
-SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration);
-SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message);
-SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel)
-```        
-(Since v0.4.3, emoji reactions on channel messages)
-
-The SlackSession interface provides a method to add an emoji reaction to a message on a given channel :
-```java
-SlackMessageHandle addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode);
-```        
- 
-## Full example :
-
-Here's a full example with an echoing bot using this library :
-```java
-public class Example
-{
-
-  public static void main(String[] args) throws Exception
-  {
-
-    final SlackSession session = SlackSessionFactory.
-      createWebSocketSlackSession("authenticationtoken", Proxy.Type.HTTP, "myproxy", 1234, true);
-    session.addMessagePostedListener(new SlackMessagePostedListener()
-    {
-        @Override
-        public void onEvent(SlackMessagePosted event, SlackSession session)
-        {
-          //let's send a message
-          SlackMessageHandle handle = session.sendMessage(session.getChannel(),
-                              event.getMessageContent(), null);
-          try
-          {
-              Thread.sleep(2000);
-          } catch (InterruptedException e)
-          {
-              e.printStackTrace();
-          }
-          //2 secs later, let's update the message (I can only update my own messages)
-          session.updateMessage(handle.getSlackReply().getTimestamp(),session.getChannel(),
-                                event.getMessageContent()+" UPDATED");
-          try
-          {
-              Thread.sleep(2000);
-          } catch (InterruptedException e)
-          {
-              e.printStackTrace();
-          }
-          //2 secs later, let's now delete the message (I can only delete my own messages)
-          session.deleteMessage(handle.getSlackReply().getTimestamp(),session.getChannel())
-        }
-      });
-    session.connect();
-
-    while (true)
-    {
-      Thread.sleep(1000);
-    }
-  }
-}
-```        
+You can find some sample of the most common use cases in the sample folder.
 
 ## Features
 
@@ -180,6 +76,7 @@ Many thanks to everyone who has contributed to this library :
 * Georges Gomes
 * François Valdy
 * Harry Fox
+* Logan Clément
 
 (Let me know if I forgot someone, I'll fix that ASAP ;) )
 

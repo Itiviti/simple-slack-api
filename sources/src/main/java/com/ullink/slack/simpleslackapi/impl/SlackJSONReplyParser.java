@@ -47,7 +47,7 @@ class SlackJSONReplyParser
 
     private static boolean isMessageReply(JSONObject obj)
     {
-        return obj.get("reply_to") != null;
+        return obj.get("ts") != null;
     }
     
     private static boolean isMpim(JSONObject obj)
