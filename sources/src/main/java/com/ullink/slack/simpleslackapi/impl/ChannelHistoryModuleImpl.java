@@ -152,7 +152,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
                 }
             }
         }
-    };
+    }
 
     public class ChannelHistoryMessagePostedListener implements SlackMessagePostedListener {
 
