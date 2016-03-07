@@ -79,4 +79,17 @@ class SlackChannelImpl implements SlackChannel
     public boolean isDirect() {
         return direct;
     }
+
+    @Override
+    public SlackChannelType getType()
+    {
+        //that's a bit hacky
+        if (isDirect()) {
+            return SlackChannelType.INSTANT_MESSAGING;
+        }
+        if (id.startsWith("G")) {
+            return SlackChannelType.PRIVATE_GROUP;
+        }
+        return SlackChannelType.PUBLIC_CHANNEL;
+    }
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.ullink.slack.simpleslackapi.SlackChannel;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.threeten.bp.LocalDate;
@@ -25,6 +27,8 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
     private final SlackSession session;
     private static final String FETCH_CHANNEL_HISTORY_COMMAND = "channels.history";
+    private static final String FETCH_GROUP_HISTORY_COMMAND = "groups.history";
+    private static final String FETCH_IM_HISTORY_COMMAND = "im.history";
 
     public ChannelHistoryModuleImpl(SlackSession session) {
         this.session = session;
@@ -60,11 +64,19 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
         } else {
             params.put("count", String.valueOf(1000));
         }
-        return fetchHistoryOfChannel(params);
+        SlackChannel channel =session.findChannelById(channelId);
+        switch (channel.getType()) {
+            case INSTANT_MESSAGING:
+                return fetchHistoryOfChannel(params,FETCH_IM_HISTORY_COMMAND);
+            case PRIVATE_GROUP:
+                return fetchHistoryOfChannel(params,FETCH_GROUP_HISTORY_COMMAND);
+            default:
+                return fetchHistoryOfChannel(params,FETCH_CHANNEL_HISTORY_COMMAND);
+        }
     }
 
-    private List<SlackMessagePosted> fetchHistoryOfChannel(Map<String, String> params) {
-        SlackMessageHandle<GenericSlackReply> handle = session.postGenericSlackCommand(params, FETCH_CHANNEL_HISTORY_COMMAND);
+    private List<SlackMessagePosted> fetchHistoryOfChannel(Map<String, String> params, String command) {
+        SlackMessageHandle<GenericSlackReply> handle = session.postGenericSlackCommand(params, command);
         GenericSlackReply replyEv = handle.getReply();
         JSONObject answer = replyEv.getPlainAnswer();
         JSONArray events = (JSONArray) answer.get("messages");
