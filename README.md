@@ -16,7 +16,7 @@ You can add this library as a dependency to your Maven or Gradle project through
 
 ## How to use it ?
 
-You can find some sample of the most common use cases in the sample folder.
+You can find some samples of the most common use cases in the [samples](https://github.com/Ullink/simple-slack-api/tree/master/samples) folder.
 
 ## Features
 
