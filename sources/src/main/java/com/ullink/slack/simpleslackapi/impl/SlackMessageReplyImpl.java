@@ -8,9 +8,9 @@ public class SlackMessageReplyImpl extends SlackReplyImpl implements SlackMessag
     private long replyTo;
     private String timestamp;
 
-    SlackMessageReplyImpl(boolean ok, JSONObject obj, long replyTo, String timestamp)
+    SlackMessageReplyImpl(boolean ok, String error, JSONObject obj, long replyTo, String timestamp)
     {
-        super(ok);
+        super(ok, error);
         this.replyTo = replyTo;
         this.timestamp = timestamp;
     }

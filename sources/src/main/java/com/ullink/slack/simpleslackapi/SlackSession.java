@@ -20,9 +20,9 @@ import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
+import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
-import com.ullink.slack.simpleslackapi.replies.SlackReply;
 
 public interface SlackSession {
 
@@ -48,7 +48,7 @@ public interface SlackSession {
     SlackBot findBotById(String botId);
     
 
-    SlackMessageHandle<GenericSlackReply> inviteUser(String email, String firstName, boolean setActive);
+    SlackMessageHandle<ParsedSlackReply> inviteUser(String email, String firstName, boolean setActive);
 
     void connect() throws IOException;
 
@@ -84,7 +84,7 @@ public interface SlackSession {
     
     SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user);
     
-    SlackMessageHandle<SlackReply> archiveChannel(SlackChannel channel);
+    SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel);
 
     SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user);
 

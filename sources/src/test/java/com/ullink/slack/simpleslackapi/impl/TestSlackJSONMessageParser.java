@@ -2,6 +2,8 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import java.io.IOException;
 import java.util.Map;
+
+import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
 import org.assertj.core.api.Assertions;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -28,7 +30,6 @@ import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.events.SlackUserChange;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
-import com.ullink.slack.simpleslackapi.replies.SlackReply;
 
 public class TestSlackJSONMessageParser {
 
@@ -165,7 +166,7 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle<SlackReply> archiveChannel(SlackChannel channel)
+            public SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel)
             {
                 return null;
             }

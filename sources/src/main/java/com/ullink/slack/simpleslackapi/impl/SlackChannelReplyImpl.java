@@ -8,9 +8,9 @@ public class SlackChannelReplyImpl extends SlackReplyImpl implements SlackChanne
 {
     private SlackChannel slackChannel;
 
-    SlackChannelReplyImpl(boolean ok, JSONObject plain, SlackChannel slackChannel)
+    SlackChannelReplyImpl(boolean ok, String error, JSONObject plain, SlackChannel slackChannel)
     {
-        super(ok);
+        super(ok,error);
         this.slackChannel = slackChannel;
     }
 

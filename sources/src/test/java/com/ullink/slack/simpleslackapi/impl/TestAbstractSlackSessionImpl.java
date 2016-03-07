@@ -1,6 +1,8 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
 import org.junit.Test;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -12,7 +14,6 @@ import com.ullink.slack.simpleslackapi.events.SlackConnected;
 import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
-import com.ullink.slack.simpleslackapi.replies.SlackReply;
 
 public class TestAbstractSlackSessionImpl
 {
@@ -130,7 +131,7 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle<SlackReply> archiveChannel(SlackChannel channel) 
+        public SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel)
         {
           return null;
         }
