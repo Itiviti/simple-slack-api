@@ -210,7 +210,7 @@ class SlackJSONMessageParser
         String userId = (String) obj.get("user");
         SlackUser user = slackSession.findUserById(userId);
         Map<String, Integer> reacs = extractReactionsFromMessageJSON(obj);
-        SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, user, user, channel, ts);
+        SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, null, user, channel, ts);
         message.setReactions(reacs);
         return message;
     }
