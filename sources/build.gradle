@@ -18,7 +18,7 @@ apply plugin: 'maven-publish'
 
 group = 'com.ullink.slack'
 archivesBaseName = 'simpleslackapi'
-version = '0.5.1'
+version = '0.6.0-SNAPSHOT'
 
 
 def pomConfig = {
@@ -97,6 +97,7 @@ def pomConfig = {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            artifactId = archivesBaseName
             from components.java
             artifact sourcesJar
             artifact javadocJar
