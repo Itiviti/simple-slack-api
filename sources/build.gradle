@@ -9,6 +9,7 @@ buildscript {
     }
 }
 
+apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'signing'
@@ -17,47 +18,8 @@ apply plugin: 'maven-publish'
 
 group = 'com.ullink.slack'
 archivesBaseName = 'simpleslackapi'
-version = '0.5.1-SNAPSHOT'
+version = '0.5.1'
 
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
-            pom.withXml {
-                asNode().appendNode('description', 'A simple API to build bot running on Slack')
-                asNode().children().last() + pomConfig
-            }
-        }
-    }
-}
-
-
-task copyRuntimeLibs(type: Copy) {
-    into "lib"
-    from configurations.runtime
-}
-
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
-signing {
-    required false
-    sign configurations.archives
-}
 
 def pomConfig = {
     name 'Simple Slack API'
@@ -129,6 +91,46 @@ def pomConfig = {
         developerConnection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
         url 'git@github.com/Ullink/simple-slack-api'
     }
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom.withXml {
+                asNode().appendNode('description', 'A simple API to build bot running on Slack')
+                asNode().children().last() + pomConfig
+            }
+        }
+    }
+}
+
+
+task copyRuntimeLibs(type: Copy) {
+    into "lib"
+    from configurations.runtime
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    required false
+    sign configurations.archives
 }
 
 bintray {
