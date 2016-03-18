@@ -1,6 +1,8 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import java.util.Map;
+
+import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -18,28 +20,20 @@ class SlackMessagePostedImpl implements SlackMessagePosted
     private String       timestamp;
     private SlackFile    slackFile;
     private JSONObject   jsonSource;
+    private MessageSubType msgSubType;
     private Map<String, Integer> reactions;
     
-    SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp)
+    SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, MessageSubType msgSubType)
     {
         this.channel = channel;
         this.messageContent = messageContent;
         this.user = user;
         this.bot = bot;
         this.timestamp = timestamp;
+        this.msgSubType = msgSubType;
     }
-    
-    SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, JSONObject jsonSource)
-    {
-        this.channel = channel;
-        this.messageContent = messageContent;
-        this.user = user;
-        this.bot = bot;
-        this.timestamp = timestamp;
-        this.jsonSource = jsonSource;
-    }
-    
-    SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, SlackFile slackFile, JSONObject jsonSource)
+
+    SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, SlackFile slackFile, JSONObject jsonSource, MessageSubType msgSubType)
     {
         this.channel = channel;
         this.messageContent = messageContent;
@@ -48,6 +42,7 @@ class SlackMessagePostedImpl implements SlackMessagePosted
         this.timestamp = timestamp;
         this.jsonSource = jsonSource;
         this.slackFile = slackFile;
+        this.msgSubType = msgSubType;
     }
 
     @Override
@@ -107,11 +102,13 @@ class SlackMessagePostedImpl implements SlackMessagePosted
 
     @Override
     public int getTotalCountOfReactions() {
-        int count = 0;
-        for (Integer tmpCount : reactions.values()) {
-            count += tmpCount;
-        }
-        return count;
+        return reactions == null ? 0 : reactions.size();
+    }
+
+    @Override
+    public MessageSubType getMessageSubType()
+    {
+        return msgSubType;
     }
 
     @Override

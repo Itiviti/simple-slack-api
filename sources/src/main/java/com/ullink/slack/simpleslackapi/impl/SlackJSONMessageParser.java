@@ -2,25 +2,14 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.ullink.slack.simpleslackapi.events.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.events.EventType;
-import com.ullink.slack.simpleslackapi.events.PinAdded;
-import com.ullink.slack.simpleslackapi.events.PinRemoved;
-import com.ullink.slack.simpleslackapi.events.ReactionAdded;
-import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
-import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
-import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
-import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackChannelRenamed;
-import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
-import com.ullink.slack.simpleslackapi.events.SlackEvent;
-import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
-import com.ullink.slack.simpleslackapi.events.SlackUserChange;
 
 class SlackJSONMessageParser
 {
@@ -200,17 +189,19 @@ class SlackJSONMessageParser
     private static SlackMessagePostedImpl parseBotMessage(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession)
     {
         String text = (String) obj.get("text");
+        String subtype = (String) obj.get("subtype");
         String botId = (String) obj.get("bot_id");
         SlackUser user = slackSession.findUserById(botId);
-        return new SlackMessagePostedImpl(text, user, user, channel, ts);
+        return new SlackMessagePostedImpl(text, user, user, channel, ts, SlackMessagePosted.MessageSubType.fromCode(subtype));
     }
 
     private static SlackMessagePostedImpl parseMessagePublished(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession) {
         String text = (String) obj.get("text");
         String userId = (String) obj.get("user");
+        String subtype = (String) obj.get("subtype");
         SlackUser user = slackSession.findUserById(userId);
         Map<String, Integer> reacs = extractReactionsFromMessageJSON(obj);
-        SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, null, user, channel, ts);
+        SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, null, user, channel, ts, SlackMessagePosted.MessageSubType.fromCode(subtype));
         message.setReactions(reacs);
         return message;
     }
@@ -258,7 +249,8 @@ class SlackJSONMessageParser
         }
         
         String text = (String) obj.get("text");
-        
+        String subtype = (String) obj.get("subtype");
+
         String comment = null;
         
         int idx = text.indexOf(COMMENT_PLACEHOLDER);
@@ -272,7 +264,7 @@ class SlackJSONMessageParser
         
         SlackUser user = slackSession.findUserById(userId);
         
-        return new SlackMessagePostedImpl(text, user, user, channel, ts,file,obj);
+        return new SlackMessagePostedImpl(text, user, user, channel, ts,file,obj, SlackMessagePosted.MessageSubType.fromCode(subtype));
     }
 
     private static SlackChannel parseChannelDescription(JSONObject channelJSONObject) {
