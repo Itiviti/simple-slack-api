@@ -18,5 +18,6 @@ public enum SlackEventType
     SLACK_USER_CHANGE,
     PIN_ADDED,
     PIN_REMOVED,
-    UNKNOWN;
+    UNKNOWN,
+    SLACK_DISCONNECTED;
 }

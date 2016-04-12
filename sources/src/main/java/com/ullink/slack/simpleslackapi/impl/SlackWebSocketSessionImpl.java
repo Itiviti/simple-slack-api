@@ -16,7 +16,8 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import com.google.common.io.CharStreams;
-import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
+import com.ullink.slack.simpleslackapi.events.*;
+import com.ullink.slack.simpleslackapi.replies.*;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -41,28 +42,8 @@ import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.events.PinAdded;
-import com.ullink.slack.simpleslackapi.events.PinRemoved;
-import com.ullink.slack.simpleslackapi.events.ReactionAdded;
-import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
-import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
-import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
-import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackChannelRenamed;
-import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
-import com.ullink.slack.simpleslackapi.events.SlackConnected;
-import com.ullink.slack.simpleslackapi.events.SlackEvent;
-import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
-import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import com.ullink.slack.simpleslackapi.events.SlackMessageUpdated;
-import com.ullink.slack.simpleslackapi.events.SlackUserChange;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
 import com.ullink.slack.simpleslackapi.listeners.SlackEventListener;
-import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
-import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
-import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
-import com.ullink.slack.simpleslackapi.replies.SlackUserPresenceReply;
 
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String>
 {
@@ -175,6 +156,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 case PIN_REMOVED:
                     dispatchImpl((PinRemoved) event, pinRemovedListener);
                     break;
+                case SLACK_DISCONNECTED:
+                    dispatchImpl((SlackDisconnected) event, slackDisconnectedListener);
                 case UNKNOWN:
                     throw new IllegalArgumentException("event not handled " + event);
             }
@@ -328,6 +311,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             }
             finally
             {
+                SlackDisconnectedImpl slackDisconnected = new SlackDisconnectedImpl(sessionPersona);
+                dispatcher.dispatch(slackDisconnected);
                 websocketSession = null;
             }
         }

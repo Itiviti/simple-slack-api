@@ -13,21 +13,7 @@ import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackTeam;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.listeners.PinAddedListener;
-import com.ullink.slack.simpleslackapi.listeners.PinRemovedListener;
-import com.ullink.slack.simpleslackapi.listeners.ReactionAddedListener;
-import com.ullink.slack.simpleslackapi.listeners.ReactionRemovedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
+import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 
 abstract class AbstractSlackSessionImpl implements SlackSession
@@ -53,6 +39,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<SlackUserChangeListener>        slackUserChangeListener  = new ArrayList<>();
     protected List<PinAddedListener>               pinAddedListener         = new ArrayList<>();
     protected List<PinRemovedListener>             pinRemovedListener       = new ArrayList<>();
+    protected List<SlackDisconnectedListener> slackDisconnectedListener = new ArrayList<>();
 
     static final SlackChatConfiguration            DEFAULT_CONFIGURATION    = SlackChatConfiguration.getConfiguration().asUser();
     static final boolean                           DEFAULT_UNFURL           = true;
@@ -305,6 +292,16 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public void removeSlackConnectedListener(SlackConnectedListener listener)
     {
         slackConnectedListener.remove(listener);
+    }
+
+    @Override
+    public void addSlackDisconnectedListener(SlackDisconnectedListener listener) {
+        slackDisconnectedListener.add(listener);
+    }
+
+    @Override
+    public void removeSlackDisconnectedListener(SlackDisconnectedListener listener) {
+        slackDisconnectedListener.remove(listener);
     }
 
     @Override
