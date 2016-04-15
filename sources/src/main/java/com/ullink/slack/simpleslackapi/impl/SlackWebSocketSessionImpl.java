@@ -71,6 +71,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     
     private static final String INVITE_USER_COMMAND     = "users.admin.invite";
 
+    private static final String SET_PERSONA_ACTIVE = "users.setPresence";
+
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
@@ -708,6 +710,27 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             e.printStackTrace();
         }
         return SlackPersona.SlackPresence.UNKNOWN;
+    }
+
+    public void setPresence(SlackPersona.SlackPresence presence) {
+        if(presence == SlackPersona.SlackPresence.UNKNOWN) {
+            throw new IllegalArgumentException("presence cannot be unknown");
+        }
+        HttpClient client = getHttpClient();
+        HttpPost request = new HttpPost(SLACK_API_HTTPS_ROOT + SET_PERSONA_ACTIVE);
+        List<NameValuePair> nameValuePairList = new ArrayList<>();
+        nameValuePairList.add(new BasicNameValuePair("token", authToken));
+        nameValuePairList.add(new BasicNameValuePair("presence", presence.toString().toLowerCase()));
+        try {
+            request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
+            HttpResponse response = client.execute(request);
+            String JSONResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
+            LOGGER.debug("JSON Response=" + JSONResponse);
+            JSONObject resultObj = parseObject(JSONResponse);
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private synchronized long getNextMessageId()

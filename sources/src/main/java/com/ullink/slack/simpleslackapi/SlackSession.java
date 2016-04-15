@@ -78,6 +78,8 @@ public interface SlackSession {
 
     SlackPersona.SlackPresence getPresence(SlackPersona persona);
 
+    void setPresence(SlackPersona.SlackPresence presence);
+
     SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(Map<String, String> params, String command);
 
     void addchannelArchivedListener(SlackChannelArchivedListener listener);
