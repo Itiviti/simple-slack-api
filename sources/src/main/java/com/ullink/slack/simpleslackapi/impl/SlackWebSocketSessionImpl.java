@@ -713,8 +713,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     public void setPresence(SlackPersona.SlackPresence presence) {
-        if(presence == SlackPersona.SlackPresence.UNKNOWN) {
-            throw new IllegalArgumentException("presence cannot be unknown");
+        if(presence == SlackPersona.SlackPresence.UNKNOWN || presence == SlackPersona.SlackPresence.ACTIVE) {
+            throw new IllegalArgumentException("Presence must be either AWAY or AUTO");
         }
         HttpClient client = getHttpClient();
         HttpPost request = new HttpPost(SLACK_API_HTTPS_ROOT + SET_PERSONA_ACTIVE);
