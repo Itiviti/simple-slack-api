@@ -20,7 +20,9 @@ public class TestAbstractSlackSessionImpl
 
     private class TestSlackSessionImpl extends AbstractSlackSessionImpl
     {
-
+        @Override
+        public void setPresence(SlackPersona.SlackPresence presence) {
+        }
         @Override
         public void connect()
         {
@@ -150,6 +152,8 @@ public class TestAbstractSlackSessionImpl
         public SlackMessageHandle sendMessageToUser(String userName, String message, SlackAttachment attachment) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+
+
     }
 
     @Test

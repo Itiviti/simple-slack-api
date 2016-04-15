@@ -57,7 +57,10 @@ public class TestSlackJSONMessageParser {
     @Before
     public void setup() {
         session = new AbstractSlackSessionImpl() {
-            
+
+            @Override
+            public void setPresence(SlackPersona.SlackPresence presence) {};
+
             @Override
             public void connect() {
                 SlackUser user1 = new SlackUserImpl("TESTUSER1", "test user 1", "", "", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0));
