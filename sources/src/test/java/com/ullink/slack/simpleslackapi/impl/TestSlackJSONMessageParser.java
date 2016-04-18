@@ -1,9 +1,11 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.io.IOException;
-import java.util.Map;
-
+import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.events.*;
+import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
+import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import org.assertj.core.api.Assertions;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,25 +13,9 @@ import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.events.ReactionAdded;
-import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
-import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
-import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
-import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
-import com.ullink.slack.simpleslackapi.events.SlackEvent;
-import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
-import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import com.ullink.slack.simpleslackapi.events.SlackUserChange;
-import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
-import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
+
+import java.io.IOException;
+import java.util.Map;
 
 public class TestSlackJSONMessageParser {
 
@@ -85,11 +71,6 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
             public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message) {
                 throw new UnsupportedOperationException();
             }
@@ -102,6 +83,11 @@ public class TestSlackJSONMessageParser {
             @Override
             public SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel) {
                 return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+                throw new UnsupportedOperationException();
             }
 
             @Override
