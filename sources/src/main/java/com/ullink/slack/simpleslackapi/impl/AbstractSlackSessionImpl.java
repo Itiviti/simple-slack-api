@@ -1,20 +1,10 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackBot;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackTeam;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+
+import java.util.*;
 
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
@@ -172,6 +162,23 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
     {
         return sendMessage(channel, message, attachment, chatConfiguration, DEFAULT_UNFURL);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage) {
+        return sendMessage(channel, preparedMessage, DEFAULT_CONFIGURATION);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
+    {
+        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
+                .withMessage(message)
+                .withUnfurl(unfurl)
+                .addAttachment(attachment)
+                .build();
+
+        return sendMessage(channel, preparedMessage, chatConfiguration);
     }
 
     @Override

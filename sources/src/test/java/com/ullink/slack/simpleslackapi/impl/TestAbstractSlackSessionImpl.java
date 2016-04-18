@@ -1,19 +1,15 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
-import org.junit.Test;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackConnected;
 import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
+import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAbstractSlackSessionImpl
 {
@@ -52,12 +48,6 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
-        {
-            return null;
-        }
-
-        @Override
         public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message)
         {
             return null;
@@ -71,6 +61,11 @@ public class TestAbstractSlackSessionImpl
         @Override
         public SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel)
         {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
             return null;
         }
 

@@ -1,9 +1,6 @@
 package actions;
 
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 
 /**
@@ -78,4 +75,22 @@ public class SendingMessages
         session.sendMessage(channel, "Hi, how are you guys", null);
     }
 
+    /**
+     * This method shows how to send a message using the PreparedMessage builder (allows for multiple attachments)
+     */
+    public void sendUsingPreparedMessage(SlackSession session)
+    {
+        //get a channel
+        SlackChannel channel = session.findChannelByName("achannel");
+
+        //build a message object
+        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
+                .withMessage("Hey, this is a message")
+                .withUnfurl(false)
+                .addAttachment(new SlackAttachment())
+                .addAttachment(new SlackAttachment())
+                .build();
+
+        session.sendMessage(channel, preparedMessage);
+    }
 }

@@ -1,14 +1,15 @@
 package com.ullink.slack.simpleslackapi;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
 import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
 
 public interface SlackSession {
 
@@ -41,6 +42,10 @@ public interface SlackSession {
     void disconnect() throws IOException;
 
     SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, SlackChannel channel);
+
+    SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration);
+
+    SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage);
 
     SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl);
 
