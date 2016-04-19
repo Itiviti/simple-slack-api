@@ -1,6 +1,8 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import java.net.Proxy;
+import java.util.concurrent.TimeUnit;
+
 import com.ullink.slack.simpleslackapi.SlackSession;
 
 public class SlackSessionFactory
@@ -15,4 +17,7 @@ public class SlackSessionFactory
         return new SlackWebSocketSessionImpl(authToken, proxyType, proxyAddress, proxyPort, true);
     }
 
+    public static SlackSession createWebSocketSlackSession(String authToken, int heartbeat, TimeUnit unit) {
+        return new SlackWebSocketSessionImpl(authToken, true, heartbeat, unit);
+    }
 }

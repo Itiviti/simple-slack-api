@@ -10,15 +10,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import javax.websocket.DeploymentException;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import com.google.common.io.CharStreams;
+import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.*;
 import com.ullink.slack.simpleslackapi.replies.*;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -36,12 +39,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
 import com.ullink.slack.simpleslackapi.listeners.SlackEventListener;
 
@@ -193,6 +190,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private Thread                            connectionMonitoringThread = null;
     private EventDispatcher                   dispatcher                 = new EventDispatcher();
+    private long                              heartbeatTime;
 
     SlackWebSocketSessionImpl(String authToken, Proxy.Type proxyType, String proxyAddress, int proxyPort, boolean reconnectOnDisconnection) {
         this.authToken = authToken;
@@ -206,6 +204,12 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     {
         this.authToken = authToken;
         this.reconnectOnDisconnection = reconnectOnDisconnection;
+    }
+
+    public SlackWebSocketSessionImpl(String authToken, boolean reconnectOnDisconnection, long heartbeatDelay, TimeUnit unit) {
+        this.authToken = authToken;
+        this.reconnectOnDisconnection = reconnectOnDisconnection;
+        this.heartbeatTime = heartbeatDelay != 0 ? unit.toMillis(heartbeatDelay) : 30000;
     }
 
     @Override
@@ -333,7 +337,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                     try
                     {
                         // heart beat of 30s (should be configurable in the future)
-                        Thread.sleep(30000);
+                        Thread.sleep(heartbeatTime);
 
                         // disconnect() was called.
                         if (wantDisconnect)
@@ -800,4 +804,12 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return handle;
     }
 
+
+    public long getHeartbeat() {
+        return heartbeatTime;
+    }
+
+    public void setHeartbeat(int heartbeat, TimeUnit unit) {
+        this.heartbeatTime = unit.toMillis(heartbeat);
+    }
 }
