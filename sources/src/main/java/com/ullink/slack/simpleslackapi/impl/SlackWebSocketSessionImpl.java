@@ -806,7 +806,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
 
     public long getHeartbeat() {
-        return heartbeatTime;
+        return TimeUnit.MILLISECONDS.toSeconds(heartbeatTime);
     }
 
     public void setHeartbeat(int heartbeat, TimeUnit unit) {
