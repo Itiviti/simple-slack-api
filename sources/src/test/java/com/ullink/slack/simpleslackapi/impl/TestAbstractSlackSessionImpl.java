@@ -9,6 +9,8 @@ import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAbstractSlackSessionImpl
@@ -148,7 +150,15 @@ public class TestAbstractSlackSessionImpl
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
+        @Override
+        public long getHeartbeat() {
+            return 0;
+        }
 
+        @Override
+        public void setHeartbeat(long heartbeat, TimeUnit unit) {
+
+        }
     }
 
     @Test

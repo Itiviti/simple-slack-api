@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class TestSlackJSONMessageParser {
 
@@ -43,6 +44,16 @@ public class TestSlackJSONMessageParser {
     @Before
     public void setup() {
         session = new AbstractSlackSessionImpl() {
+
+            @Override
+            public long getHeartbeat() {
+                return 0;
+            }
+
+            @Override
+            public void setHeartbeat(long heartbeat, TimeUnit unit) {
+
+            }
 
             @Override
             public void setPresence(SlackPersona.SlackPresence presence) {};

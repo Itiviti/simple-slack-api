@@ -10,6 +10,7 @@ import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public interface SlackSession {
 
@@ -166,4 +167,8 @@ public interface SlackSession {
     void addPinRemovedListener(PinRemovedListener listener);
   
     void removePinRemovedListener(PinRemovedListener listener);
+
+    long getHeartbeat();
+
+    void setHeartbeat(long heartbeat, TimeUnit unit);
 }
