@@ -85,6 +85,11 @@ def pomConfig = {
             name 'Logan Clément'
             email 'logs.be@gmail.com'
         }
+        contributor {
+            name 'Rhys Kenwell'
+            email 'purbleguy@gmail.com'
+            url 'http://redrield.github.io/'
+        }
     }
     scm {
         connection 'scm:git:git@github.com:Ullink/simple-slack-api.git'

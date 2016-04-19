@@ -77,6 +77,7 @@ Many thanks to everyone who has contributed to this library :
 * François Valdy
 * Harry Fox
 * Logan Clément
+* Rhys Kenwell
 
 (Let me know if I forgot someone, I'll fix that ASAP ;) )
 
