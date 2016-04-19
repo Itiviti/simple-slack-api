@@ -32,6 +32,7 @@ import java.net.ConnectException;
 import java.net.Proxy;
 import java.net.URI;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String>
 {
@@ -181,6 +182,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private Thread                            connectionMonitoringThread = null;
     private EventDispatcher                   dispatcher                 = new EventDispatcher();
+    private long                              heartbeat;
 
     SlackWebSocketSessionImpl(String authToken, Proxy.Type proxyType, String proxyAddress, int proxyPort, boolean reconnectOnDisconnection) {
         this.authToken = authToken;
@@ -194,6 +196,12 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     {
         this.authToken = authToken;
         this.reconnectOnDisconnection = reconnectOnDisconnection;
+    }
+
+    SlackWebSocketSessionImpl(String authToken, boolean reconnectOnDisconnection, long heartbeat, TimeUnit unit) {
+        this.authToken = authToken;
+        this.reconnectOnDisconnection = reconnectOnDisconnection;
+        this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : 30000;
     }
 
     @Override
@@ -321,7 +329,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                     try
                     {
                         // heart beat of 30s (should be configurable in the future)
-                        Thread.sleep(30000);
+                        Thread.sleep(heartbeat);
 
                         // disconnect() was called.
                         if (wantDisconnect)
@@ -789,4 +797,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return handle;
     }
 
+    public long getHeartbeat() {
+        return TimeUnit.MILLISECONDS.toSeconds(heartbeat);
+    }
+
+    public void setHeartbeat(long heartbeat, TimeUnit unit) {
+        this.heartbeat = unit.toMillis(heartbeat);
+    }
 }
