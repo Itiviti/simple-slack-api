@@ -108,6 +108,11 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
+        public SlackMessageHandle<ParsedSlackReply> listEmoji() {
+            return null;
+        }
+
+        @Override
         public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
         {
             return null;

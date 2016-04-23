@@ -364,6 +364,17 @@ class SlackJSONMessageParser
         }
         return reacs;
     }
+
+    public static Map<String, String> extractEmojisFromMessageJSON(JSONObject object) {
+        Map<String, String> emojis = new HashMap<>();
+
+        for (Object o : object.entrySet()) {
+            Map.Entry entry = (Map.Entry) o;
+            emojis.put(entry.getKey().toString(), entry.getValue().toString());
+        }
+
+        return emojis;
+    }
 }
 
 

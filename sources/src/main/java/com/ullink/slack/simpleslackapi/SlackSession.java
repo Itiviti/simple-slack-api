@@ -32,6 +32,8 @@ public interface SlackSession {
 
     SlackPersona sessionPersona();
 
+    SlackMessageHandle<ParsedSlackReply> listEmoji();
+
     @Deprecated
     SlackBot findBotById(String botId);
     
