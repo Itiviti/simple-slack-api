@@ -21,7 +21,7 @@ public class SlackEmojiReplyImpl extends SlackReplyImpl implements EmojiSlackRep
     }
 
     @Override
-    public Map<String, String> getEmoji() {
+    public Map<String, String> getEmojis() {
         return emoji;
     }
 }

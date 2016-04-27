@@ -2,10 +2,7 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.*;
-import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
-import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
-import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
-import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+import com.ullink.slack.simpleslackapi.replies.*;
 import org.assertj.core.api.Assertions;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -134,7 +131,7 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle<ParsedSlackReply> listEmoji() {
+            public SlackMessageHandle<EmojiSlackReply> listEmoji() {
                 return null;
             }
 

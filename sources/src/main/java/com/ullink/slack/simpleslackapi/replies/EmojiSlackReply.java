@@ -6,5 +6,5 @@ public interface EmojiSlackReply extends SlackReply
 {
     String getTimestamp();
 
-    Map<String,String> getEmoji();
+    Map<String,String> getEmojis();
 }

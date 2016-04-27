@@ -579,8 +579,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
 
-    public SlackMessageHandle<ParsedSlackReply> listEmoji() {
-        SlackMessageHandleImpl<ParsedSlackReply> handle = new SlackMessageHandleImpl<>(getNextMessageId());
+    public SlackMessageHandle<EmojiSlackReply> listEmoji() {
+        SlackMessageHandleImpl<EmojiSlackReply> handle = new SlackMessageHandleImpl<>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         postSlackCommand(arguments, LIST_EMOJI_COMMAND, handle);

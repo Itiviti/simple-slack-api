@@ -3,10 +3,7 @@ package com.ullink.slack.simpleslackapi.impl;
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackConnected;
 import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
-import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
-import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
-import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
-import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+import com.ullink.slack.simpleslackapi.replies.*;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -108,7 +105,7 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle<ParsedSlackReply> listEmoji() {
+        public SlackMessageHandle<EmojiSlackReply> listEmoji() {
             return null;
         }
 
