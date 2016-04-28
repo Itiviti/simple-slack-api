@@ -62,6 +62,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private static final String SET_PERSONA_ACTIVE = "users.setPresence";
 
+    private static final String LIST_EMOJI_COMMAND = "emoji.list";
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
@@ -574,6 +575,15 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             LOGGER.debug("Error occurred while performing command: '" + handle.getReply().getErrorMessage() + "'");
             return null;
         }
+        return handle;
+    }
+
+
+    public SlackMessageHandle<EmojiSlackReply> listEmoji() {
+        SlackMessageHandleImpl<EmojiSlackReply> handle = new SlackMessageHandleImpl<>(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        postSlackCommand(arguments, LIST_EMOJI_COMMAND, handle);
         return handle;
     }
 

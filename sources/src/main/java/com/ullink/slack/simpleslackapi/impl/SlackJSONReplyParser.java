@@ -27,6 +27,11 @@ class SlackJSONReplyParser
             return new SlackMessageReplyImpl(ok, error, obj, replyTo != null ? replyTo : -1, timestamp);
         }
 
+        if (isEmojiReply(obj)) {
+            String timestamp = (String) obj.get("cache_ts");
+            return new SlackEmojiReplyImpl(ok, error, SlackJSONMessageParser.extractEmojisFromMessageJSON((JSONObject) obj.get("emoji")), timestamp);
+        }
+
         if (ok == null) {
             //smelly reply
             ok = Boolean.FALSE;
@@ -82,6 +87,11 @@ class SlackJSONReplyParser
 
         Object group = obj.get("group");
         return group != null && group instanceof JSONObject;
+    }
+
+    private static boolean isEmojiReply(JSONObject obj) {
+        Object emoji = obj.get("emoji");
+        return emoji != null && emoji instanceof JSONObject;
     }
 
 }
