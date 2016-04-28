@@ -1,6 +1,5 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 
@@ -8,7 +7,7 @@ public class SlackChannelReplyImpl extends SlackReplyImpl implements SlackChanne
 {
     private SlackChannel slackChannel;
 
-    SlackChannelReplyImpl(boolean ok, String error, JSONObject plain, SlackChannel slackChannel)
+    SlackChannelReplyImpl(boolean ok, String error, SlackChannel slackChannel)
     {
         super(ok,error);
         this.slackChannel = slackChannel;

@@ -1,12 +1,12 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.*;
 import com.ullink.slack.simpleslackapi.replies.*;
 import org.assertj.core.api.Assertions;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class TestSlackJSONMessageParser {
     private static final String TEST_NEW_MESSAGE = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER1\",\"text\":\"Test text 1\",\"ts\":\"1413187521.000004\"}";
     private static final String TEST_NEW_MESSAGE_FROM_INTEGRATION = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"bot_id\":\"TESTINTEGRATION1\",\"text\":\"Test text 1\",\"ts\":\"1413187521.000004\"}";
     private static final String TEST_DELETED_MESSAGE = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER1\",\"text\":\"Test text 1\",\"ts\":\"1413187521.000005\", \"subtype\": \"message_deleted\", \"deleted_ts\": \"1358878749.000002\"}";
-    private static final String TEST_UPDATED_MESSAGE = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"text\":\"Test text 1\",\"ts\":\"1358878755.001234\", \"subtype\": \"message_changed\", \"message\": {\"type:\" \"message\", \"user\": \"TESTUSER1\", \"text\": \"newtext\", \"ts\": \"1413187521.000005\", \"edited\": { \"user\": \"TESTUSER1\", \"ts\":\"1358878755.001234\"}}}";
+    private static final String TEST_UPDATED_MESSAGE = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"text\":\"Test text 1\",\"ts\":\"1358878755.001234\", \"subtype\": \"message_changed\", \"message\": {\"type\": \"message\", \"user\": \"TESTUSER1\", \"text\": \"newtext\", \"ts\": \"1413187521.000005\", \"edited\": { \"user\": \"TESTUSER1\", \"ts\":\"1358878755.001234\"}}}";
 
     private static final String TEST_CHANNEL_CREATED = "{\"type\":\"channel_created\",\"channel\": { \"id\": \"NEWCHANNEL\", \"name\": \"new channel\", \"creator\": \"TESTUSER1\", \"topic\": {\"value\": \"Catz Wid Hatz\"}, \"purpose\": {\"value\": \"To post pictures of de Catz wid dem Hatz On\"}}}";
     private static final String TEST_CHANNEL_DELETED = "{\"type\":\"channel_deleted\",\"channel\": \"TESTCHANNEL1\"}";
@@ -210,8 +210,8 @@ public class TestSlackJSONMessageParser {
 
     @Test
     public void testParsingNewMessage() throws Exception {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_NEW_MESSAGE);
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_NEW_MESSAGE).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(SlackMessagePosted.class);
         SlackMessagePosted slackMessage = (SlackMessagePosted) event;
@@ -236,8 +236,8 @@ public class TestSlackJSONMessageParser {
 
     @Test
     public void testParsingMessageDeleted() throws Exception {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_DELETED_MESSAGE);
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_DELETED_MESSAGE).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(SlackMessageDeleted.class);
         SlackMessageDeleted slackMessageDeleted = (SlackMessageDeleted) event;
@@ -248,8 +248,8 @@ public class TestSlackJSONMessageParser {
 
     @Test
     public void testParsingMessageChanged() throws Exception {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_UPDATED_MESSAGE);
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_UPDATED_MESSAGE).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(SlackMessageUpdatedImpl.class);
         SlackMessageUpdatedImpl slackMessageUpdated = (SlackMessageUpdatedImpl) event;
@@ -261,8 +261,8 @@ public class TestSlackJSONMessageParser {
 
     @Test
     public void testChannelCreated() throws Exception {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_CHANNEL_CREATED);
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_CHANNEL_CREATED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(SlackChannelCreated.class);
         SlackChannelCreated slackChannelCreated = (SlackChannelCreated) event;
@@ -275,8 +275,8 @@ public class TestSlackJSONMessageParser {
 
     @Test
     public void testChannelDeleted() throws Exception {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_CHANNEL_DELETED);
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_CHANNEL_DELETED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(SlackChannelDeleted.class);
         SlackChannelDeleted slackChannelDeleted = (SlackChannelDeleted) event;
@@ -285,8 +285,8 @@ public class TestSlackJSONMessageParser {
 
     @Test
     public void testChannelArchived() throws Exception {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_CHANNEL_ARCHIVED);
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_CHANNEL_ARCHIVED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(SlackChannelArchived.class);
         SlackChannelArchived slackChannelArchived = (SlackChannelArchived) event;
@@ -296,8 +296,8 @@ public class TestSlackJSONMessageParser {
 
     @Test
     public void testChannelUnarchived() throws Exception {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_CHANNEL_UNARCHIVED);
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_CHANNEL_UNARCHIVED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(SlackChannelUnarchived.class);
         SlackChannelUnarchived slackChannelUnarchived = (SlackChannelUnarchived) event;
@@ -307,8 +307,8 @@ public class TestSlackJSONMessageParser {
 
     @Test
     public void testGroupJoined() throws Exception {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_GROUP_JOINED);
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_GROUP_JOINED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(SlackGroupJoined.class);
         SlackGroupJoined slackGroupJoined = (SlackGroupJoined) event;
@@ -319,9 +319,9 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void shouldParseReactionAddedEvent() throws ParseException {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_REACTION_ADDED);
+    public void shouldParseReactionAddedEvent() {
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_REACTION_ADDED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(ReactionAdded.class);
         ReactionAdded reacAdded = (ReactionAdded) event;
@@ -331,9 +331,9 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void shouldParseReactionRemovedEvent() throws ParseException {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_REACTION_REMOVED);
+    public void shouldParseReactionRemovedEvent() {
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_REACTION_REMOVED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(ReactionRemoved.class);
         ReactionRemoved reacRemoved = (ReactionRemoved) event;
@@ -351,9 +351,9 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void testUserChange() throws ParseException {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_USER_CHANGE);
+    public void testUserChange() {
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_USER_CHANGE).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(SlackUserChange.class);
         SlackUserChange slackUserChange = (SlackUserChange)event;
@@ -364,10 +364,10 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void testAttachment() throws ParseException {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_ATTACHMENT);
-        SlackEvent event = SlackJSONMessageParser.decode(session, object);
+    public void testAttachment() {
+        JsonParser parser = new JsonParser();
+        JsonElement object = parser.parse(TEST_ATTACHMENT);
+        SlackEvent event = SlackJSONMessageParser.decode(session, object.getAsJsonObject());
         Assertions.assertThat(event).isInstanceOf(SlackMessagePosted.class);
         SlackMessagePosted slackMessage = (SlackMessagePosted) event;
         Assertions.assertThat(slackMessage.getAttachments()).isNotNull();
