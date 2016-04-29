@@ -29,13 +29,13 @@ class SlackJSONParsingUtils {
         {
             tzOffset = element.getAsInt();
         }
-        Boolean deleted = GsonHelper.ifNullFalse(jsonUser, "deleted");
-        Boolean admin = GsonHelper.ifNullFalse(jsonUser, "is_admin");
-        Boolean owner = GsonHelper.ifNullFalse(jsonUser, "is_owner");
-        Boolean primaryOwner = GsonHelper.ifNullFalse(jsonUser, "is_primary_owner");
-        Boolean restricted = GsonHelper.ifNullFalse(jsonUser, "is_restricted");
-        Boolean ultraRestricted = GsonHelper.ifNullFalse(jsonUser, "is_ultra_restricted");
-        Boolean bot = GsonHelper.ifNullFalse(jsonUser, "is_bot");
+        Boolean deleted = GsonHelper.ifNullFalse(jsonUser.get("deleted"));
+        Boolean admin = GsonHelper.ifNullFalse(jsonUser.get("is_admin"));
+        Boolean owner = GsonHelper.ifNullFalse(jsonUser.get("is_owner"));
+        Boolean primaryOwner = GsonHelper.ifNullFalse(jsonUser.get("is_primary_owner"));
+        Boolean restricted = GsonHelper.ifNullFalse(jsonUser.get("is_restricted"));
+        Boolean ultraRestricted = GsonHelper.ifNullFalse(jsonUser.get("is_ultra_restricted"));
+        Boolean bot = GsonHelper.ifNullFalse(jsonUser.get("is_bot"));
         JsonElement profileJSON = jsonUser.get("profile");
         String email = "";
         String skype = "";

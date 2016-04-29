@@ -15,7 +15,7 @@ class GsonHelper
 
     static JsonArray getJsonArrayOrNull(JsonElement jsonElement)
     {
-        return jsonElement != null ? jsonElement.getAsJsonArray() : null;
+        return jsonElement != null && !jsonElement.isJsonNull() ? jsonElement.getAsJsonArray() : null;
     }
 
     static String getStringOrNull(JsonElement jsonElement)
@@ -30,21 +30,16 @@ class GsonHelper
 
     static Long getLongOrDefaultValue(JsonElement jsonElement, Long defaultValue)
     {
-        return jsonElement != null ? jsonElement.getAsLong() : defaultValue;
+        return jsonElement != null && !jsonElement.isJsonNull() ? jsonElement.getAsLong() : defaultValue;
     }
 
     static String getStringOrDefaultValue(JsonElement jsonElement, String defaultValue)
     {
-        return jsonElement != null ? jsonElement.getAsString() : defaultValue;
+        return jsonElement != null && !jsonElement.isJsonNull() ? jsonElement.getAsString() : defaultValue;
     }
 
-    static Boolean ifNullFalse(JsonObject jsonUser, String field)
+    static Boolean ifNullFalse(JsonElement jsonElement)
     {
-        JsonElement jsonElement = jsonUser.get(field);
-        if (jsonElement == null)
-        {
-            return false;
-        }
-        return jsonElement.getAsBoolean();
+        return jsonElement != null && !jsonElement.isJsonNull() ? jsonElement.getAsBoolean() : false;
     }
 }
