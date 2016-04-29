@@ -458,6 +458,10 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             arguments.put("unfurl_links", "false");
             arguments.put("unfurl_media", "false");
         }
+        if (preparedMessage.isLinkNames())
+        {
+            arguments.put("link_names", "1");
+        }
 
         postSlackCommand(arguments, CHAT_POST_MESSAGE_COMMAND, handle);
         return handle;
