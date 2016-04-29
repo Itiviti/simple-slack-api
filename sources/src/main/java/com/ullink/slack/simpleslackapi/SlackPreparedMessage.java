@@ -8,11 +8,13 @@ import java.util.List;
 public class SlackPreparedMessage {
     private final String message;
     private final boolean unfurl;
+    private final boolean linkNames;
     private final SlackAttachment[] attachments;
 
-    private SlackPreparedMessage(String message, boolean unfurl, SlackAttachment[] attachments) {
+    private SlackPreparedMessage(String message, boolean unfurl, boolean linkNames, SlackAttachment[] attachments) {
         this.message = message;
         this.unfurl = unfurl;
+        this.linkNames = linkNames;
         this.attachments = attachments;
     }
 
@@ -24,6 +26,10 @@ public class SlackPreparedMessage {
         return unfurl;
     }
 
+    public boolean isLinkNames() {
+        return linkNames;
+    }
+
     public SlackAttachment[] getAttachments() {
         return attachments;
     }
@@ -31,6 +37,7 @@ public class SlackPreparedMessage {
     public static class Builder {
         String message;
         boolean unfurl;
+        boolean linkNames;
         List<SlackAttachment> attachments;
 
         public Builder() {
@@ -44,6 +51,11 @@ public class SlackPreparedMessage {
 
         public Builder withUnfurl(boolean unfurl) {
             this.unfurl = unfurl;
+            return this;
+        }
+
+        public Builder withLinkNames(boolean linkNames) {
+            this.linkNames = linkNames;
             return this;
         }
 
@@ -66,6 +78,7 @@ public class SlackPreparedMessage {
             return new SlackPreparedMessage(
                     message,
                     unfurl,
+                    linkNames,
                     attachments.toArray(new SlackAttachment[]{}));
         }
     }
