@@ -409,14 +409,11 @@ class SlackJSONMessageParser {
         return reacs;
     }
 
-    public static Map<String, String> extractEmojisFromMessageJSON(JsonObject object) {
+    public static Map<String, String> extractEmojisFromMessageJSON(JsonObject emojiObject) {
         Map<String, String> emojis = new HashMap<>();
-
-        for (Object o : object.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
-            emojis.put(entry.getKey().toString(), entry.getValue().toString());
+        for (Map.Entry<String,JsonElement> entry : emojiObject.entrySet()) {
+            emojis.put(entry.getKey().toString(), entry.getValue().getAsString());
         }
-
         return emojis;
     }
 
