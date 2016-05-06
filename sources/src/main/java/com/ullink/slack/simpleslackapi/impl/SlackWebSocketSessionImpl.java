@@ -184,6 +184,12 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private Thread                            connectionMonitoringThread = null;
     private EventDispatcher                   dispatcher                 = new EventDispatcher();
     private long                              heartbeat;
+    
+    SlackWebSocketSessionImpl(String authToken, boolean reconnectOnDisconnection, long heartbeat, TimeUnit unit) {
+        this.authToken = authToken;
+        this.reconnectOnDisconnection = reconnectOnDisconnection;
+        this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : 30000;
+    }
 
     SlackWebSocketSessionImpl(String authToken, Proxy.Type proxyType, String proxyAddress, int proxyPort, boolean reconnectOnDisconnection, long heartbeat, TimeUnit unit) {
         this.authToken = authToken;

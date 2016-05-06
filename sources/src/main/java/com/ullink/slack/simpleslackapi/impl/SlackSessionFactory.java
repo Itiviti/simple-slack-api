@@ -9,7 +9,7 @@ public class SlackSessionFactory
 {
     public static SlackSession createWebSocketSlackSession(String authToken)
     {
-        return new SlackWebSocketSessionImpl(authToken, null, null, 0,true, 0, null);
+    	return new SlackWebSocketSessionImpl(authToken, true, 0, null);
     }
 
     public static SlackSession createWebSocketSlackSession(final String authToken, Proxy.Type proxyType, String proxyAddress, int proxyPort)
