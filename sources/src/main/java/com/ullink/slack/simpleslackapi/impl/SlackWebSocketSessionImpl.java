@@ -13,7 +13,6 @@ import com.ullink.slack.simpleslackapi.replies.*;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -24,8 +23,6 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
-import org.glassfish.tyrus.client.ClientManager;
-import org.glassfish.tyrus.client.ClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +90,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private String                            authToken;
     private String                            proxyAddress;
     private int                               proxyPort                  = -1;
-    private HttpHost                          proxyHost;
+    HttpHost                                  proxyHost;
     private long                              lastPingSent;
     private volatile long                     lastPingAck;
 
@@ -105,6 +102,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private Thread                            connectionMonitoringThread;
     private EventDispatcher                   dispatcher                 = new EventDispatcher();
     private long                              heartbeat;
+    private WebSocketContainerProvider        webSocketContainerProvider;
 
 
     @Override
@@ -213,19 +211,21 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
-    SlackWebSocketSessionImpl(String authToken, boolean reconnectOnDisconnection, long heartbeat, TimeUnit unit) {
+    SlackWebSocketSessionImpl(WebSocketContainerProvider webSocketContainerProvider, String authToken, boolean reconnectOnDisconnection, long heartbeat, TimeUnit unit) {
         this.authToken = authToken;
         this.reconnectOnDisconnection = reconnectOnDisconnection;
-        this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : DEFAULT_HEARTBEAT_IN_MILLIS;
+        this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : 30000;
+        this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(null,0);
     }
 
-    SlackWebSocketSessionImpl(String authToken, Proxy.Type proxyType, String proxyAddress, int proxyPort, boolean reconnectOnDisconnection, long heartbeat, TimeUnit unit) {
+    SlackWebSocketSessionImpl(WebSocketContainerProvider webSocketContainerProvider, String authToken, Proxy.Type proxyType, String proxyAddress, int proxyPort, boolean reconnectOnDisconnection, long heartbeat, TimeUnit unit) {
         this.authToken = authToken;
         this.proxyAddress = proxyAddress;
         this.proxyPort = proxyPort;
         this.proxyHost = new HttpHost(proxyAddress, proxyPort);
         this.reconnectOnDisconnection = reconnectOnDisconnection;
         this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : DEFAULT_HEARTBEAT_IN_MILLIS;
+        this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(proxyAddress,0);
     }
 
     @Override
@@ -249,7 +249,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return websocketSession != null && websocketSession.isOpen();
     }
 
-    private void connectImpl() throws IOException, ClientProtocolException, ConnectException {
+    private void connectImpl() throws IOException
+    {
         LOGGER.info("connecting to slack");
         lastPingSent = 0;
         lastPingAck = 0;
@@ -279,11 +280,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         String wssurl = sessionParser.getWebSocketURL();
 
         LOGGER.debug("retrieved websocket URL : " + wssurl);
-        ClientManager client = ClientManager.createClient();
-
-        if (proxyAddress != null) {
-            client.getProperties().put(ClientProperties.PROXY_URI, "http://" + proxyAddress + ":" + proxyPort);
-        }
+        WebSocketContainer client = webSocketContainerProvider.getWebSocketContainer();
         final MessageHandler handler = this;
         LOGGER.debug("initiating actions to websocket");
 
