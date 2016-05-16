@@ -53,6 +53,11 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
+        public SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel) {
+           return null;
+        }
+
+        @Override
         public SlackPersona.SlackPresence getPresence(SlackPersona persona) {
             return null;
         }

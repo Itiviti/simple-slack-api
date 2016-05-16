@@ -25,6 +25,7 @@ You can find some samples of the most common use cases in the [samples](https://
 All these commands can be sent through the library provided your bot has the rights to (IE : the bot has to be a member of the group or the channel to post some messages on it)
 
 * Post a message on a channel / private group / user
+* Post a typing indicator on a channel
 * Update a message
 * Delete a message
 * Join a channel

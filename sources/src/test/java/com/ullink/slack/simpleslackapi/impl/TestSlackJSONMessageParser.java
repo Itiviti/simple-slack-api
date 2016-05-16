@@ -84,6 +84,11 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
             public SlackPersona.SlackPresence getPresence(SlackPersona persona) {
                 return null;
             }

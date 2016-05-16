@@ -679,6 +679,25 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
+        public SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel)
+        {
+            SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
+            try
+            {
+                JSONObject messageJSON = new JSONObject();
+                messageJSON.put("type", "typing");
+                messageJSON.put("channel", channel.getId());
+                websocketSession.getBasicRemote().sendText(messageJSON.toJSONString());
+            }
+            catch (Exception e)
+            {
+                // TODO : improve exception handling
+                e.printStackTrace();
+            }
+            return handle;
+        }
+
+    @Override
     public SlackPersona.SlackPresence getPresence(SlackPersona persona)
     {
         HttpClient client = getHttpClient();

@@ -81,6 +81,8 @@ public interface SlackSession {
 
     SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users);
 
+    SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel);
+
     SlackPersona.SlackPresence getPresence(SlackPersona persona);
 
     void setPresence(SlackPersona.SlackPresence presence);
