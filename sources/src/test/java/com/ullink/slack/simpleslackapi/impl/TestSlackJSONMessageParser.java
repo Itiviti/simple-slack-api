@@ -141,6 +141,9 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public void refetchUsers() {}
+
+            @Override
             public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
             {
                 return null;

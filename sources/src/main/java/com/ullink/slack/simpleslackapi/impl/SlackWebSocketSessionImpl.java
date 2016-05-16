@@ -19,6 +19,7 @@ import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -63,6 +64,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private static final String SET_PERSONA_ACTIVE = "users.setPresence";
 
     private static final String LIST_EMOJI_COMMAND = "emoji.list";
+
+    private static final String LIST_USERS = "users.list";
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
@@ -584,6 +587,26 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("token", authToken);
         postSlackCommand(arguments, LIST_EMOJI_COMMAND, handle);
         return handle;
+    }
+
+    @Override
+    public void refetchUsers() {
+        Map<String, String> params = new HashMap<>();
+        params.put("presence", "1");
+        SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, LIST_USERS);
+        GenericSlackReply replyEv = handle.getReply();
+        JSONObject answer = replyEv.getPlainAnswer();
+        JSONArray membersjson = (JSONArray) answer.get("members");
+        Map<String, SlackUser> members = new HashMap<>();
+        if (membersjson != null) {
+            for (Object member : membersjson) {
+                SlackUser user = SlackJSONParsingUtils.buildSlackUser((JSONObject) member);
+                members.put(user.getId(), user);
+            }
+        }
+
+        //blindly replace cache
+        users = members;
     }
 
     private void postSlackCommand(Map<String, String> params, String command, SlackMessageHandleImpl handle)
