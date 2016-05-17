@@ -84,6 +84,11 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
             public SlackPersona.SlackPresence getPresence(SlackPersona persona) {
                 return null;
             }
@@ -134,6 +139,9 @@ public class TestSlackJSONMessageParser {
             public SlackMessageHandle<EmojiSlackReply> listEmoji() {
                 return null;
             }
+
+            @Override
+            public void refetchUsers() {}
 
             @Override
             public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 

@@ -31,6 +31,8 @@ public interface SlackSession {
 
     SlackMessageHandle<EmojiSlackReply> listEmoji();
 
+    void refetchUsers();
+
     @Deprecated
     SlackBot findBotById(String botId);
     
@@ -80,6 +82,8 @@ public interface SlackSession {
     SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user);
 
     SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users);
+
+    SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel);
 
     SlackPersona.SlackPresence getPresence(SlackPersona persona);
 
