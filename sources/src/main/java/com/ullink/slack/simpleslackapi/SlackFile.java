@@ -71,18 +71,22 @@ public class SlackFile {
         this.filetype = filetype;
     }
 
+    @Deprecated
     public String getUrl() {
         return url;
     }
 
+    @Deprecated
     public void setUrl(String url) {
         this.url = url;
     }
 
+    @Deprecated
     public String getUrlDownload() {
         return urlDownload;
     }
 
+    @Deprecated
     public void setUrlDownload(String urlDownload) {
         this.urlDownload = urlDownload;
     }
