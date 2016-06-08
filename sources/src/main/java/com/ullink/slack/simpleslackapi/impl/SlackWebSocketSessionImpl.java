@@ -6,7 +6,6 @@ import com.ullink.slack.simpleslackapi.events.*;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
 import com.ullink.slack.simpleslackapi.listeners.SlackEventListener;
 import com.ullink.slack.simpleslackapi.replies.*;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -15,6 +14,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
@@ -39,7 +40,13 @@ import java.util.concurrent.TimeUnit;
 
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String>
 {
-    private static final String SLACK_API_HTTPS_ROOT      = "https://slack.com/api/";
+    private static final String SLACK_API_SCHEME = "https";
+
+    private static final String SLACK_API_HOST = "slack.com";
+
+    private static final String SLACK_API_PATH = "/api";
+
+    private static final String SLACK_API_HTTPS_ROOT      = SLACK_API_SCHEME + "://" + SLACK_API_HOST + SLACK_API_PATH + "/";
 
     private static final String DIRECT_MESSAGE_OPEN_CHANNEL_COMMAND = "im.open";
 
@@ -475,9 +482,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
-        arguments.put("channel", channel.getId());
+        arguments.put("channels", channel.getId());
         arguments.put("filename", fileName);
-        postSlackCommand(arguments, Collections.singletonMap("file",data),FILE_UPLOAD_COMMAND, handle);
+        postSlackCommandWithFile(arguments, data, fileName,FILE_UPLOAD_COMMAND, handle);
         return handle;
     }
 
@@ -650,26 +657,21 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
-    private void postSlackCommand(Map<String, String> params, Map<String, byte []> binaryBodies, String command, SlackMessageHandleImpl handle)
+    private void postSlackCommandWithFile(Map<String, String> params, byte [] fileContent, String fileName, String command, SlackMessageHandleImpl handle)
     {
-        HttpClient client = getHttpClient();
-        HttpPost request = new HttpPost(SLACK_API_HTTPS_ROOT + command);
-        //List<NameValuePair> nameValuePairList = new ArrayList<>();
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        URIBuilder uriBuilder = new URIBuilder();
+        uriBuilder.setScheme(SLACK_API_SCHEME).setHost(SLACK_API_HOST).setPath(SLACK_API_PATH+"/"+command);
         for (Map.Entry<String, String> arg : params.entrySet())
         {
-            //nameValuePairList.add(new BasicNameValuePair(arg.getKey(), arg.getValue()));
-            builder.addTextBody(arg.getKey(),arg.getValue());
+            uriBuilder.setParameter(arg.getKey(),arg.getValue());
         }
+        HttpPost request = new HttpPost(uriBuilder.toString());
+        HttpClient client = getHttpClient();
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         try
         {
-            if (binaryBodies  != null) {
-                for (Map.Entry<String, byte []> binaryBody : binaryBodies.entrySet()) {
-                    builder.addBinaryBody(binaryBody.getKey(),binaryBody.getValue());
-                }
-            }
+            builder.addBinaryBody("file",fileContent, ContentType.DEFAULT_BINARY,fileName);
             request.setEntity(builder.build());
-            //request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
             HttpResponse response = client.execute(request);
             String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
             LOGGER.debug("PostMessage return: " + jsonResponse);
