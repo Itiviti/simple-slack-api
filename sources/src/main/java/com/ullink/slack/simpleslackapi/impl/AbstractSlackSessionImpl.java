@@ -149,7 +149,11 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, boolean unfurl)
     {
-        return sendMessage(channel, message, null, DEFAULT_CONFIGURATION, unfurl);
+        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
+                .withMessage(message)
+                .withUnfurl(unfurl)
+                .build();
+        sendMessage(channel, preparedMessage, DEFAULT_CONFIGURATION);
     }
 
     @Override

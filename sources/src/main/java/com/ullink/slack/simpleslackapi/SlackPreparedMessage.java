@@ -60,12 +60,18 @@ public class SlackPreparedMessage {
         }
 
         public Builder addAttachment(SlackAttachment attachment) {
-            this.attachments.add(attachment);
+            if (attachment != null)
+            {
+                this.attachments.add(attachment);
+            }
             return this;
         }
 
         public Builder addAttachments(List<SlackAttachment> attachments) {
-            this.attachments.addAll(attachments);
+            if (attachments != null)
+            {
+                this.attachments.addAll(attachments);
+            }
             return this;
         }
 
