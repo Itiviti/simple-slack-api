@@ -104,6 +104,12 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName)
+            {
+                return null;
+            }
+
+            @Override
             public SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message) {
                 return null;
             }

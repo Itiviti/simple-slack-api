@@ -6,6 +6,7 @@ import com.ullink.slack.simpleslackapi.events.*;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
 import com.ullink.slack.simpleslackapi.listeners.SlackEventListener;
 import com.ullink.slack.simpleslackapi.replies.*;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -14,6 +15,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
@@ -52,6 +54,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private static final String CHANNELS_ARCHIVE_COMMAND     = "channels.archive";
 
     private static final String CHAT_POST_MESSAGE_COMMAND = "chat.postMessage";
+
+    private static final String FILE_UPLOAD_COMMAND       = "files.upload";
 
     private static final String CHAT_DELETE_COMMAND       = "chat.delete";
 
@@ -466,6 +470,18 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
+    public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName)
+    {
+        SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channel", channel.getId());
+        arguments.put("filename", fileName);
+        postSlackCommand(arguments, Collections.singletonMap("file",data),FILE_UPLOAD_COMMAND, handle);
+        return handle;
+    }
+
+    @Override
     public SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, SlackChannel channel)
     {
         SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
@@ -633,7 +649,40 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             e.printStackTrace();
         }
     }
-    
+
+    private void postSlackCommand(Map<String, String> params, Map<String, byte []> binaryBodies, String command, SlackMessageHandleImpl handle)
+    {
+        HttpClient client = getHttpClient();
+        HttpPost request = new HttpPost(SLACK_API_HTTPS_ROOT + command);
+        //List<NameValuePair> nameValuePairList = new ArrayList<>();
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        for (Map.Entry<String, String> arg : params.entrySet())
+        {
+            //nameValuePairList.add(new BasicNameValuePair(arg.getKey(), arg.getValue()));
+            builder.addTextBody(arg.getKey(),arg.getValue());
+        }
+        try
+        {
+            if (binaryBodies  != null) {
+                for (Map.Entry<String, byte []> binaryBody : binaryBodies.entrySet()) {
+                    builder.addBinaryBody(binaryBody.getKey(),binaryBody.getValue());
+                }
+            }
+            request.setEntity(builder.build());
+            //request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
+            HttpResponse response = client.execute(request);
+            String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
+            LOGGER.debug("PostMessage return: " + jsonResponse);
+            ParsedSlackReply reply = SlackJSONReplyParser.decode(parseObject(jsonResponse),this);
+            handle.setReply(reply);
+        }
+        catch (Exception e)
+        {
+            // TODO : improve exception handling
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(Map<String, String> params, String command)
     {
