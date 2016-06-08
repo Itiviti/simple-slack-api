@@ -153,7 +153,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
                 .withMessage(message)
                 .withUnfurl(unfurl)
                 .build();
-        sendMessage(channel, preparedMessage, DEFAULT_CONFIGURATION);
+        return sendMessage(channel, preparedMessage, DEFAULT_CONFIGURATION);
     }
 
     @Override
