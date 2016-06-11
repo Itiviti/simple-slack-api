@@ -6,6 +6,8 @@ class SlackPersonaImpl implements SlackPersona
 {
     final String  id;
     final String  userName;
+    final String  firstName;
+    final String  lastName;
     final String  realName;
     final String  userMail;
     final boolean deleted;
@@ -19,10 +21,12 @@ class SlackPersonaImpl implements SlackPersona
     final String timeZoneLabel;
     final Integer timeZoneOffset;
 
-    SlackPersonaImpl(String id, String userName, String realName, String userMail, boolean deleted, boolean admin, boolean owner, boolean primaryOwner, boolean restricted, boolean ultraRestricted, boolean bot, String timeZone, String timeZoneLabel, Integer timeZoneOffset)
+    SlackPersonaImpl(String id, String userName, String firstName, String lastName, String realName, String userMail, boolean deleted, boolean admin, boolean owner, boolean primaryOwner, boolean restricted, boolean ultraRestricted, boolean bot, String timeZone, String timeZoneLabel, Integer timeZoneOffset)
     {
         this.id = id;
         this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.realName = realName;
         this.userMail = userMail;
         this.deleted = deleted;
@@ -95,6 +99,16 @@ class SlackPersonaImpl implements SlackPersona
     public String getUserMail()
     {
         return userMail;
+    }
+
+    @Override
+    public String getFirstName() {
+        return firstName;
+    }
+
+    @Override
+    public String getLastName() {
+        return lastName;
     }
 
     @Override

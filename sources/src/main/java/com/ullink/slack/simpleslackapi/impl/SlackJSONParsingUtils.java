@@ -31,11 +31,16 @@ class SlackJSONParsingUtils
         Boolean bot = ifNullFalse(jsonUser, "is_bot");
         JSONObject profileJSON = (JSONObject) jsonUser.get("profile");
         String email = "";
+        String firstName = "";
+        String lastName = "";
         if (profileJSON != null)
         {
             email = (String) profileJSON.get("email");
+            firstName = (String) profileJSON.get("first_name");
+            lastName = (String) profileJSON.get("last_name");
+            
         }
-        return new SlackUserImpl(id, name, realName, email, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot, tz, tzLabel, tzOffset == null ? null : new Integer(tzOffset.intValue()));
+        return new SlackUserImpl(id, name, firstName, lastName, realName, email, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot, tz, tzLabel, tzOffset == null ? null : new Integer(tzOffset.intValue()));
     }
 
     private static Boolean ifNullFalse(JSONObject jsonUser, String field)
