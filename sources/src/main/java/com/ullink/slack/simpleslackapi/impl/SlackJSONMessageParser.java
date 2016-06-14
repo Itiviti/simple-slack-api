@@ -17,7 +17,7 @@ class SlackJSONMessageParser
 
     public static enum SlackMessageSubType
     {
-        CHANNEL_JOIN("channel_join"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), BOT_MESSAGE("bot_message"), OTHER("-"), FILE_SHARE("file_share");
+        CHANNEL_JOIN("channel_join"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), OTHER("-"), FILE_SHARE("file_share");
 
         private static final Map<String, SlackMessageSubType> CODE_MAP = new HashMap<>();
 
@@ -145,8 +145,6 @@ class SlackJSONMessageParser
                 return parseMessageUpdated(obj, channel, ts);
             case MESSAGE_DELETED:
                 return parseMessageDeleted(obj, channel, ts);
-            case BOT_MESSAGE:
-                return parseBotMessage(obj, channel, ts, slackSession);
             case FILE_SHARE:
                 return parseMessagePublishedWithFile(obj, channel, ts, slackSession);
             default:
@@ -184,15 +182,6 @@ class SlackJSONMessageParser
     {
         String deletedTs = (String) obj.get("deleted_ts");
         return new SlackMessageDeletedImpl(channel, deletedTs, ts);
-    }
-
-    private static SlackMessagePostedImpl parseBotMessage(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession)
-    {
-        String text = (String) obj.get("text");
-        String subtype = (String) obj.get("subtype");
-        String botId = (String) obj.get("bot_id");
-        SlackUser user = slackSession.findUserById(botId);
-        return new SlackMessagePostedImpl(text, user, user, channel, ts, SlackMessagePosted.MessageSubType.fromCode(subtype));
     }
 
     private static SlackMessagePostedImpl parseMessagePublished(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession) {
