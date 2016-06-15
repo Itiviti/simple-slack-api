@@ -187,6 +187,9 @@ class SlackJSONMessageParser
     private static SlackMessagePostedImpl parseMessagePublished(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession) {
         String text = (String) obj.get("text");
         String userId = (String) obj.get("user");
+        if (userId == null) {
+            userId = (String) obj.get("bot_id");
+        }
         String subtype = (String) obj.get("subtype");
         SlackUser user = slackSession.findUserById(userId);
         Map<String, Integer> reacs = extractReactionsFromMessageJSON(obj);
@@ -227,10 +230,6 @@ class SlackJSONMessageParser
   
     private static SlackMessagePostedImpl parseMessagePublishedWithFile(JSONObject obj, SlackChannel channel, String ts, SlackSession slackSession)
     {
-        /*
-        Example of message with file
-        {"type":"message","subtype":"file_share","text":"<@U024SEY12|ben> uploaded a file: <https://test-team.slack.com/files/ben/F0D34F799/1388485488946.png|1388485488946.png>","file":{"id":"F0D34F799","created":1445615453,"timestamp":1445615453,"name":"1388485488946.png","title":"1388485488946.png","mimetype":"image/png","filetype":"png","pretty_type":"PNG","user":"U024SEY12","editable":false,"size":467034,"mode":"hosted","is_external":false,"external_type":"","is_public":false,"public_url_shared":false,"display_as_bot":false,"username":"","url":"https://slack-files.com/files-pub/T01234567-F0D34F799-dfacea79ee/1388485488946.png","url_download":"https://slack-files.com/files-pub/T01234567-F0D34F799-dfacea79ee/download/1388485488946.png","url_private":"https://files.slack.com/files-pri/T01234567-F0D34F799/1388485488946.png","url_private_download":"https://files.slack.com/files-pri/T01234567-F0D34F799/download/1388485488946.png","thumb_64":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_64.png","thumb_80":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_80.png","thumb_360":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_360.png","thumb_360_w":360,"thumb_360_h":244,"thumb_480":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_480.png","thumb_480_w":480,"thumb_480_h":325,"thumb_160":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_160.png","thumb_720":"https://slack-files.com/files-tmb/T01234567-F0D34F799-c329abf88c/1388485488946_720.png","thumb_720_w":720,"thumb_720_h":488,"image_exif_rotation":1,"original_w":797,"original_h":540,"permalink":"https://bentest1.slack.com/files/ben/F0D34F799/1388485488946.png","permalink_public":"https://slack-files.com/T01234567-F0D34F799-dfacea79ee","channels":[],"groups":[],"ims":[],"comments_count":0},"user":"U024SEY12","upload":true,"display_as_bot":false,"username":"<@U024SEY12|ben>","bot_id":null,"channel":"D0251JL9Y","ts":"1445615455.000002"}
-        */
         SlackFile file = new SlackFile();
         if (obj.get("file")!=null){
             JSONObject rawFile = (JSONObject) obj.get("file");
