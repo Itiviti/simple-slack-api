@@ -193,7 +193,7 @@ class SlackJSONMessageParser
         String subtype = (String) obj.get("subtype");
         SlackUser user = slackSession.findUserById(userId);
         Map<String, Integer> reacs = extractReactionsFromMessageJSON(obj);
-        SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, null, user, channel, ts, SlackMessagePosted.MessageSubType.fromCode(subtype));
+        SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, null, user, channel, ts, null, obj, SlackMessagePosted.MessageSubType.fromCode(subtype));
         message.setReactions(reacs);
         return message;
     }
