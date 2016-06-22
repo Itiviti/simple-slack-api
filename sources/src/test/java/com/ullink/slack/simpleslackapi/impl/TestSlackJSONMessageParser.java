@@ -57,9 +57,9 @@ public class TestSlackJSONMessageParser {
 
             @Override
             public void connect() {
-                SlackUser user1 = new SlackUserImpl("TESTUSER1", "test user 1", "", "", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0));
-                SlackUser user2 = new SlackUserImpl("TESTUSER2", "test user 2", "", "", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0));
-                SlackUser user3 = new SlackUserImpl("TESTUSER3", "test user 3", "", "", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0));
+                SlackUser user1 = new SlackUserImpl("TESTUSER1", "test user 1", "", "", "testSkype", "testPhone", "testTitle", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0));
+                SlackUser user2 = new SlackUserImpl("TESTUSER2", "test user 2", "", "", "testSkype", "testPhone", "testTitle", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0));
+                SlackUser user3 = new SlackUserImpl("TESTUSER3", "test user 3", "", "", "testSkype", "testPhone", "testTitle", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0));
                 users.put(user1.getId(), user1);
                 users.put(user2.getId(), user2);
                 users.put(user3.getId(), user3);
