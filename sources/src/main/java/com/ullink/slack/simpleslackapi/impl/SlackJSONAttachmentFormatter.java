@@ -13,55 +13,43 @@ class SlackJSONAttachmentFormatter
 {
     public static List<JSONObject> encodeAttachments(SlackAttachment... attachments)
     {
-        List<JSONObject> toReturn = new ArrayList<JSONObject>();
-        for (int i = 0; i < attachments.length; i++)
-        {
+        List<JSONObject> toReturn = new ArrayList<>();
+        for (SlackAttachment attachment : attachments) {
             JSONObject attachmentJSON = new JSONObject();
             toReturn.add(attachmentJSON);
-            if (attachments[i].title != null)
-            {
-                attachmentJSON.put("title", attachments[i].title);
+            if (attachment.title != null) {
+                attachmentJSON.put("title", attachment.title);
             }
-            if (attachments[i].thumb_url != null)
-            {
-                attachmentJSON.put("thumb_url", attachments[i].thumb_url);
+            if (attachment.thumb_url != null) {
+                attachmentJSON.put("thumb_url", attachment.thumb_url);
             }
-            if (attachments[i].titleLink != null)
-            {
-                attachmentJSON.put("title_link", attachments[i].titleLink);
+            if (attachment.titleLink != null) {
+                attachmentJSON.put("title_link", attachment.titleLink);
             }
-            if (attachments[i].text != null)
-            {
-                attachmentJSON.put("text", attachments[i].text);
+            if (attachment.text != null) {
+                attachmentJSON.put("text", attachment.text);
             }
-            if (attachments[i].color != null)
-            {
-                attachmentJSON.put("color", attachments[i].color);
+            if (attachment.color != null) {
+                attachmentJSON.put("color", attachment.color);
             }
-            if (attachments[i].pretext != null)
-            {
-                attachmentJSON.put("pretext", attachments[i].pretext);
+            if (attachment.pretext != null) {
+                attachmentJSON.put("pretext", attachment.pretext);
             }
-            if (attachments[i].fallback != null)
-            {
-                attachmentJSON.put("fallback", attachments[i].fallback);
+            if (attachment.fallback != null) {
+                attachmentJSON.put("fallback", attachment.fallback);
             }
-            if (attachments[i].miscRootFields != null)
-            {
-                for (Map.Entry<String, String> entry : attachments[i].miscRootFields.entrySet())
-                {
+            if (attachment.miscRootFields != null) {
+                for (Map.Entry<String, String> entry : attachment.miscRootFields.entrySet()) {
                     attachmentJSON.put(entry.getKey(), entry.getValue());
                 }
             }
-            if (attachments[i].markdown_in != null && !attachments[i].markdown_in.isEmpty())
-            {
+            if (attachment.markdown_in != null && !attachment.markdown_in.isEmpty()) {
                 JSONArray array = new JSONArray();
-                array.addAll(attachments[i].markdown_in);
+                array.addAll(attachment.markdown_in);
                 attachmentJSON.put("mrkdwn_in", array);
             }
-            if (attachments[i].fields != null && !attachments[i].fields.isEmpty())
-            {
-                attachmentJSON.put("fields", encodeAttachmentFields(attachments[i].fields));
+            if (attachment.fields != null && !attachment.fields.isEmpty()) {
+                attachmentJSON.put("fields", encodeAttachmentFields(attachment.fields));
             }
 
         }
@@ -70,7 +58,7 @@ class SlackJSONAttachmentFormatter
 
     private static List<JSONObject> encodeAttachmentFields(List<SlackField> fields)
     {
-        List<JSONObject> toReturn = new ArrayList<JSONObject>();
+        List<JSONObject> toReturn = new ArrayList<>();
         for (SlackField field : fields)
         {
             JSONObject fieldJSON = new JSONObject();

@@ -2,7 +2,7 @@ package com.ullink.slack.simpleslackapi;
 
 public interface SlackPersona
 {
-    public enum SlackPresence { UNKNOWN, ACTIVE, AWAY, AUTO }
+    enum SlackPresence { UNKNOWN, ACTIVE, AWAY, AUTO }
 
     String getId();
 

@@ -2,7 +2,6 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import java.util.Map;
 
-import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;

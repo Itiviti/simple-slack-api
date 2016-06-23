@@ -6,14 +6,14 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 
 public interface PinRemoved extends SlackEvent {
 
-    public SlackUser getSender();
+    SlackUser getSender();
 
-    public SlackChannel getChannel();
+    SlackChannel getChannel();
 
-    public String getTimestamp();
+    String getTimestamp();
 
-    public SlackFile getFile();
+    SlackFile getFile();
 
-    public String getMessage();
+    String getMessage();
 
 }

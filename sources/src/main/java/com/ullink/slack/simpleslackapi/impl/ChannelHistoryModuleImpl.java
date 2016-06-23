@@ -29,6 +29,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
     private static final String FETCH_CHANNEL_HISTORY_COMMAND = "channels.history";
     private static final String FETCH_GROUP_HISTORY_COMMAND = "groups.history";
     private static final String FETCH_IM_HISTORY_COMMAND = "im.history";
+    private static final int DEFAULT_HISTORY_FETCH_SIZE = 1000;
 
     public ChannelHistoryModuleImpl(SlackSession session) {
         this.session = session;
@@ -62,7 +63,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
         if (numberOfMessages > -1) {
             params.put("count", String.valueOf(numberOfMessages));
         } else {
-            params.put("count", String.valueOf(1000));
+            params.put("count", String.valueOf(DEFAULT_HISTORY_FETCH_SIZE));
         }
         SlackChannel channel =session.findChannelById(channelId);
         switch (channel.getType()) {

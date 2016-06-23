@@ -1,6 +1,5 @@
 package com.ullink.slack.simpleslackapi.events;
 
-public interface SlackChannelDeleted extends SlackChannelEvent
-{
+public interface SlackChannelDeleted extends SlackChannelEvent {
 
 }

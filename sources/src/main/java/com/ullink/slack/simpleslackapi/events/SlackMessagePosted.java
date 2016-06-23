@@ -7,8 +7,7 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackUser;
 
-public interface SlackMessagePosted extends SlackMessageEvent
-{
+public interface SlackMessagePosted extends SlackMessageEvent {
     enum MessageSubType {
         BOT_MESSAGE("bot_message"),
         CHANNEL_ARCHIVE("channel_archive"),

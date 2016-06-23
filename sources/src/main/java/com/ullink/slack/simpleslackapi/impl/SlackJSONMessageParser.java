@@ -233,7 +233,7 @@ class SlackJSONMessageParser
         SlackFile file = new SlackFile();
         if (obj.get("file")!=null){
             JSONObject rawFile = (JSONObject) obj.get("file");
-	    parseSlackFileFromRaw(rawFile, file);
+	        parseSlackFileFromRaw(rawFile, file);
         }
         
         String text = (String) obj.get("text");
@@ -299,20 +299,20 @@ class SlackJSONMessageParser
         SlackUser sender = slackSession.findUserById(senderId);
 
         String channelId = (String) obj.get("channel_id");
-	SlackChannel channel = slackSession.findChannelById(channelId);
+        SlackChannel channel = slackSession.findChannelById(channelId);
 
-	JSONObject item = (JSONObject) obj.get("item");
-	String messageType = (String) item.get("type");
-	SlackFile file = null;
-	String message = null;
-	if ("file".equals(messageType)) {
-	  file = new SlackFile();
-	  parseSlackFileFromRaw((JSONObject) item.get("file"), file);
-	} else if ("message".equals(messageType)) {
-	  JSONObject messageObj = (JSONObject) item.get("message");
-	  message = (String) messageObj.get("text");
-	}
-	String timestamp = (String) obj.get("event_ts");
+        JSONObject item = (JSONObject) obj.get("item");
+        String messageType = (String) item.get("type");
+        SlackFile file = null;
+        String message = null;
+        if ("file".equals(messageType)) {
+            file = new SlackFile();
+            parseSlackFileFromRaw((JSONObject) item.get("file"), file);
+        } else if ("message".equals(messageType)) {
+            JSONObject messageObj = (JSONObject) item.get("message");
+            message = (String) messageObj.get("text");
+        }
+        String timestamp = (String) obj.get("event_ts");
         return new PinRemovedImpl(sender, channel, timestamp, file, message);
     }
 
@@ -321,30 +321,30 @@ class SlackJSONMessageParser
         SlackUser sender = slackSession.findUserById(senderId);
 
         String channelId = (String) obj.get("channel_id");
-	SlackChannel channel = slackSession.findChannelById(channelId);
+        SlackChannel channel = slackSession.findChannelById(channelId);
 
-	JSONObject item = (JSONObject) obj.get("item");
-	String messageType = (String) item.get("type");
-	SlackFile file = null;
-	String message = null;
-	if ("file".equals(messageType)) {
-	  file = new SlackFile();
-	  parseSlackFileFromRaw((JSONObject) item.get("file"), file);
-	} else if ("message".equals(messageType)) {
-	  JSONObject messageObj = (JSONObject) item.get("message");
-	  message = (String) messageObj.get("text");
-	}
-	String timestamp = (String) obj.get("event_ts");
-	
-        return new PinAddedImpl(sender, channel, timestamp, file, message);       
+        JSONObject item = (JSONObject) obj.get("item");
+        String messageType = (String) item.get("type");
+        SlackFile file = null;
+        String message = null;
+        if ("file".equals(messageType)) {
+            file = new SlackFile();
+            parseSlackFileFromRaw((JSONObject) item.get("file"), file);
+        } else if ("message".equals(messageType)) {
+            JSONObject messageObj = (JSONObject) item.get("message");
+            message = (String) messageObj.get("text");
+        }
+        String timestamp = (String) obj.get("event_ts");
+
+        return new PinAddedImpl(sender, channel, timestamp, file, message);
     }
 
     private static Map<String, Integer> extractReactionsFromMessageJSON(JSONObject obj) {
         Map<String, Integer> reacs = new HashMap<>();
         JSONArray rawReactions = (JSONArray) obj.get("reactions");
         if (rawReactions != null) {
-            for (int i = 0; i < rawReactions.size(); i++) {
-                JSONObject reaction = (JSONObject) rawReactions.get(i);
+            for (Object rawReaction : rawReactions) {
+                JSONObject reaction = (JSONObject) rawReaction;
                 String emojiCode = reaction.get("name").toString();
                 Integer count = Integer.valueOf(reaction.get("count").toString());
                 reacs.put(emojiCode, count);

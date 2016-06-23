@@ -1,6 +1,5 @@
 package com.ullink.slack.simpleslackapi.events;
 
-public interface SlackGroupJoined extends SlackChannelEvent
-{
+public interface SlackGroupJoined extends SlackChannelEvent {
 
 }

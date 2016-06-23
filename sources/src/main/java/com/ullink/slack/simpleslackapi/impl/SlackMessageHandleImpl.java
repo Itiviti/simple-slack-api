@@ -7,6 +7,7 @@ import com.ullink.slack.simpleslackapi.replies.SlackReply;
 class SlackMessageHandleImpl<T extends SlackReply> implements SlackMessageHandle<T>
 {
 
+    private static final long WAIT_TIME_IN_MILLISECOND = 1L;
     private long                messageId;
     private volatile T          slackReply;
 
@@ -46,7 +47,7 @@ class SlackMessageHandleImpl<T extends SlackReply> implements SlackMessageHandle
         {
             try
             {
-                Thread.sleep(1);
+                Thread.sleep(WAIT_TIME_IN_MILLISECOND);
             }
             catch (InterruptedException e)
             {
