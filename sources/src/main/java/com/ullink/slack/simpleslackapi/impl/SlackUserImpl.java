@@ -4,8 +4,6 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 
 class SlackUserImpl extends SlackPersonaImpl implements SlackUser
 {
-    //private static final Logger LOGGER   = LoggerFactory.getLogger(SlackUserImpl.class);
-
     @Override
     public String toString()
     {

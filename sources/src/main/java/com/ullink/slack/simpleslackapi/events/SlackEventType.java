@@ -1,7 +1,6 @@
 package com.ullink.slack.simpleslackapi.events;
 
-public enum SlackEventType
-{
+public enum SlackEventType {
     SLACK_CHANNEL_ARCHIVED,
     SLACK_CHANNEL_CREATED,
     SLACK_CHANNEL_DELETED,

@@ -1,6 +1,5 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-class SlackJSONFieldsFormatter
-{
+class SlackJSONFieldsFormatter {
 
 }

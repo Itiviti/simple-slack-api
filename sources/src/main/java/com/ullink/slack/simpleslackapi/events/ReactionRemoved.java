@@ -5,11 +5,11 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 
 public interface ReactionRemoved extends SlackEvent {
 
-    public String getEmojiName();
-    public SlackChannel getChannel();
-    public SlackUser getUser();
-    public String getMessageID();
-    public String getFileID();
-    public String getFileCommentID();
+    String getEmojiName();
+    SlackChannel getChannel();
+    SlackUser getUser();
+    String getMessageID();
+    String getFileID();
+    String getFileCommentID();
   
 }
