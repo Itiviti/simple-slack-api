@@ -5,29 +5,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SlackAttachment
-{
-    public String              title;
-    public String              titleLink;
-    public String              fallback;
-    public String              text;
-    public String              pretext;
-    public String              thumb_url;
+public class SlackAttachment {
 
-    public String              color;
+    private String              title;
+    private String              titleLink;
+    private String              fallback;
+    private String              text;
+    private String              pretext;
+    private String              thumb_url;
 
-    public Map<String, String> miscRootFields;
+    private String              color;
 
-    public List<SlackField>    fields;
+    private Map<String, String> miscRootFields;
 
-    public List<String>        markdown_in;
+    private List<SlackField>    fields = new ArrayList<>();
 
-    public SlackAttachment()
-    {
+    private List<String>        markdown_in;
+
+    public SlackAttachment() {
+
     }
 
-    public SlackAttachment(String title, String fallback, String text, String pretext)
-    {
+    public SlackAttachment(String title, String fallback, String text, String pretext) {
         this.title = title;
         this.fallback = fallback;
         this.text = text;
@@ -35,33 +34,23 @@ public class SlackAttachment
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "SlackAttachment [title=" + title + ", fallback=" + fallback + ", text=" + text + ", pretext=" + pretext + ", fields=" + fields + "]";
     }
 
-    public void addField(String title, String value, boolean isShort)
-    {
-        if (fields == null)
-        {
-            fields = new ArrayList<>();
-        }
+    public void addField(String title, String value, boolean isShort) {
         fields.add(new SlackField(title, value, isShort));
     }
 
-    public void addMarkdownIn(String value)
-    {
-        if (markdown_in == null)
-        {
+    public void addMarkdownIn(String value) {
+        if (markdown_in == null) {
             markdown_in = new ArrayList<>();
         }
         markdown_in.add(value);
     }
 
-    public void addMiscField(String key, String value)
-    {
-        if (miscRootFields == null)
-        {
+    public void addMiscField(String key, String value) {
+        if (miscRootFields == null) {
             miscRootFields = new HashMap<>();
         }
         miscRootFields.put(key, value);
@@ -95,5 +84,45 @@ public class SlackAttachment
     public void setColor(String color)
     {
         this.color = color;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getTitleLink() {
+        return titleLink;
+    }
+
+    public String getFallback() {
+        return fallback;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getPretext() {
+        return pretext;
+    }
+
+    public String getThumbUrl() {
+        return thumb_url;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public Map<String, String> getMiscRootFields() {
+        return miscRootFields;
+    }
+
+    public List<SlackField> getFields() {
+        return fields;
+    }
+
+    public List<String> getMarkdown_in() {
+        return markdown_in;
     }
 }

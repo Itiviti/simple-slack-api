@@ -13,8 +13,8 @@ public class ReactionAddedImpl implements ReactionAdded {
     private final SlackUser user;
     private final String fileID;
     private final String fileCommentID;
-  
-  public ReactionAddedImpl(String emojiName, SlackUser user, SlackChannel channel, String messageID, String fileID, String fileCommentID) {
+
+    public ReactionAddedImpl(String emojiName, SlackUser user, SlackChannel channel, String messageID, String fileID, String fileCommentID) {
         this.emojiName = emojiName;
         this.user = user;
         this.channel = channel;

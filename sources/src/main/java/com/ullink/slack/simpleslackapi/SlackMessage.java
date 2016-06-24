@@ -9,8 +9,7 @@ import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
  *
  */
 @Deprecated
-public interface SlackMessage extends SlackMessageEvent
-{
+public interface SlackMessage extends SlackMessageEvent {
 
     String getMessageContent();
 

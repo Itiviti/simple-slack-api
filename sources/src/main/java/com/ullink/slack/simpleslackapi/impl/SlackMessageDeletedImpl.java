@@ -4,14 +4,12 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
 import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
 
-class SlackMessageDeletedImpl implements SlackMessageDeleted
-{
+class SlackMessageDeletedImpl implements SlackMessageDeleted {
     private final SlackChannel channel;
     private final String       messageTimestamp;
     private final String       deleteTimestamp;
 
-    SlackMessageDeletedImpl(SlackChannel channel, String messageTimestamp, String deleteTimestamp)
-    {
+    SlackMessageDeletedImpl(SlackChannel channel, String messageTimestamp, String deleteTimestamp) {
         this.channel = channel;
         this.messageTimestamp = messageTimestamp;
         this.deleteTimestamp = deleteTimestamp;

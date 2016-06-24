@@ -11,9 +11,7 @@ import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 
-class SlackJSONMessageParser
-{
-    
+class SlackJSONMessageParser {
 
     public static enum SlackMessageSubType
     {

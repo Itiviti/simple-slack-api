@@ -1,6 +1,5 @@
 package com.ullink.slack.simpleslackapi;
 
-public interface SlackPreferences
-{
+public interface SlackPreferences {
     // TODO
 }
