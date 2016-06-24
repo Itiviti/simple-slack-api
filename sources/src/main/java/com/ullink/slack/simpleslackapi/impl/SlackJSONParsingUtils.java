@@ -12,14 +12,9 @@ class SlackJSONParsingUtils {
         // Helper class
     }
 
-<<<<<<< HEAD
-    static final SlackUser buildSlackUser(JSONObject jsonUser) {
-        String id = (String) jsonUser.get("id");
-=======
     static final SlackUser buildSlackUser(JSONObject jsonUser)
     {
         String id = (String) jsonUser.get("id"); //userSkype, userTitle, userPhone
->>>>>>> Ullink/master
         String name = (String) jsonUser.get("name");
         String realName = (String) jsonUser.get("real_name");
         String tz = (String) jsonUser.get("tz");
