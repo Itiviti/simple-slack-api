@@ -12,8 +12,14 @@ class SlackJSONParsingUtils {
         // Helper class
     }
 
+<<<<<<< HEAD
     static final SlackUser buildSlackUser(JSONObject jsonUser) {
         String id = (String) jsonUser.get("id");
+=======
+    static final SlackUser buildSlackUser(JSONObject jsonUser)
+    {
+        String id = (String) jsonUser.get("id"); //userSkype, userTitle, userPhone
+>>>>>>> Ullink/master
         String name = (String) jsonUser.get("name");
         String realName = (String) jsonUser.get("real_name");
         String tz = (String) jsonUser.get("tz");
@@ -28,11 +34,17 @@ class SlackJSONParsingUtils {
         Boolean bot = ifNullFalse(jsonUser, "is_bot");
         JSONObject profileJSON = (JSONObject) jsonUser.get("profile");
         String email = "";
+        String skype = "";
+        String title = "";
+        String phone = "";
         if (profileJSON != null)
         {
             email = (String) profileJSON.get("email");
+            skype = (String) profileJSON.get("skype");
+            title = (String) profileJSON.get("title");
+            phone = (String) profileJSON.get("phone");
         }
-        return new SlackUserImpl(id, name, realName, email, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot, tz, tzLabel, tzOffset == null ? null : new Integer(tzOffset.intValue()));
+        return new SlackUserImpl(id, name, realName, email, skype, title, phone, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot, tz, tzLabel, tzOffset == null ? null : new Integer(tzOffset.intValue()));
     }
 
     private static Boolean ifNullFalse(JSONObject jsonUser, String field) {
