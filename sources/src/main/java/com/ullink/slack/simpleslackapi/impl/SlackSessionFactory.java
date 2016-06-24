@@ -5,8 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.ullink.slack.simpleslackapi.SlackSession;
 
-public class SlackSessionFactory
-{
+public class SlackSessionFactory {
     public static SlackSession createWebSocketSlackSession(String authToken)
     {
     	return new SlackWebSocketSessionImpl(authToken, true, 0, null);

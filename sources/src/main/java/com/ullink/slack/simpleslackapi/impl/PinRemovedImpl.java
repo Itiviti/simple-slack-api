@@ -8,13 +8,13 @@ import com.ullink.slack.simpleslackapi.events.SlackEventType;
 
 public class PinRemovedImpl implements PinRemoved {
 
-  private final SlackUser sender;
-  private final SlackChannel channel;
-  private final String timestamp;
-  private final SlackFile file;
-  private final String message;
+    private final SlackUser sender;
+    private final SlackChannel channel;
+    private final String timestamp;
+    private final SlackFile file;
+    private final String message;
 
-  public PinRemovedImpl(SlackUser sender, SlackChannel channel, String timestamp, SlackFile file, String message) {
+    public PinRemovedImpl(SlackUser sender, SlackChannel channel, String timestamp, SlackFile file, String message) {
         this.sender = sender;
         this.channel = channel;
         this.timestamp = timestamp;
@@ -46,7 +46,7 @@ public class PinRemovedImpl implements PinRemoved {
     public String getMessage() {
         return this.message;
     }
-  
+
     @Override
     public SlackEventType getEventType() {
         return SlackEventType.PIN_REMOVED;

@@ -13,8 +13,7 @@ import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackTeam;
 import com.ullink.slack.simpleslackapi.SlackUser;
 
-class SlackJSONSessionStatusParser
-{
+class SlackJSONSessionStatusParser {
     private static final Logger       LOGGER   = LoggerFactory.getLogger(SlackJSONSessionStatusParser.class);
 
     private Map<String, SlackChannel> channels = new HashMap<>();
@@ -45,8 +44,7 @@ class SlackJSONSessionStatusParser
         return users;
     }
 
-    public String getWebSocketURL()
-    {
+    public String getWebSocketURL() {
         return webSocketURL;
     }
 
@@ -55,8 +53,7 @@ class SlackJSONSessionStatusParser
         return error;
     }
     
-    void parse() throws ParseException
-    {
+    void parse() throws ParseException {
         LOGGER.debug("parsing session status : " + toParse);
         JSONParser parser = new JSONParser();
         JSONObject jsonResponse = (JSONObject) parser.parse(toParse);

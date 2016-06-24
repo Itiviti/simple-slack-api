@@ -5,8 +5,7 @@ import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 
-class SlackJSONReplyParser
-{
+class SlackJSONReplyParser {
     static ParsedSlackReply decode(JSONObject obj, SlackSession session)
     {
         Boolean ok = (Boolean) obj.get("ok");
@@ -39,8 +38,7 @@ class SlackJSONReplyParser
         return new SlackReplyImpl(ok,error);
     }
 
-    private static SlackChannelReply buildSlackChannelReply(Boolean ok, String error, JSONObject obj, SlackSession session)
-    {
+    private static SlackChannelReply buildSlackChannelReply(Boolean ok, String error, JSONObject obj, SlackSession session) {
         String id = (String)obj.get("id");
         if (id != null) {
             return new SlackChannelReplyImpl(ok,error,obj, session.findChannelById(id));
@@ -60,26 +58,22 @@ class SlackJSONReplyParser
         return obj.get("ts") != null;
     }
     
-    private static boolean isMpim(JSONObject obj)
-    {
+    private static boolean isMpim(JSONObject obj) {
         Boolean isMpim = (Boolean)obj.get("is_mpim");
         return isMpim != null && isMpim.equals(Boolean.TRUE);
     }
 
-    private static boolean isIm(JSONObject obj)
-    {
+    private static boolean isIm(JSONObject obj) {
         Boolean isIm = (Boolean)obj.get("is_im");
         return isIm != null && isIm.equals(Boolean.TRUE);
     }
 
-    private static boolean isChannel(JSONObject obj)
-    {
+    private static boolean isChannel(JSONObject obj) {
         Object channel = obj.get("channel");
         return channel != null && channel instanceof JSONObject;
     }
 
-    private static boolean isGroup(JSONObject obj)
-    {
+    private static boolean isGroup(JSONObject obj) {
         Boolean isGroup = (Boolean)obj.get("is_group");
         if (isGroup != null) {
             return isGroup;

@@ -9,75 +9,67 @@ import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackField;
 
-class SlackJSONAttachmentFormatter
-{
-    public static List<JSONObject> encodeAttachments(SlackAttachment... attachments)
-    {
+class SlackJSONAttachmentFormatter {
+    public static List<JSONObject> encodeAttachments(SlackAttachment... attachments) {
         List<JSONObject> toReturn = new ArrayList<>();
         for (SlackAttachment attachment : attachments) {
             JSONObject attachmentJSON = new JSONObject();
             toReturn.add(attachmentJSON);
-            if (attachment.title != null) {
-                attachmentJSON.put("title", attachment.title);
+            if (attachment.getTitle() != null) {
+                attachmentJSON.put("title", attachment.getTitle());
             }
-            if (attachment.thumb_url != null) {
-                attachmentJSON.put("thumb_url", attachment.thumb_url);
+            if (attachment.getThumbUrl() != null) {
+                attachmentJSON.put("thumb_url", attachment.getThumbUrl());
             }
-            if (attachment.titleLink != null) {
-                attachmentJSON.put("title_link", attachment.titleLink);
+            if (attachment.getTitleLink() != null) {
+                attachmentJSON.put("title_link", attachment.getTitleLink());
             }
-            if (attachment.text != null) {
-                attachmentJSON.put("text", attachment.text);
+            if (attachment.getText() != null) {
+                attachmentJSON.put("text", attachment.getText());
             }
-            if (attachment.color != null) {
-                attachmentJSON.put("color", attachment.color);
+            if (attachment.getColor() != null) {
+                attachmentJSON.put("color", attachment.getColor());
             }
-            if (attachment.pretext != null) {
-                attachmentJSON.put("pretext", attachment.pretext);
+            if (attachment.getPretext() != null) {
+                attachmentJSON.put("pretext", attachment.getPretext());
             }
-            if (attachment.fallback != null) {
-                attachmentJSON.put("fallback", attachment.fallback);
+            if (attachment.getFallback() != null) {
+                attachmentJSON.put("fallback", attachment.getFallback());
             }
-            if (attachment.miscRootFields != null) {
-                for (Map.Entry<String, String> entry : attachment.miscRootFields.entrySet()) {
+            if (attachment.getMiscRootFields() != null) {
+                for (Map.Entry<String, String> entry : attachment.getMiscRootFields().entrySet()) {
                     attachmentJSON.put(entry.getKey(), entry.getValue());
                 }
             }
-            if (attachment.markdown_in != null && !attachment.markdown_in.isEmpty()) {
+            if (attachment.getMarkdown_in() != null && !attachment.getMarkdown_in().isEmpty()) {
                 JSONArray array = new JSONArray();
-                array.addAll(attachment.markdown_in);
+                array.addAll(attachment.getMarkdown_in());
                 attachmentJSON.put("mrkdwn_in", array);
             }
-            if (attachment.fields != null && !attachment.fields.isEmpty()) {
-                attachmentJSON.put("fields", encodeAttachmentFields(attachment.fields));
+            if (attachment.getFields() != null && !attachment.getFields().isEmpty()) {
+                attachmentJSON.put("fields", encodeAttachmentFields(attachment.getFields()));
             }
 
         }
         return toReturn;
     }
 
-    private static List<JSONObject> encodeAttachmentFields(List<SlackField> fields)
-    {
+    private static List<JSONObject> encodeAttachmentFields(List<SlackField> fields) {
         List<JSONObject> toReturn = new ArrayList<>();
         for (SlackField field : fields)
         {
             JSONObject fieldJSON = new JSONObject();
             toReturn.add(fieldJSON);
-            if (field.title != null)
+            if (field.getTitle() != null)
             {
-                fieldJSON.put("title", field.title);
+                fieldJSON.put("title", field.getTitle());
             }
-            if (field.value != null)
+            if (field.getValue() != null)
             {
-                fieldJSON.put("value", field.value);
+                fieldJSON.put("value", field.getValue());
             }
-            fieldJSON.put("short", field.isShort);
+            fieldJSON.put("short", field.isShort());
         }
         return toReturn;
-    }
-
-    public static void main(String[] args) throws UnsupportedEncodingException
-    {
-        System.out.println(new String("Loïc Herve".getBytes(), "UTF-8"));
     }
 }

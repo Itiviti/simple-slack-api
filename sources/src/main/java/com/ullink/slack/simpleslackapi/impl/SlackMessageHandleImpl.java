@@ -4,8 +4,7 @@ import java.util.concurrent.TimeUnit;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.replies.SlackReply;
 
-class SlackMessageHandleImpl<T extends SlackReply> implements SlackMessageHandle<T>
-{
+class SlackMessageHandleImpl<T extends SlackReply> implements SlackMessageHandle<T> {
 
     private static final long WAIT_TIME_IN_MILLISECOND = 1L;
     private long                messageId;

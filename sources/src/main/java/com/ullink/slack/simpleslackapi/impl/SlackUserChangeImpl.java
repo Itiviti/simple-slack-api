@@ -6,7 +6,7 @@ import com.ullink.slack.simpleslackapi.events.SlackUserChange;
 
 public class SlackUserChangeImpl implements SlackUserChange {
 
-    private SlackUser slackUser;
+    private final SlackUser slackUser;
 
     SlackUserChangeImpl(SlackUser slackUser) {
         this.slackUser = slackUser;

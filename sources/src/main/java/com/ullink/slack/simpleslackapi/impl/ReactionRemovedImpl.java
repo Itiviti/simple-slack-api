@@ -12,7 +12,7 @@ public class ReactionRemovedImpl implements ReactionRemoved{
     private final String messageID;
     private final String fileID;
     private final String fileCommentID;
-  
+
     public ReactionRemovedImpl(String emojiName, SlackUser user, SlackChannel channel, String messageID, String fileID, String fileCommentID) {
         this.emojiName = emojiName;
         this.user = user;

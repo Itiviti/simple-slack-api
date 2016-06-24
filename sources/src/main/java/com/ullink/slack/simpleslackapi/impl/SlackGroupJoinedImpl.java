@@ -4,8 +4,7 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
 import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
 
-class SlackGroupJoinedImpl implements SlackGroupJoined
-{
+class SlackGroupJoinedImpl implements SlackGroupJoined {
     private SlackChannel slackChannel;
 
     SlackGroupJoinedImpl(SlackChannel slackChannel)

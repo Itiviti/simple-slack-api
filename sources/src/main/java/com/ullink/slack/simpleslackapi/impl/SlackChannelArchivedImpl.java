@@ -9,7 +9,7 @@ class SlackChannelArchivedImpl implements SlackChannelArchived
 {
     private SlackChannel slackChannel;
     private SlackUser slackuser;
-    
+
     SlackChannelArchivedImpl(SlackChannel slackChannel, SlackUser slackuser)
     {
         this.slackChannel = slackChannel;

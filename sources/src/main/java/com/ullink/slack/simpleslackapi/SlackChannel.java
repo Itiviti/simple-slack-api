@@ -2,10 +2,9 @@ package com.ullink.slack.simpleslackapi;
 
 import java.util.Collection;
 
-public interface SlackChannel
-{
+public interface SlackChannel {
 
-    public enum SlackChannelType {
+    enum SlackChannelType {
         PUBLIC_CHANNEL, PRIVATE_GROUP, INSTANT_MESSAGING
     }
 

@@ -4,15 +4,13 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
 import com.ullink.slack.simpleslackapi.events.SlackMessageUpdated;
 
-class SlackMessageUpdatedImpl implements SlackMessageUpdated
-{
+class SlackMessageUpdatedImpl implements SlackMessageUpdated {
     private final SlackChannel channel;
     private final String       messageTimestamp;
     private final String       editionTimestamp;
     private final String       newMessage;
 
-    SlackMessageUpdatedImpl(SlackChannel channel, String messageTimestamp, String editionTimestamp, String newMessage)
-    {
+    SlackMessageUpdatedImpl(SlackChannel channel, String messageTimestamp, String editionTimestamp, String newMessage) {
         this.channel = channel;
         this.messageTimestamp = messageTimestamp;
         this.editionTimestamp = editionTimestamp;

@@ -2,8 +2,7 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackUser;
 
-class SlackUserImpl extends SlackPersonaImpl implements SlackUser
-{
+class SlackUserImpl extends SlackPersonaImpl implements SlackUser {
     @Override
     public String toString()
     {

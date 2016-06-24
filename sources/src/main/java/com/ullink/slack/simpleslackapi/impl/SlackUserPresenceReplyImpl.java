@@ -4,7 +4,7 @@ import com.ullink.slack.simpleslackapi.replies.SlackUserPresenceReply;
 
 public class SlackUserPresenceReplyImpl extends SlackReplyImpl implements SlackUserPresenceReply
 {
-    private boolean active;
+    private final boolean active;
 
     SlackUserPresenceReplyImpl(boolean ok, String error, boolean active)
     {

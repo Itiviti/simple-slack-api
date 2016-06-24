@@ -2,12 +2,11 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackPersona;
 
-class SlackPersonaImpl implements SlackPersona
-{
-    final String id;
-    final String userName;
-    final String realName;
-    final String userMail;
+class SlackPersonaImpl implements SlackPersona {
+    final String  id;
+    final String  userName;
+    final String  realName;
+    final String  userMail;
     final String userSkype;
     final String userPhone;
     final String userTitle;
@@ -24,8 +23,7 @@ class SlackPersonaImpl implements SlackPersona
 
     SlackPersonaImpl(String id, String userName, String realName, String userMail, String userSkype, String userPhone, String userTitle,
                      boolean deleted, boolean admin, boolean owner, boolean primaryOwner, boolean restricted,
-                     boolean ultraRestricted, boolean bot, String timeZone, String timeZoneLabel, Integer timeZoneOffset)
-    {
+                     boolean ultraRestricted, boolean bot, String timeZone, String timeZoneLabel, Integer timeZoneOffset) {
         this.id = id;
         this.userName = userName;
         this.realName = realName;

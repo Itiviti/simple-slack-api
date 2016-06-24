@@ -10,8 +10,7 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 
-class SlackMessagePostedImpl implements SlackMessagePosted
-{
+class SlackMessagePostedImpl implements SlackMessagePosted {
     private String       messageContent;
     private SlackUser    user;
     private SlackBot     bot;
