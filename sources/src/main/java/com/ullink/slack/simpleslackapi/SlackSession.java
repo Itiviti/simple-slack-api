@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 public interface SlackSession {
 
+    SlackTeam getTeam();
+
     Collection<SlackChannel> getChannels();
 
     Collection<SlackUser> getUsers();

@@ -35,6 +35,12 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     static final boolean                           DEFAULT_UNFURL           = true;
 
     @Override
+    public SlackTeam getTeam()
+    {
+        return team;
+    }
+
+    @Override
     public Collection<SlackChannel> getChannels()
     {
         return new ArrayList<>(channels.values());
