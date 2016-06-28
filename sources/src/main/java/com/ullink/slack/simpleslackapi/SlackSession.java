@@ -171,6 +171,10 @@ public interface SlackSession {
 
     void removePinAddedListener(PinAddedListener listener);
 
+    void addPresenceChangeListener(PresenceChangeListener listener);
+
+    void removePresenceChangeListener(PresenceChangeListener listener);
+
     void addPinRemovedListener(PinRemovedListener listener);
   
     void removePinRemovedListener(PinRemovedListener listener);

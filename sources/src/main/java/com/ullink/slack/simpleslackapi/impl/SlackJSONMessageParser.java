@@ -3,13 +3,10 @@ package com.ullink.slack.simpleslackapi.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackFile;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
 
 class SlackJSONMessageParser {
 
@@ -77,6 +74,8 @@ class SlackJSONMessageParser {
                 return extractReactionRemovedEvent(slackSession, obj);
             case USER_CHANGE:
                 return extractUserChangeEvent(slackSession, obj);
+            case PRESENCE_CHANGE:
+                return extractPresenceChangeEvent(slackSession, obj);
             case PIN_ADDED:
                 return extractPinAddedEvent(slackSession, obj);
             case PIN_REMOVED:
@@ -85,8 +84,8 @@ class SlackJSONMessageParser {
                 return SlackEvent.UNKNOWN_EVENT;
         }
     }
-    
-    
+
+
     private static SlackGroupJoined extractGroupJoinedEvent(SlackSession slackSession, JSONObject obj)
     {
         JSONObject channelJSONObject = (JSONObject) obj.get("channel");
@@ -278,6 +277,18 @@ class SlackJSONMessageParser {
         JSONObject user = (JSONObject) obj.get("user");
         SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(user);
         return new SlackUserChangeImpl(slackUser);
+    }
+
+    private static PresenceChange extractPresenceChangeEvent(SlackSession slackSession, JSONObject obj) {
+        String userId = (String) obj.get("user");
+        String presence = (String) obj.get("presence");
+        SlackPersona.SlackPresence value = SlackPersona.SlackPresence.UNKNOWN;
+        if ("active".equals(presence)) {
+            value = SlackPersona.SlackPresence.ACTIVE;
+        } else if ("away".equals(presence)) {
+            value = SlackPersona.SlackPresence.AWAY;
+        }
+        return new PresenceChangeImpl(userId, value);
     }
 
     private static ReactionRemoved extractReactionRemovedEvent(SlackSession slackSession, JSONObject obj) {
