@@ -178,6 +178,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                     break;
                 case SLACK_USER_CHANGE:
                     dispatchImpl((SlackUserChange) event, slackUserChangeListener);
+                    break;
                 case PIN_ADDED:
                     dispatchImpl((PinAdded) event, pinAddedListener);
                     break;
