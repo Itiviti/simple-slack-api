@@ -15,7 +15,7 @@ class SlackJSONMessageParser {
 
     public static enum SlackMessageSubType
     {
-        CHANNEL_JOIN("channel_join"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), OTHER("-"), FILE_SHARE("file_share");
+        CHANNEL_JOIN("channel_join"), CHANNEL_LEAVE("channel_leave"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), OTHER("-"), FILE_SHARE("file_share");
 
         private static final Map<String, SlackMessageSubType> CODE_MAP = new HashMap<>();
 
@@ -100,8 +100,8 @@ class SlackJSONMessageParser {
 
     private static SlackChannelLeft extractChannelLeftEvent(SlackSession slackSession, JSONObject obj)
     {
-        JSONObject channelJSONObject = (JSONObject) obj.get("channel");
-        SlackChannel slackChannel = parseChannelDescription(channelJSONObject);
+        String channelId = (String) obj.get("channel");
+        SlackChannel slackChannel = slackSession.findChannelById(channelId);
         return new SlackChannelLeftImpl(slackChannel);
     }
 
