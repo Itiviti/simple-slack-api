@@ -75,6 +75,8 @@ public interface SlackSession {
 
     SlackMessageHandle<SlackMessageReply> addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode);
 
+    SlackMessageHandle<SlackChannelReply> setChannelTopic(SlackChannel channel, String topic);
+
     SlackMessageHandle<SlackChannelReply> joinChannel(String channelName);
 
     SlackMessageHandle<SlackChannelReply> leaveChannel(SlackChannel channel);
