@@ -19,6 +19,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<SlackChannelDeletedListener>    channelDeleteListener    = new ArrayList<>();
     protected List<SlackChannelRenamedListener>    channelRenamedListener   = new ArrayList<>();
     protected List<SlackChannelUnarchivedListener> channelUnarchiveListener = new ArrayList<>();
+    protected List<SlackChannelJoinedListener>     channelJoinedListener    = new ArrayList<>();
     protected List<SlackGroupJoinedListener>       groupJoinedListener      = new ArrayList<>();
     protected List<SlackMessageDeletedListener>    messageDeletedListener   = new ArrayList<>();
     protected List<SlackMessagePostedListener>     messagePostedListener    = new ArrayList<>();
@@ -285,6 +286,18 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public void removeMessageUpdatedListener(SlackMessageUpdatedListener listener)
     {
         messageUpdatedListener.remove(listener);
+    }
+
+    @Override
+    public void addChannelJoinedListener(SlackChannelJoinedListener listener)
+    {
+        channelJoinedListener.add(listener);
+    }
+
+    @Override
+    public void removeChannelJoinedListener(SlackChannelJoinedListener listener)
+    {
+        channelJoinedListener.remove(listener);
     }
 
     @Override

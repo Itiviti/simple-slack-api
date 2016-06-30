@@ -157,6 +157,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 case SLACK_CHANNEL_UNARCHIVED:
                     dispatchImpl((SlackChannelUnarchived) event, channelUnarchiveListener);
                     break;
+                case SLACK_CHANNEL_JOINED:
+                    dispatchImpl((SlackChannelJoined) event, channelJoinedListener);
+                    break;
                 case SLACK_GROUP_JOINED:
                     dispatchImpl((SlackGroupJoined) event, groupJoinedListener);
                     break;
