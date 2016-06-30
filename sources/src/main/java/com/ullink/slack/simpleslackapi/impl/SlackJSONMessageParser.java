@@ -69,8 +69,6 @@ class SlackJSONMessageParser {
                 return extractChannelRenamedEvent(slackSession, obj);
             case CHANNEL_UNARCHIVE:
                 return extractChannelUnarchiveEvent(slackSession, obj);
-            case CHANNEL_JOINED:
-                return extractChannelJoinedEvent(slackSession, obj);
             case GROUP_JOINED:
                 return extractGroupJoinedEvent(slackSession, obj);
             case REACTION_ADDED:
@@ -89,13 +87,6 @@ class SlackJSONMessageParser {
     }
     
     
-    private static SlackChannelJoined extractChannelJoinedEvent(SlackSession slackSession, JSONObject obj)
-    {
-        JSONObject channelJSONObject = (JSONObject) obj.get("channel");
-        SlackChannel slackChannel = parseChannelDescription(channelJSONObject);
-        return new SlackChannelJoinedImpl(slackChannel);
-    }
-
     private static SlackGroupJoined extractGroupJoinedEvent(SlackSession slackSession, JSONObject obj)
     {
         JSONObject channelJSONObject = (JSONObject) obj.get("channel");
