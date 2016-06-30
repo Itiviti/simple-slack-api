@@ -75,6 +75,8 @@ public interface SlackSession {
 
     SlackMessageHandle<SlackMessageReply> addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode);
 
+    SlackMessageHandle<SlackChannelReply> setChannelTopic(SlackChannel channel, String topic);
+
     SlackMessageHandle<SlackChannelReply> joinChannel(String channelName);
 
     SlackMessageHandle<SlackChannelReply> leaveChannel(SlackChannel channel);
@@ -126,6 +128,14 @@ public interface SlackSession {
     void addMessageUpdatedListener(SlackMessageUpdatedListener listener);
 
     void removeMessageUpdatedListener(SlackMessageUpdatedListener listener);
+
+    void addChannelJoinedListener(SlackChannelJoinedListener listener);
+
+    void removeChannelJoinedListener(SlackChannelJoinedListener listener);
+
+    void addChannelLeftListener(SlackChannelLeftListener listener);
+
+    void removeChannelLeftListener(SlackChannelLeftListener listener);
 
     void addGroupJoinedListener(SlackGroupJoinedListener listener);
 
