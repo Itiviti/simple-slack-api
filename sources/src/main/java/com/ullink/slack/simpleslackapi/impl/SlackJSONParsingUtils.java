@@ -53,9 +53,25 @@ class SlackJSONParsingUtils {
     static final SlackChannelImpl buildSlackChannel(JSONObject jsonChannel, Map<String, SlackUser> knownUsersById) {
         String id = (String) jsonChannel.get("id");
         String name = (String) jsonChannel.get("name");
-        String topic = null; // TODO
-        String purpose = null; // TODO
-        SlackChannelImpl toReturn = new SlackChannelImpl(id, name, topic, purpose, false);
+
+        String topic = null;
+        if (jsonChannel.containsKey("topic")) {
+            JSONObject jsonTopic = (JSONObject)jsonChannel.get("topic");
+            topic = (String)jsonTopic.get("value");
+        }
+
+        String purpose = null;
+        if (jsonChannel.containsKey("purpose")) {
+            JSONObject jsonPurpose = (JSONObject)jsonChannel.get("purpose");
+            purpose = (String) jsonPurpose.get("value");
+        }
+
+        boolean isMember = false;
+        if (jsonChannel.containsKey("is_member")) {
+            isMember = (boolean)jsonChannel.get("is_member");
+        }
+
+        SlackChannelImpl toReturn = new SlackChannelImpl(id, name, topic, purpose, false, isMember);
         JSONArray membersJson = (JSONArray) jsonChannel.get("members");
         if (membersJson != null) {
             for (Object jsonMembersObject : membersJson) {
@@ -69,7 +85,7 @@ class SlackJSONParsingUtils {
 
     static final SlackChannelImpl buildSlackImChannel(JSONObject jsonChannel, Map<String, SlackUser> knownUsersById) {
         String id = (String) jsonChannel.get("id");
-        SlackChannelImpl toReturn = new SlackChannelImpl(id, null, null, null, true);
+        SlackChannelImpl toReturn = new SlackChannelImpl(id, null, null, null, true, false);
         String memberId = (String) jsonChannel.get("user");
         SlackUser user = knownUsersById.get(memberId);
         toReturn.addUser(user);

@@ -66,10 +66,10 @@ public class TestSlackJSONMessageParser {
                 users.put(user2.getId(), user2);
                 users.put(user3.getId(), user3);
 
-                SlackChannel channel1 = new SlackChannelImpl("TESTCHANNEL1", "testchannel1", null, null, false);
-                SlackChannel channel2 = new SlackChannelImpl("TESTCHANNEL2", "testchannel2", null, null, false);
-                SlackChannel channel3 = new SlackChannelImpl("TESTCHANNEL3", "testchannel3", null, null, false);
-                SlackChannel channel4 = new SlackChannelImpl("NEWCHANNEL", "new channel", "To have something new", "This channel so new it aint even old yet", false);
+                SlackChannel channel1 = new SlackChannelImpl("TESTCHANNEL1", "testchannel1", null, null, false, false);
+                SlackChannel channel2 = new SlackChannelImpl("TESTCHANNEL2", "testchannel2", null, null, false, false);
+                SlackChannel channel3 = new SlackChannelImpl("TESTCHANNEL3", "testchannel3", null, null, false, false);
+                SlackChannel channel4 = new SlackChannelImpl("NEWCHANNEL", "new channel", "To have something new", "This channel so new it aint even old yet", false, false);
                 channels.put(channel1.getId(), channel1);
                 channels.put(channel2.getId(), channel2);
                 channels.put(channel3.getId(), channel3);

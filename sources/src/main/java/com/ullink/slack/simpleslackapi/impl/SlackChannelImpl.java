@@ -15,14 +15,16 @@ class SlackChannelImpl implements SlackChannel
     private Set<SlackUser> members = new HashSet<>();
     private String         topic;
     private String         purpose;
+    private boolean        isMember;
 
-    SlackChannelImpl(String id, String name, String topic, String purpose, boolean direct)
+    SlackChannelImpl(String id, String name, String topic, String purpose, boolean direct, boolean isMember)
     {
         this.id = id;
         this.name = name;
         this.topic = topic;
         this.purpose = purpose;
         this.direct = direct;
+        this.isMember = isMember;
     }
 
     void addUser(SlackUser user)
@@ -78,6 +80,11 @@ class SlackChannelImpl implements SlackChannel
     @Override
     public boolean isDirect() {
         return direct;
+    }
+
+    @Override
+    public boolean isMember() {
+        return isMember;
     }
 
     @Override

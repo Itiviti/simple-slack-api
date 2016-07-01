@@ -20,6 +20,8 @@ public interface SlackChannel {
 
     boolean isDirect();
 
+    boolean isMember();
+
     SlackChannelType getType();
 
 }
