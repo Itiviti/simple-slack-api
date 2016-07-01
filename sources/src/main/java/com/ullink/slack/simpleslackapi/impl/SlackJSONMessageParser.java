@@ -378,7 +378,7 @@ class SlackJSONMessageParser {
     }
 
     private static ArrayList<SlackAttachment> extractAttachmentsFromMessageJSON(JSONObject object){
-        if(object.get("attachments") == null) return null;
+        if(object.get("attachments") == null) return new ArrayList<>();
 
         ArrayList<SlackAttachment> attachments = new ArrayList<>();
 
@@ -400,9 +400,12 @@ class SlackJSONMessageParser {
             slackAttachment.setFooter((String) obj.get("footer"));
             slackAttachment.setFooterIcon((String) obj.get("footer_icon"));
 
-            for(Object field : (JSONArray)obj.get("fields")){
-                JSONObject f = (JSONObject) field;
-                slackAttachment.addField((String) f.get("title"), (String) f.get("value"), (Boolean) f.get("short"));
+            if(obj.get("fields") != null) {
+                for (Object field : (JSONArray) obj.get("fields")) {
+                    JSONObject f = (JSONObject) field;
+                    slackAttachment.addField((String) f.get("title"), (String) f.get("value"),
+                        (Boolean) f.get("short"));
+                }
             }
 
             attachments.add(slackAttachment);
