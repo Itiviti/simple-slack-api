@@ -157,7 +157,7 @@ class SlackJSONMessageParser {
             if (channelId.startsWith("D"))
             {
                 // direct messaging, on the fly channel creation
-                return new SlackChannelImpl(channelId, channelId, "", "", true);
+                return new SlackChannelImpl(channelId, channelId, "", "", true, false);
             }
             else
             {
@@ -258,7 +258,7 @@ class SlackJSONMessageParser {
         String name = (String) channelJSONObject.get("name");
         String topic = (String)((Map)channelJSONObject.get("topic")).get("value");
         String purpose = (String) ((Map) channelJSONObject.get("purpose")).get("value");
-        return new SlackChannelImpl(id, name, topic, purpose, id.startsWith("D"));
+        return new SlackChannelImpl(id, name, topic, purpose, id.startsWith("D"), id.startsWith("D"));
     }
 
 
