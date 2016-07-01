@@ -36,6 +36,24 @@ class SlackJSONAttachmentFormatter {
             if (attachment.getFallback() != null) {
                 attachmentJSON.put("fallback", attachment.getFallback());
             }
+            if (attachment.getAuthorName() != null) {
+                attachmentJSON.put("author_name", attachment.getAuthorName());
+            }
+            if (attachment.getAuthorLink() != null) {
+                attachmentJSON.put("author_link", attachment.getAuthorLink());
+            }
+            if (attachment.getAuthorIcon() != null) {
+                attachmentJSON.put("author_icon", attachment.getAuthorIcon());
+            }
+            if (attachment.getImageUrl() != null) {
+                attachmentJSON.put("image_url", attachment.getImageUrl());
+            }
+            if (attachment.getFooter() != null) {
+                attachmentJSON.put("footer", attachment.getFooter());
+            }
+            if (attachment.getFooterIcon() != null) {
+                attachmentJSON.put("footer_icon", attachment.getFooterIcon());
+            }
             if (attachment.getMiscRootFields() != null) {
                 for (Map.Entry<String, String> entry : attachment.getMiscRootFields().entrySet()) {
                     attachmentJSON.put(entry.getKey(), entry.getValue());

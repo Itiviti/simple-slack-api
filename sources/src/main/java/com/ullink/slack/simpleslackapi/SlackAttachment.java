@@ -13,6 +13,12 @@ public class SlackAttachment {
     private String              text;
     private String              pretext;
     private String              thumb_url;
+    private String              author_name;
+    private String              author_link;
+    private String              author_icon;
+    private String              footer;
+    private String              footer_icon;
+    private String              image_url;
 
     private String              color;
 
@@ -81,10 +87,24 @@ public class SlackAttachment {
         this.pretext = pretext;
     }
 
+    public void setThumbUrl(String thumb_url) { this.thumb_url = thumb_url; }
+
     public void setColor(String color)
     {
         this.color = color;
     }
+
+    public void setImageUrl(String image_url) { this.image_url = image_url; }
+
+    public void setAuthorName(String author_name) { this.author_name = author_name; }
+
+    public void setAuthorLink(String author_link) { this.author_link = author_link; }
+
+    public void setAuthorIcon(String author_icon) { this.author_icon = author_icon; }
+
+    public void setFooter(String footer) { this.footer = footer; }
+
+    public void setFooterIcon(String footer_icon) { this.footer_icon = footer_icon; }
 
     public String getTitle() {
         return title;
@@ -125,4 +145,16 @@ public class SlackAttachment {
     public List<String> getMarkdown_in() {
         return markdown_in;
     }
+
+    public String getImageUrl() { return image_url; }
+
+    public String getAuthorName() { return author_name; }
+
+    public String getAuthorLink() { return author_link; }
+
+    public String getAuthorIcon() { return author_icon; }
+
+    public String getFooter() { return footer; }
+
+    public String getFooterIcon() { return footer_icon; }
 }

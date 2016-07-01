@@ -1,10 +1,12 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.*;
+import jdk.nashorn.api.scripting.JSObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -190,8 +192,10 @@ class SlackJSONMessageParser {
         String subtype = (String) obj.get("subtype");
         SlackUser user = slackSession.findUserById(userId);
         Map<String, Integer> reacs = extractReactionsFromMessageJSON(obj);
+        ArrayList<SlackAttachment> attachments = extractAttachmentsFromMessageJSON(obj);
         SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, null, user, channel, ts, null, obj, SlackMessagePosted.MessageSubType.fromCode(subtype));
         message.setReactions(reacs);
+        message.setAttachments(attachments);
         return message;
     }
 
@@ -371,6 +375,43 @@ class SlackJSONMessageParser {
         }
 
         return emojis;
+    }
+
+    private static ArrayList<SlackAttachment> extractAttachmentsFromMessageJSON(JSONObject object){
+        if(object.get("attachments") == null) return new ArrayList<>();
+
+        ArrayList<SlackAttachment> attachments = new ArrayList<>();
+
+        for(Object o : (JSONArray) object.get("attachments")){
+            JSONObject obj = (JSONObject) o;
+            SlackAttachment slackAttachment = new SlackAttachment();
+
+            slackAttachment.setFallback((String) obj.get("fallback"));
+            slackAttachment.setColor((String) obj.get("color"));
+            slackAttachment.setPretext((String) obj.get("pretext"));
+            slackAttachment.setAuthorName((String) obj.get("author_name"));
+            slackAttachment.setAuthorLink((String) obj.get("author_link"));
+            slackAttachment.setAuthorIcon((String) obj.get("author_icon"));
+            slackAttachment.setTitle((String) obj.get("title"));
+            slackAttachment.setTitleLink((String) obj.get("title_link"));
+            slackAttachment.setText((String) obj.get("text"));
+            slackAttachment.setThumbUrl((String) obj.get("thumb_url"));
+            slackAttachment.setImageUrl((String) obj.get("image_url"));
+            slackAttachment.setFooter((String) obj.get("footer"));
+            slackAttachment.setFooterIcon((String) obj.get("footer_icon"));
+
+            if(obj.get("fields") != null) {
+                for (Object field : (JSONArray) obj.get("fields")) {
+                    JSONObject f = (JSONObject) field;
+                    slackAttachment.addField((String) f.get("title"), (String) f.get("value"),
+                        (Boolean) f.get("short"));
+                }
+            }
+
+            attachments.add(slackAttachment);
+        }
+
+        return attachments;
     }
 }
 
