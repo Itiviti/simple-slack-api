@@ -174,7 +174,7 @@ class SlackJSONMessageParser {
         String text = (String) message.get("text");
         String messageTs = (String) message.get("ts");
         SlackMessageUpdatedImpl toto = new SlackMessageUpdatedImpl(channel, messageTs, ts, text);
-        ArrayList<SlackAttachment> attachments = extractAttachmentsFromMessageJSON((JSONObject) obj.get("attachments"));
+        ArrayList<SlackAttachment> attachments = extractAttachmentsFromMessageJSON(message);
         toto.setAttachments(attachments);
         return toto;
     }
