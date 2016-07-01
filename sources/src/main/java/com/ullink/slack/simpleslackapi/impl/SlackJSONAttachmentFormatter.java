@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.ullink.slack.simpleslackapi.SlackAction;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
+import com.ullink.slack.simpleslackapi.SlackAction;
 import com.ullink.slack.simpleslackapi.SlackField;
 
 class SlackJSONAttachmentFormatter {
