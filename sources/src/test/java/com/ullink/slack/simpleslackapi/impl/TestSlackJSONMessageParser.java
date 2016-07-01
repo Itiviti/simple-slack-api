@@ -38,6 +38,8 @@ public class TestSlackJSONMessageParser {
 
     private static final String TEST_USER_CHANGE = "{\"type\": \"user_change\",\"user\": {\"id\": \"TESTUSER1\", \"name\": \"test user 1\"}}";
 
+    private static final String TEST_ATTACHMENT = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER1\",\"text\":\"Test text 1\",\"ts\":\"1413187521.000004\", \"attachments\": [{\"fallback\": \"Required plain-text summary of the attachment.\", \"color\": \"#36a64f\", \"pretext\": \"Optional text that appears above the attachment block\", \"author_name\": \"Bobby Tables\", \"author_link\": \"http://flickr.com/bobby/\", \"author_icon\": \"http://flickr.com/icons/bobby.jpg\", \"title\": \"Slack API Documentation\", \"title_link\": \"https://api.slack.com/\", \"text\": \"Optional text that appears within the attachment\", \"fields\": [ { \"title\": \"Priority\", \"value\": \"High\", \"short\": false } ], \"image_url\": \"http://my-website.com/path/to/image.jpg\", \"thumb_url\": \"http://example.com/path/to/thumb.png\", \"footer\": \"Slack API\", \"footer_icon\": \"https://platform.slack-edge.com/img/default_application_icon.png\", \"ts\": 123456789}]}";
+
     @Before
     public void setup() {
         session = new AbstractSlackSessionImpl() {
@@ -335,5 +337,39 @@ public class TestSlackJSONMessageParser {
         Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getId()).isEqualTo("TESTUSER1");
         Assertions.assertThat(session.findUserById("TESTUSER1").getUserName()).isEqualTo(user.getUserName());
+    }
+
+    @Test
+    public void testAttachment() throws ParseException {
+        JSONParser parser = new JSONParser();
+        JSONObject object = (JSONObject) parser.parse(TEST_ATTACHMENT);
+        SlackEvent event = SlackJSONMessageParser.decode(session, object);
+        Assertions.assertThat(event).isInstanceOf(SlackMessagePosted.class);
+        SlackMessagePosted slackMessage = (SlackMessagePosted) event;
+        Assertions.assertThat(slackMessage.getAttachments()).isNotNull();
+        Assertions.assertThat(slackMessage.getAttachments().size() == 1);
+
+        SlackAttachment attachment = slackMessage.getAttachments().get(0);
+
+        Assertions.assertThat(attachment.getFallback()).isEqualTo("Required plain-text summary of the attachment.");
+        Assertions.assertThat(attachment.getColor()).isEqualTo("#36a64f");
+        Assertions.assertThat(attachment.getPretext()).isEqualTo("Optional text that appears above the attachment block");
+        Assertions.assertThat(attachment.getAuthorName()).isEqualTo("Bobby Tables");
+        Assertions.assertThat(attachment.getAuthorLink()).isEqualTo("http://flickr.com/bobby/");
+        Assertions.assertThat(attachment.getAuthorIcon()).isEqualTo("http://flickr.com/icons/bobby.jpg");
+        Assertions.assertThat(attachment.getTitle()).isEqualTo("Slack API Documentation");
+        Assertions.assertThat(attachment.getTitleLink()).isEqualTo("https://api.slack.com/");
+        Assertions.assertThat(attachment.getText()).isEqualTo("Optional text that appears within the attachment");
+        Assertions.assertThat(attachment.getThumbUrl()).isEqualTo("http://example.com/path/to/thumb.png");
+        Assertions.assertThat(attachment.getFooter()).isEqualTo("Slack API");
+        Assertions.assertThat(attachment.getFooterIcon()).isEqualTo("https://platform.slack-edge.com/img/default_application_icon.png");
+
+        Assertions.assertThat(attachment.getFields().size()).isEqualTo(1);
+
+        SlackField field = attachment.getFields().get(0);
+
+        Assertions.assertThat(field.getTitle()).isEqualTo("Priority");
+        Assertions.assertThat(field.getValue()).isEqualTo("High");
+        Assertions.assertThat(field.isShort()).isEqualTo(false);
     }
 }

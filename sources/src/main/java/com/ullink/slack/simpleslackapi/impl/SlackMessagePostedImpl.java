@@ -1,5 +1,7 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.ullink.slack.simpleslackapi.SlackAttachment;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
@@ -20,6 +22,7 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
     private JSONObject   jsonSource;
     private MessageSubType msgSubType;
     private Map<String, Integer> reactions;
+    private ArrayList<SlackAttachment> attachments;
     
     SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, MessageSubType msgSubType)
     {
@@ -98,6 +101,10 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
         this.reactions = reactions;
     }
 
+    public void setAttachments(ArrayList<SlackAttachment> attachments) {
+        this.attachments = attachments;
+    }
+
     @Override
     public int getTotalCountOfReactions() {
         return reactions == null ? 0 : reactions.size();
@@ -114,5 +121,6 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
         return timestamp;
     }
 
+    @Override public ArrayList<SlackAttachment> getAttachments() { return attachments; }
 }
 

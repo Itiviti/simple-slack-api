@@ -1,11 +1,13 @@
 package com.ullink.slack.simpleslackapi.events;
 
-import java.util.Map;
-import org.json.simple.JSONObject;
+import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import java.util.ArrayList;
+import java.util.Map;
+import org.json.simple.JSONObject;
 
 public interface SlackMessagePosted extends SlackMessageEvent {
     enum MessageSubType {
@@ -69,6 +71,5 @@ public interface SlackMessagePosted extends SlackMessageEvent {
     int getTotalCountOfReactions();
     MessageSubType getMessageSubType();
 
-
-
+    ArrayList<SlackAttachment> getAttachments();
 }
