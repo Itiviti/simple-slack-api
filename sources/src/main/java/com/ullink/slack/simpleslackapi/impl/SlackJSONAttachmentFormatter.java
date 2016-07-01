@@ -1,12 +1,13 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
+import com.ullink.slack.simpleslackapi.SlackAction;
 import com.ullink.slack.simpleslackapi.SlackField;
 
 class SlackJSONAttachmentFormatter {
@@ -35,6 +36,9 @@ class SlackJSONAttachmentFormatter {
             }
             if (attachment.getFallback() != null) {
                 attachmentJSON.put("fallback", attachment.getFallback());
+            }
+            if (attachment.getCallbackId() != null) {
+                attachmentJSON.put("callback_id", attachment.getCallbackId());
             }
             if (attachment.getAuthorName() != null) {
                 attachmentJSON.put("author_name", attachment.getAuthorName());
@@ -67,6 +71,9 @@ class SlackJSONAttachmentFormatter {
             if (attachment.getFields() != null && !attachment.getFields().isEmpty()) {
                 attachmentJSON.put("fields", encodeAttachmentFields(attachment.getFields()));
             }
+            if (attachment.getActions() != null && !attachment.getActions().isEmpty()) {
+                attachmentJSON.put("actions", encodeAttachmentActions(attachment.getActions()));
+            }
 
         }
         return toReturn;
@@ -87,6 +94,31 @@ class SlackJSONAttachmentFormatter {
                 fieldJSON.put("value", field.getValue());
             }
             fieldJSON.put("short", field.isShort());
+        }
+        return toReturn;
+    }
+
+    private static List<JSONObject> encodeAttachmentActions(List<SlackAction> actions) {
+        List<JSONObject> toReturn = new ArrayList<>();
+        for (SlackAction action : actions) {
+            JSONObject actionJSON = new JSONObject();
+            toReturn.add(actionJSON);
+            if (action.getName() != null)
+            {
+                actionJSON.put("name", action.getName());
+            }
+            if (action.getText() != null)
+            {
+                actionJSON.put("text", action.getText());
+            }
+            if (action.getType() != null)
+            {
+                actionJSON.put("type", action.getType());
+            }
+            if (action.getValue() != null)
+            {
+                actionJSON.put("value", action.getValue());
+            }
         }
         return toReturn;
     }

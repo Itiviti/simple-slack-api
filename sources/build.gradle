@@ -90,6 +90,11 @@ def pomConfig = {
             email 'purbleguy@gmail.com'
             url 'http://redrield.github.io/'
         }
+        contributor {
+            name 'Dmitry Che'
+            email 'morfeusys@gmail.com'
+            url 'https://github.com/Morfeusys'
+        }
     }
     scm {
         connection 'scm:git:git@github.com:Ullink/simple-slack-api.git'
