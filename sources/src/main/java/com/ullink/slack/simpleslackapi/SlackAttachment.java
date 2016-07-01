@@ -10,6 +10,7 @@ public class SlackAttachment {
     private String              title;
     private String              titleLink;
     private String              fallback;
+    private String              callback_id;
     private String              text;
     private String              pretext;
     private String              thumb_url;
@@ -19,6 +20,8 @@ public class SlackAttachment {
     private Map<String, String> miscRootFields;
 
     private List<SlackField>    fields = new ArrayList<>();
+
+    private List<SlackAction>   actions = new ArrayList<>();
 
     private List<String>        markdown_in;
 
@@ -40,6 +43,10 @@ public class SlackAttachment {
 
     public void addField(String title, String value, boolean isShort) {
         fields.add(new SlackField(title, value, isShort));
+    }
+
+    public void addAction(String name, String value, String text, String type) {
+        actions.add(new SlackAction(name, text, type, value));
     }
 
     public void addMarkdownIn(String value) {
@@ -71,6 +78,10 @@ public class SlackAttachment {
         this.fallback = fallback;
     }
 
+    public void setCallbackId(String callback_id) {
+        this.callback_id = callback_id;
+    }
+
     public void setText(String text)
     {
         this.text = text;
@@ -98,6 +109,10 @@ public class SlackAttachment {
         return fallback;
     }
 
+    public String getCallbackId() {
+        return callback_id;
+    }
+
     public String getText() {
         return text;
     }
@@ -120,6 +135,10 @@ public class SlackAttachment {
 
     public List<SlackField> getFields() {
         return fields;
+    }
+
+    public List<SlackAction> getActions() {
+        return actions;
     }
 
     public List<String> getMarkdown_in() {
