@@ -15,6 +15,7 @@ public enum SlackEventType {
     REACTION_ADDED,
     REACTION_REMOVED,
     SLACK_USER_CHANGE,
+    PRESENCE_CHANGE,
     PIN_ADDED,
     PIN_REMOVED,
     UNKNOWN,

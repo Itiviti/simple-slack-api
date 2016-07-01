@@ -185,6 +185,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 case PIN_REMOVED:
                     dispatchImpl((PinRemoved) event, pinRemovedListener);
                     break;
+                case PRESENCE_CHANGE:
+                    dispatchImpl((PresenceChange) event, presenceChangeListener);
+                    break;
                 case SLACK_DISCONNECTED:
                     dispatchImpl((SlackDisconnected) event, slackDisconnectedListener);
                     break;

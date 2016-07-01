@@ -29,6 +29,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<SlackUserChangeListener>        slackUserChangeListener  = new ArrayList<>();
     protected List<PinAddedListener>               pinAddedListener         = new ArrayList<>();
     protected List<PinRemovedListener>             pinRemovedListener       = new ArrayList<>();
+    protected List<PresenceChangeListener>         presenceChangeListener   = new ArrayList<>();
     protected List<SlackDisconnectedListener> slackDisconnectedListener = new ArrayList<>();
 
     static final SlackChatConfiguration            DEFAULT_CONFIGURATION    = SlackChatConfiguration.getConfiguration().asUser();
@@ -380,4 +381,13 @@ abstract class AbstractSlackSessionImpl implements SlackSession
         pinRemovedListener.remove(listener);
     }
 
+    @Override
+    public void addPresenceChangeListener(PresenceChangeListener listener) {
+        presenceChangeListener.add(listener);
+    }
+
+    @Override
+    public void removePresenceChangeListener(PresenceChangeListener listener) {
+        presenceChangeListener.remove(listener);
+    }
 }
