@@ -15,6 +15,7 @@ public interface SlackMessagePosted extends SlackMessageEvent {
         CHANNEL_ARCHIVE("channel_archive"),
         CHANNEL_JOIN("channel_join"),
         CHANNEL_LEAVE("channel_leave"),
+        CHANNEL_LEFT("channel_left"),
         CHANNEL_NAME("channel_name"),
         CHANNEL_PURPOSE("channel_purpose"),
         CHANNEL_TOPIC("channel_topic"),
