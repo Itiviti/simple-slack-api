@@ -55,6 +55,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private static final String CHANNELS_LEAVE_COMMAND    = "channels.leave";
 
     private static final String CHANNELS_JOIN_COMMAND     = "channels.join";
+
+    private static final String CHANNELS_SET_TOPIC_COMMAND     = "channels.setTopic";
     
     private static final String CHANNELS_INVITE_COMMAND     = "channels.invite";
     
@@ -501,6 +503,17 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("token", authToken);
         arguments.put("name", channelName);
         postSlackCommand(arguments, CHANNELS_JOIN_COMMAND, handle);
+        return handle;
+    }
+
+    @Override
+    public SlackMessageHandle<SlackChannelReply> setChannelTopic(SlackChannel channel, String topic) {
+        SlackMessageHandleImpl<SlackChannelReply> handle = new SlackMessageHandleImpl<>(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channel", channel.getId());
+        arguments.put("topic", topic);
+        postSlackCommand(arguments, CHANNELS_SET_TOPIC_COMMAND, handle);
         return handle;
     }
 

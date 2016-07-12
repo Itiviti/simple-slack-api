@@ -127,6 +127,11 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle<SlackChannelReply> setChannelTopic(SlackChannel channel, String topic) {
+                return null;
+            }
+
+            @Override
             public SlackMessageHandle leaveChannel(SlackChannel channel) {
                 return null;
             }
