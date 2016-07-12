@@ -129,6 +129,14 @@ public interface SlackSession {
 
     void removeMessageUpdatedListener(SlackMessageUpdatedListener listener);
 
+    void addChannelJoinedListener(SlackChannelJoinedListener listener);
+
+    void removeChannelJoinedListener(SlackChannelJoinedListener listener);
+
+    void addChannelLeftListener(SlackChannelLeftListener listener);
+
+    void removeChannelLeftListener(SlackChannelLeftListener listener);
+
     void addGroupJoinedListener(SlackGroupJoinedListener listener);
 
     void removeGroupJoinedListener(SlackGroupJoinedListener listener);
