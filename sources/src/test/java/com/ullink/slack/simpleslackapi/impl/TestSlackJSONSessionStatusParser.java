@@ -1,10 +1,12 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestSlackJSONSessionStatusParser
 {
@@ -36,5 +38,10 @@ public class TestSlackJSONSessionStatusParser
         assertThat(parser.getTeam().getId()).isEqualTo("TEAM");
         assertThat(parser.getTeam().getName()).isEqualTo("Example Team");
         assertThat(parser.getTeam().getDomain()).isEqualTo("example");
+
+        assertThat(parser.getIntegrations().get("INTEGRATION1").getName()).isEqualTo("bot1");
+        assertThat(parser.getIntegrations().get("INTEGRATION1").isDeleted()).isEqualTo(false);
+        assertThat(parser.getIntegrations().get("INTEGRATION2").getName()).isEqualTo("bot2");
+        assertThat(parser.getIntegrations().get("INTEGRATION2").isDeleted()).isEqualTo(true);
     }
 }

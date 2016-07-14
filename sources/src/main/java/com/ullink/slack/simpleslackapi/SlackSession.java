@@ -19,6 +19,8 @@ public interface SlackSession {
 
     Collection<SlackBot> getBots();
 
+    Collection<SlackIntegration> getIntegrations();
+
     SlackChannel findChannelByName(String channelName);
 
     SlackChannel findChannelById(String channelId);

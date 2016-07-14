@@ -1,10 +1,12 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.util.Map;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import com.ullink.slack.simpleslackapi.SlackIntegration;
 import com.ullink.slack.simpleslackapi.SlackTeam;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import java.util.Map;
 
 class SlackJSONParsingUtils {
 
@@ -97,5 +99,12 @@ class SlackJSONParsingUtils {
         String name = (String) jsonTeam.get("name");
         String domain = (String) jsonTeam.get("domain");
         return new SlackTeamImpl(id, name, domain);
+    }
+
+    static final SlackIntegration buildSlackIntegration(JSONObject jsonIntegration) {
+        String id = (String) jsonIntegration.get("id");
+        String name = (String) jsonIntegration.get("name");
+        boolean deleted = ifNullFalse(jsonIntegration, "deleted");
+        return new SlackIntegrationImpl(id, name, deleted);
     }
 }

@@ -11,6 +11,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
 
     protected Map<String, SlackChannel>            channels                 = new HashMap<>();
     protected Map<String, SlackUser>               users                    = new HashMap<>();
+    protected Map<String, SlackIntegration>        integrations             = new HashMap<>();
     protected SlackPersona                         sessionPersona;
     protected SlackTeam                            team;
 
@@ -53,6 +54,11 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public Collection<SlackUser> getUsers()
     {
         return new ArrayList<>(users.values());
+    }
+
+    @Override
+    public Collection<SlackIntegration> getIntegrations() {
+        return new ArrayList<>(integrations.values());
     }
 
     @Override
