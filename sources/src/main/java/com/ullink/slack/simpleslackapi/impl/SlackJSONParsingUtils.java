@@ -1,6 +1,7 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackIntegration;
+import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackTeam;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import org.json.simple.JSONArray;
@@ -41,7 +42,18 @@ class SlackJSONParsingUtils {
             title = (String) profileJSON.get("title");
             phone = (String) profileJSON.get("phone");
         }
-        return new SlackUserImpl(id, name, realName, email, skype, title, phone, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot, tz, tzLabel, tzOffset == null ? null : new Integer(tzOffset.intValue()));
+
+        String presence = (String) jsonUser.get("presence");
+        SlackPersona.SlackPresence slackPresence = SlackPersona.SlackPresence.UNKNOWN;
+        if ("active".equals(presence))
+        {
+            slackPresence = SlackPersona.SlackPresence.ACTIVE;
+        }
+        if ("away".equals(presence))
+        {
+            slackPresence = SlackPersona.SlackPresence.AWAY;
+        }
+        return new SlackUserImpl(id, name, realName, email, skype, title, phone, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot, tz, tzLabel, tzOffset == null ? null : new Integer(tzOffset.intValue()), slackPresence);
     }
 
     private static Boolean ifNullFalse(JSONObject jsonUser, String field) {

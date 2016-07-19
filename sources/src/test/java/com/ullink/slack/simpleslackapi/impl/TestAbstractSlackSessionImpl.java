@@ -27,15 +27,15 @@ public class TestAbstractSlackSessionImpl
             channels.put("channelid4",new SlackChannelImpl("channelid4", "testchannel4", "topicchannel4", "topicchannel4", false, false));
             channels.put("channelid5",new SlackChannelImpl("channelid5", "testchannel5", "topicchannel5", "topicchannel5", false, false));
 
-            users.put("userid1",new SlackUserImpl("userid1", "username1", "realname1","userid1@my.mail", "testSkype", "testPhone", "testTitle", false,false,false,false,false,false, false,"tz","tzLabel",new Integer(0)));
-            users.put("userid2",new SlackUserImpl("userid2", "username2", "realname2","userid2@my.mail", "testSkype", "testPhone", "testTitle", false,false,false,false,false,false, false,"tz","tzLabel",new Integer(0)));
-            users.put("userid3",new SlackUserImpl("userid3", "username3", "realname3","userid3@my.mail", "testSkype", "testPhone", "testTitle", true,false,false,false,false,false, false,"tz","tzLabel",new Integer(0)));
-            users.put("userid4",new SlackUserImpl("userid4", "username4", "realname4","userid4@my.mail", "testSkype", "testPhone", "testTitle", false,false,false,false,false,false, false,"tz","tzLabel",new Integer(0)));
-            users.put("userid5",new SlackUserImpl("userid5", "username5", "realname4","userid5@my.mail", "testSkype", "testPhone", "testTitle", true,false,false,false,false,false, false,"tz","tzLabel",new Integer(0)));
+            users.put("userid1",new SlackUserImpl("userid1", "username1", "realname1","userid1@my.mail", "testSkype", "testPhone", "testTitle", false,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
+            users.put("userid2",new SlackUserImpl("userid2", "username2", "realname2","userid2@my.mail", "testSkype", "testPhone", "testTitle", false,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
+            users.put("userid3",new SlackUserImpl("userid3", "username3", "realname3","userid3@my.mail", "testSkype", "testPhone", "testTitle", true,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
+            users.put("userid4",new SlackUserImpl("userid4", "username4", "realname4","userid4@my.mail", "testSkype", "testPhone", "testTitle", false,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
+            users.put("userid5",new SlackUserImpl("userid5", "username5", "realname4","userid5@my.mail", "testSkype", "testPhone", "testTitle", true,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
 
-            users.put("botid1",new SlackUserImpl("botid1", "botname1", "real bot name 1", null, "testSkype", "testPhone", "testTitle", false,false,false,false,false,false,true,"tz","tzLabel",new Integer(0)));
-            users.put("botid2",new SlackUserImpl("botid2", "botname2", "real bot name 2", null, "testSkype", "testPhone", "testTitle", false,false,false,false,false,false,true,"tz","tzLabel",new Integer(0)));
-            users.put("botid3",new SlackUserImpl("botid3", "botname3", "real bot name 3", null, "testSkype", "testPhone", "testTitle", true,false,false,false,false,false,true,"tz","tzLabel",new Integer(0)));
+            users.put("botid1",new SlackUserImpl("botid1", "botname1", "real bot name 1", null, "testSkype", "testPhone", "testTitle", false,false,false,false,false,false,true,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
+            users.put("botid2",new SlackUserImpl("botid2", "botname2", "real bot name 2", null, "testSkype", "testPhone", "testTitle", false,false,false,false,false,false,true,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
+            users.put("botid3",new SlackUserImpl("botid3", "botname3", "real bot name 3", null, "testSkype", "testPhone", "testTitle", true,false,false,false,false,false,true,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
         }
 
         @Override
