@@ -272,5 +272,17 @@
       "type": "service"
     }
  },
+  "bots": [
+    {
+      "id": "INTEGRATION1",
+      "deleted": false,
+      "name": "bot1"
+    },
+    {
+      "id": "INTEGRATION2",
+      "deleted": true,
+      "name": "bot2"
+    }
+  ],
   "url": "wss:\/\/mywebsocketurl"
 }

@@ -1,23 +1,22 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.ullink.slack.simpleslackapi.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackTeam;
-import com.ullink.slack.simpleslackapi.SlackUser;
+
+import java.util.HashMap;
+import java.util.Map;
 
 class SlackJSONSessionStatusParser {
-    private static final Logger       LOGGER   = LoggerFactory.getLogger(SlackJSONSessionStatusParser.class);
+    private static final Logger             LOGGER       = LoggerFactory.getLogger(SlackJSONSessionStatusParser.class);
 
-    private Map<String, SlackChannel> channels = new HashMap<>();
-    private Map<String, SlackUser>    users    = new HashMap<>();
+    private Map<String, SlackChannel>       channels     = new HashMap<>();
+    private Map<String, SlackUser>          users        = new HashMap<>();
+    private Map<String, SlackIntegration>   integrations = new HashMap<>();
 
     private SlackPersona              sessionPersona;
 
@@ -44,7 +43,12 @@ class SlackJSONSessionStatusParser {
         return users;
     }
 
-    public String getWebSocketURL() {
+    Map<String,SlackIntegration> getIntegrations() {
+        return integrations;
+    }
+
+    public String getWebSocketURL()
+    {
         return webSocketURL;
     }
 
@@ -72,14 +76,14 @@ class SlackJSONSessionStatusParser {
             users.put(slackUser.getId(), slackUser);
         }
 
-        JSONArray botsJson = (JSONArray) jsonResponse.get("bots");
-        if (botsJson != null) {
-            for (Object jsonObject : botsJson)
+        JSONArray integrationsJson = (JSONArray) jsonResponse.get("bots");
+        if (integrationsJson != null) {
+            for (Object jsonObject : integrationsJson)
             {
-                JSONObject jsonBot = (JSONObject) jsonObject;
-                SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(jsonBot);
-                LOGGER.debug("slack bot found : " + slackUser.getId());
-                users.put(slackUser.getId(), slackUser);
+                JSONObject jsonIntegration = (JSONObject) jsonObject;
+                SlackIntegration slackIntegration = SlackJSONParsingUtils.buildSlackIntegration(jsonIntegration);
+                LOGGER.debug("slack integration found : " + slackIntegration.getId());
+                integrations.put(slackIntegration.getId(), slackIntegration);
             }
         }
 
