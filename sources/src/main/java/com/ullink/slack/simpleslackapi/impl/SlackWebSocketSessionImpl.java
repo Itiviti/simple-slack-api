@@ -225,7 +225,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         this.proxyHost = new HttpHost(proxyAddress, proxyPort);
         this.reconnectOnDisconnection = reconnectOnDisconnection;
         this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : DEFAULT_HEARTBEAT_IN_MILLIS;
-        this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(proxyAddress,0);
+        this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(proxyAddress,proxyPort);
     }
 
     @Override
