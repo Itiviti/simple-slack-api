@@ -18,6 +18,11 @@ class GsonHelper
         return jsonElement != null && !jsonElement.isJsonNull() ? jsonElement.getAsJsonArray() : null;
     }
 
+    static JsonObject getJsonObjectOrNull(JsonElement jsonElement)
+    {
+        return jsonElement != null && !jsonElement.isJsonNull() ? jsonElement.getAsJsonObject() : null;
+    }
+
     static String getStringOrNull(JsonElement jsonElement)
     {
         return getStringOrDefaultValue(jsonElement,null);

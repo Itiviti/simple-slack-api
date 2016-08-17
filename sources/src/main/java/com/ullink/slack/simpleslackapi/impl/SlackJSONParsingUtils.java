@@ -36,20 +36,20 @@ class SlackJSONParsingUtils {
         Boolean restricted = GsonHelper.ifNullFalse(jsonUser.get("is_restricted"));
         Boolean ultraRestricted = GsonHelper.ifNullFalse(jsonUser.get("is_ultra_restricted"));
         Boolean bot = GsonHelper.ifNullFalse(jsonUser.get("is_bot"));
-        JsonElement profileJSON = jsonUser.get("profile");
+        JsonObject profileJSON = GsonHelper.getJsonObjectOrNull(jsonUser.get("profile"));
         String email = "";
         String skype = "";
         String title = "";
         String phone = "";
+        String presence = "";
         if (profileJSON !=null && !profileJSON.isJsonNull())
         {
-            email = GsonHelper.getStringOrNull(profileJSON.getAsJsonObject().get("email"));
-            skype = GsonHelper.getStringOrNull(profileJSON.getAsJsonObject().get("skype"));
-            title = GsonHelper.getStringOrNull(profileJSON.getAsJsonObject().get("title"));
-            phone = GsonHelper.getStringOrNull(profileJSON.getAsJsonObject().get("phone"));
+            email = GsonHelper.getStringOrNull(profileJSON.get("email"));
+            skype = GsonHelper.getStringOrNull(profileJSON.get("skype"));
+            title = GsonHelper.getStringOrNull(profileJSON.get("title"));
+            phone = GsonHelper.getStringOrNull(profileJSON.get("phone"));
+            presence = GsonHelper.getStringOrNull(profileJSON.get("presence"));
         }
-
-        String presence = GsonHelper.getStringOrNull(profileJSON.getAsJsonObject().get("presence"));
         SlackPersona.SlackPresence slackPresence = SlackPersona.SlackPresence.UNKNOWN;
         if ("active".equals(presence))
         {
@@ -82,7 +82,7 @@ class SlackJSONParsingUtils {
         }
 
         SlackChannelImpl toReturn = new SlackChannelImpl(id, name, topic, purpose, false, isMember);
-        JsonArray membersJson = jsonChannel.get("members").getAsJsonArray();
+        JsonArray membersJson = GsonHelper.getJsonArrayOrNull(jsonChannel.get("members"));
         if (membersJson != null) {
             for (JsonElement jsonMembersObject : membersJson) {
                 String memberId = jsonMembersObject.getAsString();
