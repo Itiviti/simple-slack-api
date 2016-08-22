@@ -81,11 +81,9 @@ class SlackJSONSessionStatusParser {
             for (Object jsonObject : integrationsJson)
             {
                 JSONObject jsonIntegration = (JSONObject) jsonObject;
-                SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(jsonIntegration);
                 SlackIntegration slackIntegration = SlackJSONParsingUtils.buildSlackIntegration(jsonIntegration);
                 LOGGER.debug("slack integration found : " + slackIntegration.getId());
                 integrations.put(slackIntegration.getId(), slackIntegration);
-                users.put(slackUser.getId(), slackUser);
             }
         }
 

@@ -2,6 +2,7 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IllegalFormatException;
 import java.util.Map;
 
 import com.ullink.slack.simpleslackapi.*;
@@ -209,6 +210,15 @@ class SlackJSONMessageParser {
         }
         String subtype = (String) obj.get("subtype");
         SlackUser user = slackSession.findUserById(userId);
+        if (user == null) {
+
+            SlackIntegration integration = slackSession.findIntegrationById(userId);
+            if (integration == null) {
+                throw new IllegalStateException("unknown user id: " + userId);
+            }
+            user = new SlackIntegrationUser(integration);
+
+        }
         Map<String, Integer> reacs = extractReactionsFromMessageJSON(obj);
         ArrayList<SlackAttachment> attachments = extractAttachmentsFromMessageJSON(obj);
         SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, null, user, channel, ts, null, obj, SlackMessagePosted.MessageSubType.fromCode(subtype));

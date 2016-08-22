@@ -25,6 +25,8 @@ public interface SlackSession {
 
     SlackChannel findChannelById(String channelId);
 
+    SlackIntegration findIntegrationById(String integrationId);
+
     SlackUser findUserById(String userId);
 
     SlackUser findUserByUserName(String userName);

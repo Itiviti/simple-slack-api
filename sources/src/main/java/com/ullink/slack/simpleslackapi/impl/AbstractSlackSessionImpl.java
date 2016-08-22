@@ -137,6 +137,12 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
+    public SlackIntegration findIntegrationById(String integrationId)
+    {
+        return integrations.get(integrationId);
+    }
+
+    @Override
     public SlackPersona sessionPersona()
     {
         return sessionPersona;

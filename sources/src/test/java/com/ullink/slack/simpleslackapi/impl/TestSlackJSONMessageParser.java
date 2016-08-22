@@ -20,6 +20,7 @@ public class TestSlackJSONMessageParser {
     SlackSession session;
 
     private static final String TEST_NEW_MESSAGE = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER1\",\"text\":\"Test text 1\",\"ts\":\"1413187521.000004\"}";
+    private static final String TEST_NEW_MESSAGE_FROM_INTEGRATION = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"bot_id\":\"TESTINTEGRATION1\",\"text\":\"Test text 1\",\"ts\":\"1413187521.000004\"}";
     private static final String TEST_DELETED_MESSAGE = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER1\",\"text\":\"Test text 1\",\"ts\":\"1413187521.000005\", \"subtype\": \"message_deleted\", \"deleted_ts\": \"1358878749.000002\"}";
     private static final String TEST_UPDATED_MESSAGE = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"text\":\"Test text 1\",\"ts\":\"1358878755.001234\", \"subtype\": \"message_changed\", \"message\": {\"type:\" \"message\", \"user\": \"TESTUSER1\", \"text\": \"newtext\", \"ts\": \"1413187521.000005\", \"edited\": { \"user\": \"TESTUSER1\", \"ts\":\"1358878755.001234\"}}}";
 
@@ -62,9 +63,14 @@ public class TestSlackJSONMessageParser {
                 SlackUser user1 = new SlackUserImpl("TESTUSER1", "test user 1", "", "", "testSkype", "testPhone", "testTitle", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0), SlackPersona.SlackPresence.ACTIVE);
                 SlackUser user2 = new SlackUserImpl("TESTUSER2", "test user 2", "", "", "testSkype", "testPhone", "testTitle", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0), SlackPersona.SlackPresence.ACTIVE);
                 SlackUser user3 = new SlackUserImpl("TESTUSER3", "test user 3", "", "", "testSkype", "testPhone", "testTitle", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0), SlackPersona.SlackPresence.ACTIVE);
+
                 users.put(user1.getId(), user1);
                 users.put(user2.getId(), user2);
                 users.put(user3.getId(), user3);
+
+                SlackIntegration integration = new SlackIntegrationImpl("TESTINTEGRATION1","integration 1",false);
+
+                integrations.put(integration.getId(),integration);
 
                 SlackChannel channel1 = new SlackChannelImpl("TESTCHANNEL1", "testchannel1", null, null, false, false);
                 SlackChannel channel2 = new SlackChannelImpl("TESTCHANNEL2", "testchannel2", null, null, false, false);
@@ -210,6 +216,19 @@ public class TestSlackJSONMessageParser {
         Assertions.assertThat(event).isInstanceOf(SlackMessagePosted.class);
         SlackMessagePosted slackMessage = (SlackMessagePosted) event;
         Assertions.assertThat(slackMessage.getSender().getId()).isEqualTo("TESTUSER1");
+        Assertions.assertThat(slackMessage.getChannel().getId()).isEqualTo("TESTCHANNEL1");
+        Assertions.assertThat(slackMessage.getMessageContent()).isEqualTo("Test text 1");
+        Assertions.assertThat(slackMessage.getTimeStamp()).isEqualTo("1413187521.000004");
+    }
+
+    @Test
+    public void testParsingNewMessageFromIntegration() throws Exception {
+        JSONParser parser = new JSONParser();
+        JSONObject object = (JSONObject) parser.parse(TEST_NEW_MESSAGE_FROM_INTEGRATION);
+        SlackEvent event = SlackJSONMessageParser.decode(session, object);
+        Assertions.assertThat(event).isInstanceOf(SlackMessagePosted.class);
+        SlackMessagePosted slackMessage = (SlackMessagePosted) event;
+        Assertions.assertThat(slackMessage.getSender().getId()).isEqualTo("TESTINTEGRATION1");
         Assertions.assertThat(slackMessage.getChannel().getId()).isEqualTo("TESTCHANNEL1");
         Assertions.assertThat(slackMessage.getMessageContent()).isEqualTo("Test text 1");
         Assertions.assertThat(slackMessage.getTimeStamp()).isEqualTo("1413187521.000004");
