@@ -223,8 +223,8 @@ public class TestSlackJSONMessageParser {
 
     @Test
     public void testParsingNewMessageFromIntegration() throws Exception {
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(TEST_NEW_MESSAGE_FROM_INTEGRATION);
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_NEW_MESSAGE_FROM_INTEGRATION).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
         Assertions.assertThat(event).isInstanceOf(SlackMessagePosted.class);
         SlackMessagePosted slackMessage = (SlackMessagePosted) event;
