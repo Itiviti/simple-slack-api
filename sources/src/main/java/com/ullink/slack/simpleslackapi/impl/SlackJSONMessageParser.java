@@ -92,6 +92,8 @@ class SlackJSONMessageParser {
                 return extractPinAddedEvent(slackSession, obj);
             case PIN_REMOVED:
                 return extractPinRemovedEvent(slackSession, obj);
+            case USER_TYPING:
+                return extractUserTypingEvent(slackSession, obj);
             default:
                 return SlackEvent.UNKNOWN_EVENT;
         }
@@ -348,6 +350,16 @@ class SlackJSONMessageParser {
         SlackChannel channel = (channelId != null) ? slackSession.findChannelById(channelId) : null;
         SlackUser user = slackSession.findUserById(GsonHelper.getStringOrNull(obj.get("user")));
         return new ReactionRemovedImpl(emojiName, user, channel, messageId, fileId, fileCommentId);
+    }
+
+    private static UserTyping extractUserTypingEvent(SlackSession slackSession, JsonObject obj) {
+        String channelId = GsonHelper.getStringOrNull(obj.get("channel"));
+        String userId = GsonHelper.getStringOrNull(obj.get("user"));
+
+        SlackChannel slackChannel = slackSession.findChannelById(channelId);
+        SlackUser slackUser = slackSession.findUserById(userId);
+
+        return new UserTypingImpl(slackChannel, slackUser, SlackEventType.USER_TYPING);
     }
 
     private static PinRemoved extractPinRemovedEvent(SlackSession slackSession, JsonObject obj) {

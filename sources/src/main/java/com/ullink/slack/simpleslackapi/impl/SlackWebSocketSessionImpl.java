@@ -199,6 +199,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 case SLACK_DISCONNECTED:
                     dispatchImpl((SlackDisconnected) event, slackDisconnectedListener);
                     break;
+                case USER_TYPING:
+                    dispatchImpl((UserTyping) event, userTypingListener);
+                    break;
                 case UNKNOWN:
                     throw new IllegalArgumentException("event not handled " + event);
             }

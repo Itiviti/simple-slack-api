@@ -34,6 +34,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<PinRemovedListener>             pinRemovedListener       = new ArrayList<>();
     protected List<PresenceChangeListener>         presenceChangeListener   = new ArrayList<>();
     protected List<SlackDisconnectedListener> slackDisconnectedListener = new ArrayList<>();
+    protected List<UserTypingListener>             userTypingListener       = new ArrayList<>();
 
     static final SlackChatConfiguration            DEFAULT_CONFIGURATION    = SlackChatConfiguration.getConfiguration().asUser();
     static final boolean                           DEFAULT_UNFURL           = true;
@@ -427,5 +428,15 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public void removePresenceChangeListener(PresenceChangeListener listener) {
         presenceChangeListener.remove(listener);
+    }
+
+    @Override
+    public void addUserTypingListener(UserTypingListener listener) {
+        userTypingListener.add(listener);
+    }
+
+    @Override
+    public void removeUserTypingListener(UserTypingListener listener) {
+        userTypingListener.remove(listener);
     }
 }

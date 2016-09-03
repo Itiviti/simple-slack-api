@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi;
 
+import com.ullink.slack.simpleslackapi.events.UserTyping;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
 import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.*;
@@ -144,6 +145,10 @@ public interface SlackSession {
     void addGroupJoinedListener(SlackGroupJoinedListener listener);
 
     void removeGroupJoinedListener(SlackGroupJoinedListener listener);
+
+    void addUserTypingListener(UserTypingListener listener);
+
+    void removeUserTypingListener(UserTypingListener listener);
 
 
     /*
