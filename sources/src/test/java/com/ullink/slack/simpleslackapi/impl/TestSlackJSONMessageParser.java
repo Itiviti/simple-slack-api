@@ -41,6 +41,8 @@ public class TestSlackJSONMessageParser {
 
     private static final String TEST_ATTACHMENT = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER1\",\"text\":\"Test text 1\",\"ts\":\"1413187521.000004\", \"attachments\": [{\"fallback\": \"Required plain-text summary of the attachment.\", \"color\": \"#36a64f\", \"pretext\": \"Optional text that appears above the attachment block\", \"author_name\": \"Bobby Tables\", \"author_link\": \"http://flickr.com/bobby/\", \"author_icon\": \"http://flickr.com/icons/bobby.jpg\", \"title\": \"Slack API Documentation\", \"title_link\": \"https://api.slack.com/\", \"text\": \"Optional text that appears within the attachment\", \"fields\": [ { \"title\": \"Priority\", \"value\": \"High\", \"short\": false } ], \"image_url\": \"http://my-website.com/path/to/image.jpg\", \"thumb_url\": \"http://example.com/path/to/thumb.png\", \"footer\": \"Slack API\", \"footer_icon\": \"https://platform.slack-edge.com/img/default_application_icon.png\", \"ts\": 123456789}]}";
 
+    private static final String TEST_USER_TYPING = "{\"type\":\"user_typing\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER3\"}";
+
     @Before
     public void setup() {
         session = new AbstractSlackSessionImpl() {
@@ -395,5 +397,19 @@ public class TestSlackJSONMessageParser {
         Assertions.assertThat(field.getTitle()).isEqualTo("Priority");
         Assertions.assertThat(field.getValue()).isEqualTo("High");
         Assertions.assertThat(field.isShort()).isEqualTo(false);
+    }
+
+    @Test
+    public void testUserTyping() {
+        JsonParser jsonParser = new JsonParser();
+        JsonElement object = jsonParser.parse(TEST_USER_TYPING);
+        SlackEvent slackEvent = SlackJSONMessageParser.decode(session, object.getAsJsonObject());
+
+        Assertions.assertThat(slackEvent).isInstanceOf(UserTyping.class);
+
+        UserTyping userTyping = (UserTyping) slackEvent;
+
+        Assertions.assertThat(userTyping.getChannel().getId()).isEqualTo("TESTCHANNEL1");
+        Assertions.assertThat(userTyping.getUser().getId()).isEqualTo("TESTUSER3");
     }
 }

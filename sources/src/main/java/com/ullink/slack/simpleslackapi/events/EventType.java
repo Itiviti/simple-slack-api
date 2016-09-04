@@ -20,6 +20,7 @@ public enum EventType
     PRESENCE_CHANGE("presence_change"),
     PIN_ADDED("pin_added"),
     PIN_REMOVED("pin_removed"),
+    USER_TYPING("user_typing"),
     OTHER("-");
 
     private static final Map<String, EventType> CODE_MAP = new HashMap<>();
