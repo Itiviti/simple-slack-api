@@ -209,7 +209,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
         private <E extends SlackEvent, L extends SlackEventListener<E>> void dispatchImpl(E event, List<L> listeners) {
             for (L listener : listeners) {
-                listener.onEvent(event, SlackWebSocketSessionImpl.this);
+                try {
+                    listener.onEvent(event, SlackWebSocketSessionImpl.this);
+                } catch (Throwable thr) {
+                    LOGGER.error("caught exception in dispatchImpl", thr);
+                }
             }
         }
     }
