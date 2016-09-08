@@ -296,6 +296,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                     session.addMessageHandler(handler);
                 }
 
+                @Override
+                public void onError(Session session, Throwable thr) {
+                    LOGGER.error("Endpoint#onError called", thr);
+                }
+
             }, URI.create(wssurl));
         }
         catch (DeploymentException e) {
