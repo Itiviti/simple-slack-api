@@ -57,7 +57,7 @@ public class ListeningToMessageEvents
                 // I can filter out messages coming from other users
                 SlackUser myInterestingUser = session1.findUserByUserName("gueststar");
 
-                if (!myInterestingUser.getId().equals(event.getSender())) {
+                if (!myInterestingUser.getId().equals(event.getSender().getId())) {
                     return;
                 }
 
