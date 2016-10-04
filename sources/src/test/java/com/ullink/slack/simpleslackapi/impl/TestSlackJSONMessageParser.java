@@ -118,6 +118,11 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage) {
+                return null;
+            }
+
+            @Override
             public SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message) {
                 return null;
             }
