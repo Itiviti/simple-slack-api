@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ullink.slack.simpleslackapi.SlackChannel;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
@@ -79,13 +81,16 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
     private List<SlackMessagePosted> fetchHistoryOfChannel(Map<String, String> params, String command) {
         SlackMessageHandle<GenericSlackReply> handle = session.postGenericSlackCommand(params, command);
         GenericSlackReply replyEv = handle.getReply();
-        JSONObject answer = replyEv.getPlainAnswer();
-        JSONArray events = (JSONArray) answer.get("messages");
+        String answer = replyEv.getPlainAnswer();
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(answer).getAsJsonObject();
+        JsonArray events = GsonHelper.getJsonArrayOrNull(jsonObject.get("messages"));
         List<SlackMessagePosted> messages = new ArrayList<>();
         if (events != null) {
-            for (Object event : events) {
-                if ((((JSONObject) event).get("subtype") == null)) {
-                    messages.add((SlackMessagePosted) SlackJSONMessageParser.decode(session, (JSONObject) event));
+            for (JsonElement eventJson : events) {
+                JsonObject event = eventJson.getAsJsonObject();
+                if (GsonHelper.getStringOrNull(event.get("subtype")) == null) {
+                    messages.add((SlackMessagePosted) SlackJSONMessageParser.decode(session, event));
                 }
             }
         }

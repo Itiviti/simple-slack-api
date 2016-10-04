@@ -1,7 +1,7 @@
 package com.ullink.slack.simpleslackapi;
 
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class SlackPreparedMessage {
         List<SlackAttachment> attachments;
 
         public Builder() {
-            this.attachments = Lists.newArrayList();
+            this.attachments = new ArrayList<>();
         }
 
         public Builder withMessage(String message) {

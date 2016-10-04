@@ -4,7 +4,6 @@ import com.ullink.slack.simpleslackapi.SlackAttachment;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
@@ -19,7 +18,7 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
     private SlackChannel channel;
     private String       timestamp;
     private SlackFile    slackFile;
-    private JSONObject   jsonSource;
+    private String   jsonSource;
     private MessageSubType msgSubType;
     private Map<String, Integer> reactions;
     private ArrayList<SlackAttachment> attachments;
@@ -34,7 +33,7 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
         this.msgSubType = msgSubType;
     }
 
-    SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, SlackFile slackFile, JSONObject jsonSource, MessageSubType msgSubType)
+    SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, SlackFile slackFile, String jsonSource, MessageSubType msgSubType)
     {
         this.channel = channel;
         this.messageContent = messageContent;
@@ -52,7 +51,7 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
     }
 
     @Override
-    public JSONObject getJsonSource() {
+    public String getJsonSource() {
         return jsonSource;
     }
 

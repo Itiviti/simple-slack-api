@@ -20,6 +20,7 @@ public enum SlackEventType {
     PRESENCE_CHANGE,
     PIN_ADDED,
     PIN_REMOVED,
+    USER_TYPING,
     UNKNOWN,
     SLACK_DISCONNECTED;
 }

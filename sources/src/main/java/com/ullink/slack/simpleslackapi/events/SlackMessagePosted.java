@@ -1,13 +1,12 @@
 package com.ullink.slack.simpleslackapi.events;
 
 import com.ullink.slack.simpleslackapi.SlackAttachment;
+import java.util.Map;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import java.util.ArrayList;
-import java.util.Map;
-import org.json.simple.JSONObject;
 
 public interface SlackMessagePosted extends SlackMessageEvent {
     enum MessageSubType {
@@ -63,7 +62,7 @@ public interface SlackMessagePosted extends SlackMessageEvent {
     
     SlackFile getSlackFile();
     
-    JSONObject getJsonSource();
+    String getJsonSource();
     
     String getTimestamp();
     

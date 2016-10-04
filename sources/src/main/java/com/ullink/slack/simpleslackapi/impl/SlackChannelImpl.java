@@ -16,8 +16,9 @@ class SlackChannelImpl implements SlackChannel
     private String         topic;
     private String         purpose;
     private boolean        isMember;
+    private boolean        isArchived;
 
-    SlackChannelImpl(String id, String name, String topic, String purpose, boolean direct, boolean isMember)
+    SlackChannelImpl(String id, String name, String topic, String purpose, boolean direct, boolean isMember, boolean isArchived)
     {
         this.id = id;
         this.name = name;
@@ -25,6 +26,7 @@ class SlackChannelImpl implements SlackChannel
         this.purpose = purpose;
         this.direct = direct;
         this.isMember = isMember;
+        this.isArchived = isArchived;
     }
 
     void addUser(SlackUser user)
@@ -85,6 +87,11 @@ class SlackChannelImpl implements SlackChannel
     @Override
     public boolean isMember() {
         return isMember;
+    }
+
+    @Override
+    public boolean isArchived() {
+        return isArchived;
     }
 
     @Override

@@ -14,6 +14,11 @@ With this library you should be able to connect to Slack and to send some messag
 
 You can add this library as a dependency to your Maven or Gradle project through [JitPack](https://jitpack.io/#Ullink/simple-slack-api).
 
+Released versions are also availables on the maven central repository :
+
+* *group id:* com.ullink.slack
+* *artifact id:* simpleslackapi
+
 ## How to use it ?
 
 You can find some samples of the most common use cases in the [samples](https://github.com/Ullink/simple-slack-api/tree/master/samples) folder.

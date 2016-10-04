@@ -22,6 +22,8 @@ public interface SlackChannel {
 
     boolean isMember();
 
+    boolean isArchived();
+
     SlackChannelType getType();
 
 }
