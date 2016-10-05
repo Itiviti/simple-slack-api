@@ -1,6 +1,5 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.google.common.io.CharStreams;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,6 +9,7 @@ import com.ullink.slack.simpleslackapi.events.*;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
 import com.ullink.slack.simpleslackapi.listeners.SlackEventListener;
 import com.ullink.slack.simpleslackapi.replies.*;
+import com.ullink.slack.simpleslackapi.utils.ReaderUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -680,7 +680,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             builder.addBinaryBody("file",fileContent, ContentType.DEFAULT_BINARY,fileName);
             request.setEntity(builder.build());
             HttpResponse response = client.execute(request);
-            String jsonResponse = CharStreams.toString(new InputStreamReader(response.getEntity().getContent()));
+            String jsonResponse = ReaderUtils.readAll(new InputStreamReader(response.getEntity().getContent()));
             LOGGER.debug("PostMessage return: " + jsonResponse);
             ParsedSlackReply reply = SlackJSONReplyParser.decode(parseObject(jsonResponse),this);
             handle.setReply(reply);
