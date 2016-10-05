@@ -104,6 +104,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private long                              heartbeat;
     private WebSocketContainerProvider        webSocketContainerProvider;
 
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage message) {
+        SlackChannel iMChannel = getIMChannelForUser(user);
+        return sendMessage(iMChannel, message);
+    }
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
