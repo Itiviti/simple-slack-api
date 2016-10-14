@@ -86,6 +86,8 @@ class SlackJSONMessageParser {
                 return extractReactionRemovedEvent(slackSession, obj);
             case USER_CHANGE:
                 return extractUserChangeEvent(obj);
+            case TEAM_JOIN:
+                return extractTeamJoinEvent(obj);
             case PRESENCE_CHANGE:
                 return extractPresenceChangeEvent(slackSession, obj);
             case PIN_ADDED:
@@ -327,6 +329,12 @@ class SlackJSONMessageParser {
         JsonObject user = obj.get("user").getAsJsonObject();
         SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(user);
         return new SlackUserChangeImpl(slackUser);
+    }
+
+    private static SlackTeamJoin extractTeamJoinEvent(JsonObject obj) {
+        JsonObject user = obj.get("user").getAsJsonObject();
+        SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(user);
+        return new SlackTeamJoinImpl(slackUser);
     }
 
     private static PresenceChange extractPresenceChangeEvent(SlackSession slackSession, JsonObject obj) {

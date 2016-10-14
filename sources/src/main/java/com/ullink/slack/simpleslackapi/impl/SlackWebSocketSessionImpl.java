@@ -192,6 +192,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 case SLACK_USER_CHANGE:
                     dispatchImpl((SlackUserChange) event, slackUserChangeListener);
                     break;
+                case SLACK_TEAM_JOIN:
+                    dispatchImpl((SlackTeamJoin) event, slackTeamJoinListener);
+                    break;
                 case PIN_ADDED:
                     dispatchImpl((PinAdded) event, pinAddedListener);
                     break;
@@ -860,10 +863,10 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 SlackGroupJoined slackGroupJoined = (SlackGroupJoined) slackEvent;
                 channels.put(slackGroupJoined.getSlackChannel().getId(), slackGroupJoined.getSlackChannel());
             }
-            if (slackEvent instanceof SlackUserChange)
+            if (slackEvent instanceof SlackUserChangeEvent)
             {
-                SlackUserChange slackUserChange = (SlackUserChange) slackEvent;
-                users.put(slackUserChange.getUser().getId(), slackUserChange.getUser());
+                SlackUserChangeEvent slackUserChangeEvent = (SlackUserChangeEvent) slackEvent;
+                users.put(slackUserChangeEvent.getUser().getId(), slackUserChangeEvent.getUser());
             }
             dispatcher.dispatch(slackEvent);
         }

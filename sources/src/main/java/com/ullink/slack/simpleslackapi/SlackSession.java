@@ -188,6 +188,10 @@ public interface SlackSession {
 
     void removeSlackUserChangeListener(SlackUserChangeListener listener);
 
+    void addSlackTeamJoinListener(SlackTeamJoinListener listener);
+
+    void removeSlackTeamJoinListener(SlackTeamJoinListener listener);
+
     void addPinAddedListener(PinAddedListener listener);
 
     void removePinAddedListener(PinAddedListener listener);
