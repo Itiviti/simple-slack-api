@@ -839,16 +839,15 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     @Override
     public void onMessage(String message) {
+        final JsonObject object = parseObject(message);
+
         LOGGER.debug("receiving from websocket " + message);
-        if (message.contains("{\"type\":\"pong\",\"reply_to\"")) {
-            int rightBracketIdx = message.indexOf('}');
-            String toParse = message.substring(26, rightBracketIdx);
-            lastPingAck = Integer.parseInt(toParse);
+        if ("pong".equals(object.get("type").getAsString())) {
+            lastPingAck = object.get("reply_to").getAsInt();
             LOGGER.debug("pong received " + lastPingAck);
         }
         else
         {
-            JsonObject object = parseObject(message);
             SlackEvent slackEvent = SlackJSONMessageParser.decode(this, object);
             if (slackEvent instanceof SlackChannelCreated)
             {
