@@ -63,9 +63,10 @@ All these events can be listen provided your bot has the rights to (IE : the bot
 * channel / private group archived event
 * channel / private group unarchived event
 * channel / private group renamed event
-* channel /private group joined event
+* channel / private group joined event
 * reaction added to message event (since v0.5.0)
 * reaction removed from message event (since v0.5.0)
+* team joined event
 
 
 # Thanks

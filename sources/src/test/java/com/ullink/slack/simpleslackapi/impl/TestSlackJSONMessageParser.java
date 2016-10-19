@@ -39,6 +39,8 @@ public class TestSlackJSONMessageParser {
 
     private static final String TEST_USER_CHANGE = "{\"type\": \"user_change\",\"user\": {\"id\": \"TESTUSER1\", \"name\": \"test user 1\"}}";
 
+    private static final String TEST_TEAM_JOIN = "{\"type\": \"team_join\",\"user\": {\"id\": \"TESTUSER1\", \"name\": \"test user 1\"}}";
+
     private static final String TEST_ATTACHMENT = "{\"type\":\"message\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER1\",\"text\":\"Test text 1\",\"ts\":\"1413187521.000004\", \"attachments\": [{\"fallback\": \"Required plain-text summary of the attachment.\", \"color\": \"#36a64f\", \"pretext\": \"Optional text that appears above the attachment block\", \"author_name\": \"Bobby Tables\", \"author_link\": \"http://flickr.com/bobby/\", \"author_icon\": \"http://flickr.com/icons/bobby.jpg\", \"title\": \"Slack API Documentation\", \"title_link\": \"https://api.slack.com/\", \"text\": \"Optional text that appears within the attachment\", \"fields\": [ { \"title\": \"Priority\", \"value\": \"High\", \"short\": false } ], \"image_url\": \"http://my-website.com/path/to/image.jpg\", \"thumb_url\": \"http://example.com/path/to/thumb.png\", \"footer\": \"Slack API\", \"footer_icon\": \"https://platform.slack-edge.com/img/default_application_icon.png\", \"ts\": 123456789}]}";
 
     private static final String TEST_USER_TYPING = "{\"type\":\"user_typing\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER3\"}";
@@ -368,6 +370,19 @@ public class TestSlackJSONMessageParser {
         Assertions.assertThat(event).isInstanceOf(SlackUserChange.class);
         SlackUserChange slackUserChange = (SlackUserChange)event;
         SlackUser user = slackUserChange.getUser();
+        Assertions.assertThat(user).isNotNull();
+        Assertions.assertThat(user.getId()).isEqualTo("TESTUSER1");
+        Assertions.assertThat(session.findUserById("TESTUSER1").getUserName()).isEqualTo(user.getUserName());
+    }
+
+    @Test
+    public void testTeamJoin() {
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_TEAM_JOIN).getAsJsonObject();
+        SlackEvent event = SlackJSONMessageParser.decode(session, object);
+        Assertions.assertThat(event).isInstanceOf(SlackTeamJoin.class);
+        SlackTeamJoin slackTeamJoin = (SlackTeamJoin)event;
+        SlackUser user = slackTeamJoin.getUser();
         Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getId()).isEqualTo("TESTUSER1");
         Assertions.assertThat(session.findUserById("TESTUSER1").getUserName()).isEqualTo(user.getUserName());

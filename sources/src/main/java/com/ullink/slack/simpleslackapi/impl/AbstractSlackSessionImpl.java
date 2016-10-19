@@ -30,6 +30,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<ReactionAddedListener>          reactionAddedListener    = new ArrayList<>();
     protected List<ReactionRemovedListener>        reactionRemovedListener  = new ArrayList<>();
     protected List<SlackUserChangeListener>        slackUserChangeListener  = new ArrayList<>();
+    protected List<SlackTeamJoinListener>          slackTeamJoinListener    = new ArrayList<>();
     protected List<PinAddedListener>               pinAddedListener         = new ArrayList<>();
     protected List<PinRemovedListener>             pinRemovedListener       = new ArrayList<>();
     protected List<PresenceChangeListener>         presenceChangeListener   = new ArrayList<>();
@@ -395,6 +396,18 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public void removeSlackUserChangeListener(SlackUserChangeListener listener)
     {
         slackUserChangeListener.remove(listener);
+    }
+
+    @Override
+    public void addSlackTeamJoinListener(SlackTeamJoinListener listener)
+    {
+        slackTeamJoinListener.add(listener);
+    }
+
+    @Override
+    public void removeSlackTeamJoinListener(SlackTeamJoinListener listener)
+    {
+        slackTeamJoinListener.remove(listener);
     }
 
     public void addPinAddedListener(PinAddedListener listener)
