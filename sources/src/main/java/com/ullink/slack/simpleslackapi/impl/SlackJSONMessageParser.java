@@ -306,8 +306,14 @@ class SlackJSONMessageParser {
     private static SlackChannel parseChannelDescription(JsonObject channelJSONObject) {
         String id = GsonHelper.getStringOrNull(channelJSONObject.get("id"));
         String name = GsonHelper.getStringOrNull(channelJSONObject.get("name"));
-        String topic = GsonHelper.getStringOrNull(channelJSONObject.get("topic").getAsJsonObject().get("value"));
-        String purpose = GsonHelper.getStringOrNull((channelJSONObject.get("purpose").getAsJsonObject().get("value")));
+        String topic = null;
+        String purpose = null;
+        if (channelJSONObject.has("topic")) {
+            topic = GsonHelper.getStringOrNull(channelJSONObject.get("topic").getAsJsonObject().get("value"));
+        }
+        if (channelJSONObject.has("purpose")) {
+            purpose = GsonHelper.getStringOrNull((channelJSONObject.get("purpose").getAsJsonObject().get("value")));
+        }
         boolean isArchived = GsonHelper.getBooleanOrDefaultValue(channelJSONObject.get("is_archived"), false);
         return new SlackChannelImpl(id, name, topic, purpose, id.startsWith("D"),false, isArchived);
     }
