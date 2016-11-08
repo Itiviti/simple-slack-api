@@ -55,6 +55,10 @@ public class SlackAttachment {
         actions.add(new SlackAction(name, text, type, value));
     }
 
+    public void addAction(SlackAction action) {
+        actions.add(action);
+    }
+
     public void addMarkdownIn(String value) {
         if (markdown_in == null) {
             markdown_in = new ArrayList<>();

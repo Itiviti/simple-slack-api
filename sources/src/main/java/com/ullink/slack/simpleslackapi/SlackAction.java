@@ -5,8 +5,10 @@ public class SlackAction {
 
     private String name;
     private String text;
+    private String style;
     private String type;
     private String value;
+    private SlackConfirmation confirm;
 
     public SlackAction() {
     }
@@ -48,5 +50,68 @@ public class SlackAction {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+    }
+
+    public SlackConfirmation getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(SlackConfirmation confirm) {
+        this.confirm = confirm;
+    }
+
+
+    public static class SlackConfirmation {
+        private String title;
+        private String text;
+        private String okText;
+        private String dismissText;
+
+        public SlackConfirmation(String title, String text, String okText, String dismissText) {
+            this.title = title;
+            this.text = text;
+            this.okText = okText;
+            this.dismissText = dismissText;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public String getOkText() {
+            return okText;
+        }
+
+        public void setOkText(String okText) {
+            this.okText = okText;
+        }
+
+        public String getDismissText() {
+            return dismissText;
+        }
+
+        public void setDismissText(String dismissText) {
+            this.dismissText = dismissText;
+        }
     }
 }

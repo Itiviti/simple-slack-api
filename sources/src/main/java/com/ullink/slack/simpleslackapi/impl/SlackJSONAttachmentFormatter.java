@@ -136,6 +136,35 @@ class SlackJSONAttachmentFormatter
             {
                 actionJSON.addProperty("value", action.getValue());
             }
+            if (action.getStyle() != null)
+            {
+                actionJSON.addProperty("style", action.getStyle());
+            }
+            if (action.getConfirm() != null)
+            {
+                actionJSON.add("confirm", encodeAttachmentActionsConfirmation(action.getConfirm()));
+            }
+        }
+        return toReturn;
+    }
+
+    private static JsonObject encodeAttachmentActionsConfirmation(SlackAction.SlackConfirmation confirmation) {
+        JsonObject toReturn = new JsonObject();
+        if (confirmation.getTitle() != null)
+        {
+            toReturn.addProperty("title", confirmation.getTitle());
+        }
+        if(confirmation.getText() != null)
+        {
+            toReturn.addProperty("text", confirmation.getText());
+        }
+        if(confirmation.getOkText() != null)
+        {
+            toReturn.addProperty("ok_text", confirmation.getOkText());
+        }
+        if(confirmation.getDismissText() != null)
+        {
+            toReturn.addProperty("dismiss_text", confirmation.getDismissText());
         }
         return toReturn;
     }
