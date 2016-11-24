@@ -136,6 +136,11 @@ public class TestSlackJSONMessageParser {
                 return null;
             }
 
+            @Override public SlackMessageHandle<SlackMessageReply> removeReactionFromMessage(SlackChannel channel, String messageTimeStamp, String emojiCode)
+            {
+                return null;
+            }
+
             @Override
             public SlackMessageHandle joinChannel(String channelName) {
                 return null;
