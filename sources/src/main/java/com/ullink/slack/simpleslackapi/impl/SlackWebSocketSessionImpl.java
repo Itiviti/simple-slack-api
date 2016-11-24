@@ -70,7 +70,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private static final String CHAT_UPDATE_COMMAND       = "chat.update";
 
     private static final String REACTIONS_ADD_COMMAND     = "reactions.add";
-    
+
+    private static final String REACTIONS_REMOVE_COMMAND     = "reactions.remove";
+
     private static final String INVITE_USER_COMMAND     = "users.admin.invite";
 
     private static final String SET_PERSONA_ACTIVE = "users.setPresence";
@@ -528,6 +530,18 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("timestamp", messageTimeStamp);
         arguments.put("name", emojiCode);
         postSlackCommand(arguments, REACTIONS_ADD_COMMAND, handle);
+        return handle;
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> removeReactionFromMessage(SlackChannel channel, String messageTimeStamp, String emojiCode) {
+        SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<>(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channel", channel.getId());
+        arguments.put("timestamp", messageTimeStamp);
+        arguments.put("name", emojiCode);
+        postSlackCommand(arguments, REACTIONS_REMOVE_COMMAND, handle);
         return handle;
     }
 
