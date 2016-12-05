@@ -15,6 +15,7 @@ apply plugin: 'idea'
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'idea'
 
     repositories {
         mavenCentral()
