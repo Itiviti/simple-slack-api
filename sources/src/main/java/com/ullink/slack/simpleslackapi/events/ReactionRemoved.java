@@ -8,8 +8,9 @@ public interface ReactionRemoved extends SlackEvent {
     String getEmojiName();
     SlackChannel getChannel();
     SlackUser getUser();
+    SlackUser getItemUser();
     String getMessageID();
     String getFileID();
     String getFileCommentID();
-  
+
 }
