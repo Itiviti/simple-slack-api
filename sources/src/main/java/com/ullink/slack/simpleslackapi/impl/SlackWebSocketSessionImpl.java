@@ -759,6 +759,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         try
         {
             JsonObject messageJSON = new JsonObject();
+            messageJSON.addProperty("id", handle.getMessageId());
             messageJSON.addProperty("type", "message");
             messageJSON.addProperty("channel", channel.getId());
             messageJSON.addProperty("text", message);
@@ -779,6 +780,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         try
         {
             JsonObject messageJSON = new JsonObject();
+            messageJSON.addProperty("id", handle.getMessageId());
             messageJSON.addProperty("type", "typing");
             messageJSON.addProperty("channel", channel.getId());
             websocketSession.getBasicRemote().sendText(messageJSON.toString());
