@@ -9,13 +9,15 @@ public class ReactionRemovedImpl implements ReactionRemoved{
     private final String emojiName;
     private final SlackChannel channel;
     private final SlackUser user;
+    private final SlackUser itemUser;
     private final String messageID;
     private final String fileID;
     private final String fileCommentID;
 
-    public ReactionRemovedImpl(String emojiName, SlackUser user, SlackChannel channel, String messageID, String fileID, String fileCommentID) {
+    public ReactionRemovedImpl(String emojiName, SlackUser user, SlackUser itemUser, SlackChannel channel, String messageID, String fileID, String fileCommentID) {
         this.emojiName = emojiName;
         this.user = user;
+        this.itemUser = itemUser;
         this.channel = channel;
         this.messageID = messageID;
         this.fileID = fileID;
@@ -50,6 +52,11 @@ public class ReactionRemovedImpl implements ReactionRemoved{
     @Override
     public SlackUser getUser() {
         return user;
+    }
+
+    @Override
+    public SlackUser getItemUser() {
+        return itemUser;
     }
 
     @Override
