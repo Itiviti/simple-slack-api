@@ -183,10 +183,6 @@ public class TestAbstractSlackSessionImpl
             return 0;
         }
 
-        @Override
-        public void setHeartbeat(long heartbeat, TimeUnit unit) {
-
-        }
     }
 
     @Test

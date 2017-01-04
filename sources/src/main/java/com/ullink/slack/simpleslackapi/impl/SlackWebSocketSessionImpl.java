@@ -88,23 +88,24 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private  static final int                 DEFAULT_HEARTBEAT_IN_MILLIS = 30000;
 
-    private Session                           websocketSession;
+    private volatile Session                  websocketSession;
     private String                            authToken;
     private String                            proxyAddress;
     private int                               proxyPort                  = -1;
     HttpHost                                  proxyHost;
-    private long                              lastPingSent;
+    private volatile long                     lastPingSent;
     private volatile long                     lastPingAck;
 
     private AtomicLong                        messageId = new AtomicLong();
 
-    private boolean                           reconnectOnDisconnection;
-    private boolean                           wantDisconnect;
+    private final boolean                     reconnectOnDisconnection;
+    private volatile boolean                  wantDisconnect;
 
     private Thread                            connectionMonitoringThread;
     private EventDispatcher                   dispatcher                 = new EventDispatcher();
-    private long                              heartbeat;
+    private final long                        heartbeat;
     private WebSocketContainerProvider        webSocketContainerProvider;
+    private volatile String                   webSocketConnectionURL;
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage message) {
@@ -269,8 +270,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private void connectImpl() throws IOException
     {
         LOGGER.info("connecting to slack");
-        lastPingSent = 0;
-        lastPingAck = 0;
         HttpClient httpClient = getHttpClient();
         HttpGet request = new HttpGet(SLACK_HTTPS_AUTH_URL + authToken);
         HttpResponse response;
@@ -294,9 +293,15 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         LOGGER.info("Self " + sessionPersona.getId() + " : " + sessionPersona.getUserName());
         LOGGER.info(users.size() + " users found on this session");
         LOGGER.info(channels.size() + " channels found on this session");
-        String wssurl = sessionParser.getWebSocketURL();
+        webSocketConnectionURL = sessionParser.getWebSocketURL();
+        LOGGER.debug("retrieved websocket URL : " + webSocketConnectionURL);
+        establishWebsocketConnection();
+    }
 
-        LOGGER.debug("retrieved websocket URL : " + wssurl);
+    private void establishWebsocketConnection() throws IOException
+    {
+        lastPingSent = 0;
+        lastPingAck = 0;
         WebSocketContainer client = webSocketContainerProvider.getWebSocketContainer();
         final MessageHandler handler = this;
         LOGGER.debug("initiating actions to websocket");
@@ -313,19 +318,22 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 @Override
                 public void onError(Session session, Throwable thr) {
                     LOGGER.error("Endpoint#onError called", thr);
+                    websocketSession = null;
                 }
 
-            }, URI.create(wssurl));
+            }, URI.create(webSocketConnectionURL));
         }
         catch (DeploymentException e) {
             LOGGER.error(e.toString());
+            throw new IOException(e);
         }
-
         if (websocketSession != null) {
             SlackConnectedImpl slackConnectedImpl = new SlackConnectedImpl(sessionPersona);
             dispatcher.dispatch(slackConnectedImpl);
             LOGGER.debug("websocket actions established");
             LOGGER.info("slack session ready");
+        } else {
+            throw new IOException("Unable to establish a connection to this websocket URL " + webSocketConnectionURL);
         }
     }
 
@@ -367,7 +375,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 LOGGER.debug("monitoring thread started");
                 while (true) {
                     try {
-                        // heart beat of 30s (should be configurable in the future)
                         Thread.sleep(heartbeat);
 
                         // disconnect() was called.
@@ -389,7 +396,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                             }
                             websocketSession = null;
                             if (reconnectOnDisconnection) {
-                                connectImpl();
+                                establishWebsocketConnection();
                             }
                             else {
                                 this.interrupt();
@@ -865,6 +872,10 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             lastPingAck = object.get("reply_to").getAsInt();
             LOGGER.debug("pong received " + lastPingAck);
         }
+        else if ("reconnect_url".equals(object.get("type").getAsString())) {
+            webSocketConnectionURL = object.get("url").getAsString();
+            LOGGER.debug("new websocket connection received " + webSocketConnectionURL);
+        }
         else
         {
             SlackEvent slackEvent = SlackJSONMessageParser.decode(this, object);
@@ -908,9 +919,5 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     public long getHeartbeat() {
         return TimeUnit.MILLISECONDS.toSeconds(heartbeat);
-    }
-
-    public void setHeartbeat(long heartbeat, TimeUnit unit) {
-        this.heartbeat = unit.toMillis(heartbeat);
     }
 }

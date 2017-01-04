@@ -207,6 +207,4 @@ public interface SlackSession {
     void removePinRemovedListener(PinRemovedListener listener);
 
     long getHeartbeat();
-
-    void setHeartbeat(long heartbeat, TimeUnit unit);
 }

@@ -55,11 +55,6 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public void setHeartbeat(long heartbeat, TimeUnit unit) {
-
-            }
-
-            @Override
             public void setPresence(SlackPersona.SlackPresence presence) {};
 
             @Override
