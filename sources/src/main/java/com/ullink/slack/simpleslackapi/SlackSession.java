@@ -104,15 +104,15 @@ public interface SlackSession {
 
     SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(Map<String, String> params, String command);
 
-    void addchannelArchivedListener(SlackChannelArchivedListener listener);
+    void addChannelArchivedListener(SlackChannelArchivedListener listener);
 
     void removeChannelArchivedListener(SlackChannelArchivedListener listener);
 
-    void addchannelCreatedListener(SlackChannelCreatedListener listener);
+    void addChannelCreatedListener(SlackChannelCreatedListener listener);
 
     void removeChannelCreatedListener(SlackChannelCreatedListener listener);
 
-    void addchannelDeletedListener(SlackChannelDeletedListener listener);
+    void addChannelDeletedListener(SlackChannelDeletedListener listener);
 
     void removeChannelDeletedListener(SlackChannelDeletedListener listener);
 

@@ -34,8 +34,8 @@ public class TestSlackJSONMessageParser {
     private static final String TEST_GROUP_JOINED = "{\"type\":\"group_joined\"," + NEW_CHANNEL + "}";
 
     private static final String TEST_REACTION = " \"reaction\":\"thumbsup\", \"item\": {\"channel\":\"NEWCHANNEL\",\"ts\":\"1360782804.083113\"}";
-    private static final String TEST_REACTION_ADDED = "{\"type\":\"reaction_added\", " + TEST_REACTION + "}";
-    private static final String TEST_REACTION_REMOVED = "{\"type\":\"reaction_removed\", " + TEST_REACTION + "}";
+    private static final String TEST_REACTION_ADDED = "{\"type\":\"reaction_added\", " + TEST_REACTION + ", \"user\":\"TESTUSER1\",\"item_user\":\"TESTUSER2\"}";
+    private static final String TEST_REACTION_REMOVED = "{\"type\":\"reaction_removed\", " + TEST_REACTION + ",\"user\":\"TESTUSER1\",\"item_user\":\"TESTUSER2\"}";
 
     private static final String TEST_USER_CHANGE = "{\"type\": \"user_change\",\"user\": {\"id\": \"TESTUSER1\", \"name\": \"test user 1\"}}";
 

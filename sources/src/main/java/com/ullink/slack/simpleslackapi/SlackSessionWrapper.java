@@ -270,9 +270,9 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.postGenericSlackCommand(params, command);
     }
 
-    @Override public void addchannelArchivedListener(SlackChannelArchivedListener listener)
+    @Override public void addChannelArchivedListener(SlackChannelArchivedListener listener)
     {
-        delegate.addchannelArchivedListener(listener);
+        delegate.addChannelArchivedListener(listener);
     }
 
     @Override public void removeChannelArchivedListener(SlackChannelArchivedListener listener)
@@ -280,9 +280,9 @@ public class SlackSessionWrapper implements SlackSession
         delegate.removeChannelArchivedListener(listener);
     }
 
-    @Override public void addchannelCreatedListener(SlackChannelCreatedListener listener)
+    @Override public void addChannelCreatedListener(SlackChannelCreatedListener listener)
     {
-        delegate.addchannelCreatedListener(listener);
+        delegate.addChannelCreatedListener(listener);
     }
 
     @Override public void removeChannelCreatedListener(SlackChannelCreatedListener listener)
@@ -290,9 +290,9 @@ public class SlackSessionWrapper implements SlackSession
         delegate.removeChannelCreatedListener(listener);
     }
 
-    @Override public void addchannelDeletedListener(SlackChannelDeletedListener listener)
+    @Override public void addChannelDeletedListener(SlackChannelDeletedListener listener)
     {
-        delegate.addchannelDeletedListener(listener);
+        delegate.addChannelDeletedListener(listener);
     }
 
     @Override public void removeChannelDeletedListener(SlackChannelDeletedListener listener)

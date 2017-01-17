@@ -5,13 +5,14 @@ import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
 
-    protected Map<String, SlackChannel>            channels                 = new HashMap<>();
-    protected Map<String, SlackUser>               users                    = new HashMap<>();
-    protected Map<String, SlackIntegration>        integrations             = new HashMap<>();
+    protected Map<String, SlackChannel>            channels                 = new ConcurrentHashMap<>();
+    protected Map<String, SlackUser>               users                    = new ConcurrentHashMap<>();
+    protected Map<String, SlackIntegration>        integrations             = new ConcurrentHashMap<>();
     protected SlackPersona                         sessionPersona;
     protected SlackTeam                            team;
 
@@ -209,7 +210,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
-    public void addchannelArchivedListener(SlackChannelArchivedListener listener)
+    public void addChannelArchivedListener(SlackChannelArchivedListener listener)
     {
         channelArchiveListener.add(listener);
     }
@@ -221,7 +222,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
-    public void addchannelCreatedListener(SlackChannelCreatedListener listener)
+    public void addChannelCreatedListener(SlackChannelCreatedListener listener)
     {
         channelCreateListener.add(listener);
     }
@@ -233,7 +234,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
-    public void addchannelDeletedListener(SlackChannelDeletedListener listener)
+    public void addChannelDeletedListener(SlackChannelDeletedListener listener)
     {
         channelDeleteListener.add(listener);
     }
@@ -410,6 +411,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
         slackTeamJoinListener.remove(listener);
     }
 
+    @Override
     public void addPinAddedListener(PinAddedListener listener)
     {
         pinAddedListener.add(listener);

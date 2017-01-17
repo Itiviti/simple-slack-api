@@ -7,7 +7,15 @@ import com.google.gson.JsonParser;
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.*;
 import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
+import com.ullink.slack.simpleslackapi.listeners.PresenceChangeListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackEventListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackTeamJoinListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
 import com.ullink.slack.simpleslackapi.replies.*;
 import com.ullink.slack.simpleslackapi.utils.ReaderUtils;
 import org.apache.http.HttpHost;
@@ -234,6 +242,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         this.reconnectOnDisconnection = reconnectOnDisconnection;
         this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : 30000;
         this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(null,0);
+        addInternalListeners();
     }
 
     SlackWebSocketSessionImpl(WebSocketContainerProvider webSocketContainerProvider, String authToken, Proxy.Type proxyType, String proxyAddress, int proxyPort, boolean reconnectOnDisconnection, long heartbeat, TimeUnit unit) {
@@ -244,6 +253,19 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         this.reconnectOnDisconnection = reconnectOnDisconnection;
         this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : DEFAULT_HEARTBEAT_IN_MILLIS;
         this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(proxyAddress,proxyPort);
+        addInternalListeners();
+    }
+
+    private void addInternalListeners()
+    {
+        addPresenceChangeListener(INTERNAL_PRESENCE_CHANGE_LISTENER);
+        addChannelArchivedListener(INTERNAL_CHANNEL_ARCHIVE_LISTENER);
+        addChannelCreatedListener(INTERNAL_CHANNEL_CREATED_LISTENER);
+        addChannelDeletedListener(INTERNAL_CHANNEL_DELETED_LISTENER);
+        addChannelRenamedListener(INTERNAL_CHANNEL_RENAMED_LISTENER);
+        addChannelUnarchivedListener(INTERNAL_CHANNEL_UNARCHIVED_LISTENER);
+        addSlackTeamJoinListener(INTERNAL_TEAM_JOIN_LISTENER);
+        addSlackUserChangeListener(INTERNAL_USER_CHANGE_LISTENER);
     }
 
     @Override
@@ -922,4 +944,80 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     public long getHeartbeat() {
         return TimeUnit.MILLISECONDS.toSeconds(heartbeat);
     }
+
+    private final PresenceChangeListener INTERNAL_PRESENCE_CHANGE_LISTENER = new PresenceChangeListener()
+    {
+        @Override public void onEvent(PresenceChange event, SlackSession session)
+        {
+            SlackUser user = users.get(event.getUserId());
+            SlackUserImpl newUser = new SlackUserImpl(user.getId(), user.getUserName(), user.getRealName(), user.getUserMail(), user.getUserSkype(), user.getUserTitle(), user.getUserPhone(),
+                user.isDeleted(), user.isAdmin(), user.isOwner(), user.isPrimaryOwner(), user.isRestricted(),
+                user.isUltraRestricted(), user.isBot(), user.getTimeZone(), user.getTimeZoneLabel(), user.getTimeZoneOffset(),
+                event.getPresence());
+            users.put(event.getUserId(), newUser);
+        }
+    };
+
+    private final SlackChannelArchivedListener INTERNAL_CHANNEL_ARCHIVE_LISTENER = new SlackChannelArchivedListener()
+    {
+        @Override public void onEvent(SlackChannelArchived event, SlackSession session)
+        {
+            SlackChannel channel = channels.get(event.getSlackChannel().getId());
+            SlackChannelImpl newChannel = new SlackChannelImpl(channel.getId(), channel.getName(), channel.getTopic(), channel.getPurpose(), channel.isDirect(), channel.isMember(), true);
+            channels.put(newChannel.getId(), newChannel);
+        }
+    };
+
+    private final SlackChannelCreatedListener INTERNAL_CHANNEL_CREATED_LISTENER = new SlackChannelCreatedListener()
+    {
+        @Override public void onEvent(SlackChannelCreated event, SlackSession session)
+        {
+            channels.put(event.getSlackChannel().getId(), event.getSlackChannel());
+        }
+    };
+
+    private final SlackChannelDeletedListener INTERNAL_CHANNEL_DELETED_LISTENER = new SlackChannelDeletedListener()
+    {
+        @Override public void onEvent(SlackChannelDeleted event, SlackSession session)
+        {
+            channels.remove(event.getSlackChannel().getId());
+        }
+    };
+
+    private final SlackChannelRenamedListener INTERNAL_CHANNEL_RENAMED_LISTENER = new SlackChannelRenamedListener()
+    {
+        @Override public void onEvent(SlackChannelRenamed event, SlackSession session)
+        {
+            SlackChannel channel = channels.get(event.getSlackChannel().getId());
+            SlackChannelImpl newChannel = new SlackChannelImpl(channel.getId(), event.getNewName(), channel.getTopic(), channel.getPurpose(), channel.isDirect(), channel.isMember(), channel.isArchived());
+            channels.put(newChannel.getId(), newChannel);
+        }
+    };
+
+    private final SlackChannelUnarchivedListener INTERNAL_CHANNEL_UNARCHIVED_LISTENER = new SlackChannelUnarchivedListener()
+    {
+        @Override public void onEvent(SlackChannelUnarchived event, SlackSession session)
+        {
+            SlackChannel channel = channels.get(event.getSlackChannel().getId());
+            SlackChannelImpl newChannel = new SlackChannelImpl(channel.getId(), channel.getName(), channel.getTopic(), channel.getPurpose(), channel.isDirect(), channel.isMember(), false);
+            channels.put(newChannel.getId(), newChannel);
+        }
+    };
+
+    private final SlackTeamJoinListener INTERNAL_TEAM_JOIN_LISTENER = new SlackTeamJoinListener()
+    {
+        @Override public void onEvent(SlackTeamJoin event, SlackSession session)
+        {
+            users.put(event.getUser().getId(), event.getUser());
+        }
+    };
+
+    private final SlackUserChangeListener INTERNAL_USER_CHANGE_LISTENER = new SlackUserChangeListener()
+    {
+        @Override public void onEvent(SlackUserChange event, SlackSession session)
+        {
+            users.put(event.getUser().getId(), event.getUser());
+        }
+    };
+
 }
