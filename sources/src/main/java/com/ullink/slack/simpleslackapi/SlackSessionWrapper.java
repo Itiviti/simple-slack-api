@@ -240,6 +240,11 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.archiveChannel(channel);
     }
 
+    @Override public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel)
+    {
+        return delegate.unarchiveChannel(channel);
+    }
+
     @Override public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
     {
         return delegate.openDirectMessageChannel(user);

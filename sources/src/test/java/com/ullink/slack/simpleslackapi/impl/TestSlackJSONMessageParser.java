@@ -209,6 +209,11 @@ public class TestSlackJSONMessageParser {
                 return null;
             }
 
+            @Override public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel)
+            {
+                return null;
+            }
+
         };
         try {
             session.connect();

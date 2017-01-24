@@ -69,6 +69,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     
     private static final String CHANNELS_ARCHIVE_COMMAND     = "channels.archive";
 
+    private static final String CHANNELS_UNARCHIVE_COMMAND     = "channels.unarchive";
+
     private static final String CHAT_POST_MESSAGE_COMMAND = "chat.postMessage";
 
     private static final String FILE_UPLOAD_COMMAND       = "files.upload";
@@ -627,7 +629,17 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
       postSlackCommand(arguments, CHANNELS_ARCHIVE_COMMAND, handle);
       return handle;
     }
-    
+
+    @Override public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel)
+    {
+        SlackMessageHandleImpl<ParsedSlackReply> handle = new SlackMessageHandleImpl<>(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channel", channel.getId());
+        postSlackCommand(arguments, CHANNELS_UNARCHIVE_COMMAND, handle);
+        return handle;
+    }
+
     @Override
     public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user) {
         SlackMessageHandleImpl<SlackChannelReply> handle = new SlackMessageHandleImpl<>(getNextMessageId());

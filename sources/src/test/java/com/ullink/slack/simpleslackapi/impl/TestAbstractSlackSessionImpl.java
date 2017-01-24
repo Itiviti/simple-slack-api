@@ -162,7 +162,12 @@ public class TestAbstractSlackSessionImpl
         {
           return null;
         }
-        
+
+        @Override public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel)
+        {
+            return null;
+        }
+
         @Override
         public SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(java.util.Map<String,String> params, String command) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

@@ -92,6 +92,8 @@ public interface SlackSession {
     
     SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel);
 
+    SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel);
+
     SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user);
 
     SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users);
