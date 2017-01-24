@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.*;
-import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration.Avatar;
+import com.ullink.slack.simpleslackapi.SlackChatConfiguration.Avatar;
 import com.ullink.slack.simpleslackapi.listeners.PresenceChangeListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
@@ -485,21 +485,21 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("token", authToken);
         arguments.put("channel", channel.getId());
         arguments.put("text", preparedMessage.getMessage());
-        if (chatConfiguration.asUser)
+        if (chatConfiguration.isAsUser())
         {
             arguments.put("as_user", "true");
         }
-        if (chatConfiguration.avatar == Avatar.ICON_URL)
+        if (chatConfiguration.getAvatar() == Avatar.ICON_URL)
         {
-            arguments.put("icon_url", chatConfiguration.avatarDescription);
+            arguments.put("icon_url", chatConfiguration.getAvatarDescription());
         }
-        if (chatConfiguration.avatar == Avatar.EMOJI)
+        if (chatConfiguration.getAvatar() == Avatar.EMOJI)
         {
-            arguments.put("icon_emoji", chatConfiguration.avatarDescription);
+            arguments.put("icon_emoji", chatConfiguration.getAvatarDescription());
         }
-        if (chatConfiguration.userName != null)
+        if (chatConfiguration.getUserName() != null)
         {
-            arguments.put("username", chatConfiguration.userName);
+            arguments.put("username", chatConfiguration.getUserName());
         }
         if (preparedMessage.getAttachments() != null && preparedMessage.getAttachments().length > 0)
         {

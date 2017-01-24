@@ -3,7 +3,6 @@ package com.ullink.slack.simpleslackapi;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
-import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
 import com.ullink.slack.simpleslackapi.listeners.PinAddedListener;
 import com.ullink.slack.simpleslackapi.listeners.PinRemovedListener;
 import com.ullink.slack.simpleslackapi.listeners.PresenceChangeListener;

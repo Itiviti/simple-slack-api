@@ -1,20 +1,40 @@
-package com.ullink.slack.simpleslackapi.impl;
+package com.ullink.slack.simpleslackapi;
 
 public class SlackChatConfiguration
 {
-    static enum Avatar
+    public enum Avatar
     {
-        DEFAULT, EMOJI, ICON_URL;
+        DEFAULT, EMOJI, ICON_URL
     }
 
-    protected boolean asUser;
-    protected Avatar  avatar = Avatar.DEFAULT;
-    protected String  userName;
-    protected String  avatarDescription;
+    private boolean asUser;
+    private Avatar  avatar = Avatar.DEFAULT;
+    private String  userName;
+    private String  avatarDescription;
 
     private SlackChatConfiguration()
     {
 
+    }
+
+    public boolean isAsUser()
+    {
+        return asUser;
+    }
+
+    public Avatar getAvatar()
+    {
+        return avatar;
+    }
+
+    public String getUserName()
+    {
+        return userName;
+    }
+
+    public String getAvatarDescription()
+    {
+        return avatarDescription;
     }
 
     public SlackChatConfiguration asUser()
