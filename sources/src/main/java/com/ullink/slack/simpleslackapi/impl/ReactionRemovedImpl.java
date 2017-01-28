@@ -13,8 +13,9 @@ public class ReactionRemovedImpl implements ReactionRemoved{
     private final String messageID;
     private final String fileID;
     private final String fileCommentID;
+    private final String timestamp;
 
-    public ReactionRemovedImpl(String emojiName, SlackUser user, SlackUser itemUser, SlackChannel channel, String messageID, String fileID, String fileCommentID) {
+    public ReactionRemovedImpl(String emojiName, SlackUser user, SlackUser itemUser, SlackChannel channel, String messageID, String fileID, String fileCommentID, String timestamp) {
         this.emojiName = emojiName;
         this.user = user;
         this.itemUser = itemUser;
@@ -22,6 +23,7 @@ public class ReactionRemovedImpl implements ReactionRemoved{
         this.messageID = messageID;
         this.fileID = fileID;
         this.fileCommentID = fileCommentID;
+        this.timestamp = timestamp;
     }
 
     @Override
@@ -63,4 +65,9 @@ public class ReactionRemovedImpl implements ReactionRemoved{
     public SlackEventType getEventType() {
         return SlackEventType.REACTION_REMOVED;
     }
+    
+	@Override
+	public String getTimestamp() {
+		return timestamp;
+	}
 }

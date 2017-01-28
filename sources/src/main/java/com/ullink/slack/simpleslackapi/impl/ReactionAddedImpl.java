@@ -14,8 +14,9 @@ public class ReactionAddedImpl implements ReactionAdded {
     private final SlackUser itemUser;
     private final String fileID;
     private final String fileCommentID;
+    private final String timestamp;
 
-    public ReactionAddedImpl(String emojiName, SlackUser user, SlackUser itemUser, SlackChannel channel, String messageID, String fileID, String fileCommentID) {
+    public ReactionAddedImpl(String emojiName, SlackUser user, SlackUser itemUser, SlackChannel channel, String messageID, String fileID, String fileCommentID, String timestamp) {
         this.emojiName = emojiName;
         this.user = user;
         this.itemUser = itemUser;
@@ -23,6 +24,7 @@ public class ReactionAddedImpl implements ReactionAdded {
         this.messageID = messageID;
         this.fileID = fileID;
         this.fileCommentID = fileCommentID;
+        this.timestamp = timestamp;
     }
 
     @Override
@@ -64,5 +66,10 @@ public class ReactionAddedImpl implements ReactionAdded {
     public SlackEventType getEventType() {
         return SlackEventType.REACTION_ADDED;
     }
+
+	@Override
+	public String getTimestamp() {
+		return timestamp;
+	}
 
 }
