@@ -13,5 +13,6 @@ public interface ReactionAdded extends SlackEvent {
     String getMessageID();
     String getFileID();
     String getFileCommentID();
+    String getTimestamp();
 
 }

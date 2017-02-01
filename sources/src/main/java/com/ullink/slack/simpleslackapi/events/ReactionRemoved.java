@@ -12,5 +12,6 @@ public interface ReactionRemoved extends SlackEvent {
     String getMessageID();
     String getFileID();
     String getFileCommentID();
+    String getTimestamp();
 
 }
