@@ -920,6 +920,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 SlackChannelCreated slackChannelCreated = (SlackChannelCreated) slackEvent;
                 channels.put(slackChannelCreated.getSlackChannel().getId(), slackChannelCreated.getSlackChannel());
             }
+            if (slackEvent instanceof SlackChannelJoined)
+            {
+                SlackChannelJoined slackChannelJoined = (SlackChannelJoined) slackEvent;
+                channels.put(slackChannelJoined.getSlackChannel().getId(), slackChannelJoined.getSlackChannel());
+            }
             if (slackEvent instanceof SlackGroupJoined)
             {
                 SlackGroupJoined slackGroupJoined = (SlackGroupJoined) slackEvent;
