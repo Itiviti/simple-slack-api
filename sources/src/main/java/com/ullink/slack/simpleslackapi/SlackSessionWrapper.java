@@ -179,6 +179,18 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.sendFile(channel, data, fileName);
     }
 
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte[] data, String fileName)
+    {
+        return delegate.sendFileToUser(user, data, fileName);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName)
+    {
+        return delegate.sendFileToUser(userName, data, fileName);
+    }
+
     @Override public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage)
     {
         return delegate.sendMessageToUser(user, preparedMessage);

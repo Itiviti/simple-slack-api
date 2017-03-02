@@ -521,6 +521,17 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName) {
+        return sendFileToUser(findUserByUserName(userName), data, fileName);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte[] data, String fileName) {
+        SlackChannel iMChannel = getIMChannelForUser(user);
+        return sendFile(iMChannel, data, fileName);
+    }
+
+    @Override
     public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName) {
         SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
