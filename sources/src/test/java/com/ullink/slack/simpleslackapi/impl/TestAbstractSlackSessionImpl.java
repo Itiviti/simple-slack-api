@@ -75,6 +75,18 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
+        public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte[] data, String fileName)
+        {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName)
+        {
+            return null;
+        }
+
+        @Override
         public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage) {
             return null;
         }
