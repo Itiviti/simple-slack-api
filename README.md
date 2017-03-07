@@ -23,6 +23,15 @@ Released versions are also availables on the maven central repository :
 
 You can find some samples of the most common use cases in the [samples](https://github.com/Ullink/simple-slack-api/tree/master/samples) folder.
 
+Sample code
+
+```java
+SlackSession session = SlackSessionFactory.createWebSocketSlackSession("slack-bot-auth-token");
+session.connect();
+SlackChannel channel = session.findChannelByName("general"); //make sure bot is a member of the channel.
+session.sendMessage(channel, "hi im a bot" );
+```
+
 ## Features
 
 ### Supported Slack commands
