@@ -212,7 +212,8 @@ class SlackJSONMessageParser {
 
             SlackIntegration integration = slackSession.findIntegrationById(userId);
             if (integration == null) {
-                
+                // TODO: Remove this logger
+                LOGGER.info(obj.toString());
                 throw new IllegalStateException("unknown user id: " + userId);
             }
             user = new SlackIntegrationUser(integration);
