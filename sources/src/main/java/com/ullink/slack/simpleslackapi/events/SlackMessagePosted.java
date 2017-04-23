@@ -1,12 +1,13 @@
 package com.ullink.slack.simpleslackapi.events;
 
 import com.ullink.slack.simpleslackapi.SlackAttachment;
-import java.util.Map;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackUser;
+
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface SlackMessagePosted extends SlackMessageEvent {
     enum MessageSubType {
@@ -33,6 +34,7 @@ public interface SlackMessagePosted extends SlackMessageEvent {
         MESSAGE_DELETED("message_deleted"),
         PINNED_ITEM("pinned_item"),
         UNPINNED_ITEM("unpinned_item"),
+        MESSAGE_REPLIED("message_replied"),
         UNKNOWN("");
 
         String code;
@@ -72,4 +74,6 @@ public interface SlackMessagePosted extends SlackMessageEvent {
     MessageSubType getMessageSubType();
 
     ArrayList<SlackAttachment> getAttachments();
+
+    String getThreadTimestamp();
 }

@@ -1,26 +1,26 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackIntegration;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.events.*;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
+import com.ullink.slack.simpleslackapi.SlackIntegration;
+import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.events.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 class SlackJSONMessageParser {
 
     public static enum SlackMessageSubType
     {
-        CHANNEL_JOIN("channel_join"), CHANNEL_LEAVE("channel_leave"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), OTHER("-"), FILE_SHARE("file_share");
+        CHANNEL_JOIN("channel_join"), CHANNEL_LEAVE("channel_leave"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), OTHER("-"), FILE_SHARE("file_share"), MESSAGE_REPLIED("message_replied");
 
         private static final Map<String, SlackMessageSubType> CODE_MAP = new HashMap<>();
 
@@ -173,6 +173,8 @@ class SlackJSONMessageParser {
                 return parseMessageDeleted(obj, channel, ts);
             case FILE_SHARE:
                 return parseMessagePublishedWithFile(obj, channel, ts, slackSession);
+            case MESSAGE_REPLIED:
+                return SlackEvent.UNKNOWN_EVENT; // This event should not be handled
             default:
                 return parseMessagePublished(obj, channel, ts, slackSession);
         }
@@ -229,6 +231,7 @@ class SlackJSONMessageParser {
         }
         String subtype = GsonHelper.getStringOrNull(obj.get("subtype"));
         SlackUser user = slackSession.findUserById(userId);
+        String threadTimestamp = GsonHelper.getStringOrNull(obj.get("thread_ts"));
         if (user == null) {
 
             SlackIntegration integration = slackSession.findIntegrationById(userId);
@@ -240,7 +243,7 @@ class SlackJSONMessageParser {
         }
         Map<String, Integer> reacs = extractReactionsFromMessageJSON(obj);
         ArrayList<SlackAttachment> attachments = extractAttachmentsFromMessageJSON(obj);
-        SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, null, user, channel, ts, null, obj.toString(), SlackMessagePosted.MessageSubType.fromCode(subtype));
+        SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, null, user, channel, ts, null, obj.toString(), SlackMessagePosted.MessageSubType.fromCode(subtype), threadTimestamp);
         message.setReactions(reacs);
         message.setAttachments(attachments);
         return message;
@@ -300,7 +303,9 @@ class SlackJSONMessageParser {
 
         SlackUser user = slackSession.findUserById(userId);
 
-        return new SlackMessagePostedImpl(text, user, user, channel, ts,file,obj.toString(), SlackMessagePosted.MessageSubType.fromCode(subtype));
+        String threadTimestamp = GsonHelper.getStringOrNull(obj.get("thread_ts"));
+
+        return new SlackMessagePostedImpl(text, user, user, channel, ts,file,obj.toString(), SlackMessagePosted.MessageSubType.fromCode(subtype), threadTimestamp);
     }
 
     private static SlackChannel parseChannelDescription(JsonObject channelJSONObject) {
