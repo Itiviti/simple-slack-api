@@ -515,6 +515,13 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             arguments.put("link_names", "1");
         }
+        if(preparedMessage.getThreadTimestamp() != null) {
+            arguments.put("thread_ts", preparedMessage.getThreadTimestamp());
+
+            if(preparedMessage.isReplyBroadcast()) {
+                arguments.put("reply_broadcast", "true");
+            }
+        }
 
         postSlackCommand(arguments, CHAT_POST_MESSAGE_COMMAND, handle);
         return handle;
