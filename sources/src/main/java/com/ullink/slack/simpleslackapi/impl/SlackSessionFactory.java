@@ -22,6 +22,8 @@ public class SlackSessionFactory {
         private Proxy.Type proxyType;
         private String proxyAddress;
         private int proxyPort;
+        private String proxyUser;
+        private String proxyPassword;
         private int heartbeat;
         private TimeUnit unit;
         private WebSocketContainerProvider provider;
@@ -35,6 +37,15 @@ public class SlackSessionFactory {
             this.proxyType = proxyType;
             this.proxyAddress = proxyAddress;
             this.proxyPort = proxyPort;
+            return this;
+        }
+
+        public SlackSessionFactoryBuilder withProxy(Proxy.Type proxyType, String proxyAddress, int proxyPort, String proxyUser, String proxyPassword) {
+            this.proxyType = proxyType;
+            this.proxyAddress = proxyAddress;
+            this.proxyPort = proxyPort;
+            this.proxyUser = proxyUser;
+            this.proxyPassword = proxyPassword;
             return this;
         }
 
@@ -56,7 +67,7 @@ public class SlackSessionFactory {
 
 
         public SlackSession build() {
-            return new SlackWebSocketSessionImpl(provider,authToken, proxyType, proxyAddress, proxyPort, autoreconnection,heartbeat,unit);
+            return new SlackWebSocketSessionImpl(provider, authToken, proxyType, proxyAddress, proxyPort, proxyUser, proxyPassword, autoreconnection, heartbeat,unit);
         }
     }
 }
