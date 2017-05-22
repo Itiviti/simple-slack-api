@@ -10,12 +10,16 @@ public class SlackPreparedMessage {
     private final boolean unfurl;
     private final boolean linkNames;
     private final SlackAttachment[] attachments;
+    private final String threadTimestamp;
+    private final boolean replyBroadcast;
 
-    private SlackPreparedMessage(String message, boolean unfurl, boolean linkNames, SlackAttachment[] attachments) {
+    private SlackPreparedMessage(String message, boolean unfurl, boolean linkNames, SlackAttachment[] attachments, String threadTimestamp, boolean replyBroadcast) {
         this.message = message;
         this.unfurl = unfurl;
         this.linkNames = linkNames;
         this.attachments = attachments;
+        this.threadTimestamp = threadTimestamp;
+        this.replyBroadcast = replyBroadcast;
     }
 
     public String getMessage() {
@@ -34,11 +38,21 @@ public class SlackPreparedMessage {
         return attachments;
     }
 
+    public String getThreadTimestamp() {
+        return threadTimestamp;
+    }
+
+    public boolean isReplyBroadcast() {
+        return replyBroadcast;
+    }
+
     public static class Builder {
         String message;
         boolean unfurl;
         boolean linkNames;
         List<SlackAttachment> attachments;
+        String threadTimestamp;
+        boolean replyBroadcast;
 
         public Builder() {
             this.attachments = new ArrayList<>();
@@ -80,12 +94,24 @@ public class SlackPreparedMessage {
             return this;
         }
 
+        public Builder withThreadTimestamp(String threadTimestamp) {
+            this.threadTimestamp = threadTimestamp;
+            return this;
+        }
+
+        public Builder withReplyBroadcast(boolean replyBroadcast) {
+            this.replyBroadcast = replyBroadcast;
+            return this;
+        }
+
         public SlackPreparedMessage build() {
             return new SlackPreparedMessage(
                     message,
                     unfurl,
                     linkNames,
-                    attachments.toArray(new SlackAttachment[]{}));
+                    attachments.toArray(new SlackAttachment[]{}),
+                    threadTimestamp,
+                    replyBroadcast);
         }
     }
 

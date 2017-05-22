@@ -1,15 +1,11 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import java.util.ArrayList;
-import java.util.Map;
-
-import com.ullink.slack.simpleslackapi.SlackBot;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackFile;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 class SlackMessagePostedImpl implements SlackMessagePosted {
     private String       messageContent;
@@ -17,6 +13,7 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
     private SlackBot     bot;
     private SlackChannel channel;
     private String       timestamp;
+    private String       threadTimestamp;
     private SlackFile    slackFile;
     private String   jsonSource;
     private MessageSubType msgSubType;
@@ -33,7 +30,7 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
         this.msgSubType = msgSubType;
     }
 
-    SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, SlackFile slackFile, String jsonSource, MessageSubType msgSubType)
+    SlackMessagePostedImpl(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, SlackFile slackFile, String jsonSource, MessageSubType msgSubType, String threadTimestamp)
     {
         this.channel = channel;
         this.messageContent = messageContent;
@@ -43,6 +40,7 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
         this.jsonSource = jsonSource;
         this.slackFile = slackFile;
         this.msgSubType = msgSubType;
+        this.threadTimestamp = threadTimestamp;
     }
 
     @Override
@@ -121,5 +119,10 @@ class SlackMessagePostedImpl implements SlackMessagePosted {
     }
 
     @Override public ArrayList<SlackAttachment> getAttachments() { return attachments; }
+
+    @Override
+    public String getThreadTimestamp() {
+        return threadTimestamp;
+    }
 }
 
