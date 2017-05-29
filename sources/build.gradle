@@ -20,7 +20,7 @@ apply plugin: 'nebula.optional-base'
 
 group = 'com.ullink.slack'
 archivesBaseName = 'simpleslackapi'
-version = '1.0.0-SNAPSHOT'
+version = '1.0.0'
 
 
 def pomConfig = {
