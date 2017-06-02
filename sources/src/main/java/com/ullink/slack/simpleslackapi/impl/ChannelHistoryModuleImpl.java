@@ -14,6 +14,7 @@ import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.events.ReactionAdded;
 import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
@@ -23,7 +24,6 @@ import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.listeners.ReactionAddedListener;
 import com.ullink.slack.simpleslackapi.listeners.ReactionRemovedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
-import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 
 public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 

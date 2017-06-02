@@ -1,5 +1,16 @@
 package com.ullink.slack.simpleslackapi.replies;
 
-public interface SlackUserPresenceReply extends ParsedSlackReply {
-    boolean isActive();
+public class SlackUserPresenceReply extends SlackReplyImpl implements ParsedSlackReply {
+    private final boolean active;
+
+    SlackUserPresenceReply(boolean ok, String error, boolean active)
+    {
+        super(ok, error);
+        this.active = active;
+    }
+
+    public boolean isActive()
+    {
+        return active;
+    }
 }

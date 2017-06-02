@@ -25,11 +25,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackTeamJoinListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
 import com.ullink.slack.simpleslackapi.listeners.UserTypingListener;
-import com.ullink.slack.simpleslackapi.replies.EmojiSlackReply;
-import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
-import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
-import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
-import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+import com.ullink.slack.simpleslackapi.replies.*;
 
 public class SlackSessionWrapper implements SlackSession
 {

@@ -2,9 +2,8 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
+import com.ullink.slack.simpleslackapi.replies.*;
 import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 
 class SlackJSONReplyParser
 {
@@ -18,7 +17,7 @@ class SlackJSONReplyParser
         }
         if (obj.get("presence") != null)
         {
-            return new SlackUserPresenceReplyImpl(ok, error,"active".equals(obj.get("presence").getAsString()));
+            return new SlackUserPresenceReply(ok, error,"active".equals(obj.get("presence").getAsString()));
         }
 
         if (isMpim(obj) || isIm(obj) || isChannel(obj) || isGroup(obj)) {
@@ -27,12 +26,12 @@ class SlackJSONReplyParser
 
         if(isMessageReply(obj)) {
             String timestamp = GsonHelper.getStringOrNull(obj.get("ts"));
-            return new SlackMessageReplyImpl(ok, error, GsonHelper.getLongOrDefaultValue(obj.get("reply_to"),-1l), timestamp);
+            return new SlackMessageReply(ok, error, GsonHelper.getLongOrDefaultValue(obj.get("reply_to"),-1l), timestamp);
         }
 
         if (isEmojiReply(obj)) {
             String timestamp = GsonHelper.getStringOrNull(obj.get("cache_ts"));
-            return new SlackEmojiReply(ok, error, SlackJSONMessageParser.extractEmojisFromMessageJSON(obj.get("emoji").getAsJsonObject()), timestamp);
+            return new EmojiSlackReply(ok, error, SlackJSONMessageParser.extractEmojisFromMessageJSON(obj.get("emoji").getAsJsonObject()), timestamp);
         }
 
         if (ok == null) {
@@ -44,7 +43,7 @@ class SlackJSONReplyParser
 
     private static SlackChannelReply buildSlackChannelReply(Boolean ok, String error, JsonObject obj, SlackSession session) {
         if (obj.get("id") != null) {
-            return new SlackChannelReplyImpl(ok,error, session.findChannelById(obj.get("id").getAsString()));
+            return new SlackChannelReply(ok,error, session.findChannelById(obj.get("id").getAsString()));
         }
 
         JsonElement channelObj = obj.get("channel");
@@ -53,7 +52,7 @@ class SlackJSONReplyParser
         }
 
         String id = channelObj.getAsJsonObject().get("id").getAsString();
-        return new SlackChannelReplyImpl(ok,error, session.findChannelById(id));
+        return new SlackChannelReply(ok,error, session.findChannelById(id));
     }
 
     private static boolean isMessageReply(JsonObject obj)

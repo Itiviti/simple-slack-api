@@ -798,7 +798,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             HttpResponse response = client.execute(request);
             String jsonResponse = consumeToString(response.getEntity().getContent());
             LOGGER.debug("PostMessage return: " + jsonResponse);
-            GenericSlackReplyImpl reply = new GenericSlackReplyImpl(jsonResponse);
+            GenericSlackReply reply = new GenericSlackReply(jsonResponse);
             handle.setReply(reply);
             return handle;
         }
