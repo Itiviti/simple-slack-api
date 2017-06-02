@@ -5,7 +5,7 @@ public class SlackMessageReply extends SlackReplyImpl implements ParsedSlackRepl
     private long replyTo;
     private String timestamp;
 
-    SlackMessageReply(boolean ok, String error, long replyTo, String timestamp)
+    public SlackMessageReply(boolean ok, String error, long replyTo, String timestamp)
     {
         super(ok, error);
         this.replyTo = replyTo;

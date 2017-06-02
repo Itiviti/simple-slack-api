@@ -5,7 +5,7 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 public class SlackChannelReply extends SlackReplyImpl implements ParsedSlackReply {
     private SlackChannel slackChannel;
 
-    SlackChannelReply(boolean ok, String error, SlackChannel slackChannel)
+    public SlackChannelReply(boolean ok, String error, SlackChannel slackChannel)
     {
         super(ok,error);
         this.slackChannel = slackChannel;
