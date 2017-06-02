@@ -2,21 +2,12 @@ package com.ullink.slack.simpleslackapi.events;
 
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import lombok.Data;
 
+@Data
 public class SlackChannelCreated implements SlackEvent {
-    private SlackChannel slackChannel;
-    private SlackUser slackuser;
-    
-    public SlackChannelCreated(SlackChannel slackChannel, SlackUser slackuser)
-    {
-        this.slackChannel = slackChannel;
-        this.slackuser = slackuser;
-    }
-
-    public SlackChannel getSlackChannel()
-    {
-        return slackChannel;
-    }
+    private final SlackChannel slackChannel;
+    private final SlackUser slackuser;
 
     public SlackUser getCreator()
     {
@@ -24,8 +15,7 @@ public class SlackChannelCreated implements SlackEvent {
     }
 
     @Override
-    public SlackEventType getEventType()
-    {
+    public SlackEventType getEventType() {
         return SlackEventType.SLACK_CHANNEL_CREATED;
     }
 

@@ -2,21 +2,12 @@ package com.ullink.slack.simpleslackapi.events;
 
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import lombok.Data;
 
+@Data
 public class SlackChannelArchived implements SlackEvent {
-    private SlackChannel slackChannel;
-    private SlackUser slackuser;
-
-    public SlackChannelArchived(SlackChannel slackChannel, SlackUser slackuser)
-    {
-        this.slackChannel = slackChannel;
-        this.slackuser = slackuser;
-    }
-
-    public SlackChannel getSlackChannel()
-    {
-        return slackChannel;
-    }
+    private final SlackChannel slackChannel;
+    private final SlackUser slackuser;
 
     public SlackUser getUser()
     {

@@ -1,24 +1,13 @@
 package com.ullink.slack.simpleslackapi.events;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import lombok.Data;
+import lombok.NonNull;
 
+@Data
 public class SlackChannelLeft implements SlackEvent {
+    @NonNull
     private SlackChannel slackChannel;
-
-    public SlackChannelLeft(SlackChannel slackChannel)
-    {
-        this.slackChannel = slackChannel;
-    }
-
-    public SlackChannel getSlackChannel()
-    {
-        return slackChannel;
-    }
-
-    void setSlackChannel(SlackChannel slackChannel)
-    {
-        this.slackChannel = slackChannel;
-    }
 
     @Override
     public SlackEventType getEventType()

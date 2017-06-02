@@ -2,25 +2,34 @@ package com.ullink.slack.simpleslackapi.events;
 
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import lombok.Data;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.Map;
 
+//TODO: even bother with NonNull in here?
+@Data
 public class SlackMessagePosted implements SlackEvent {
-    private String       messageContent;
-    private SlackUser    user;
-    private SlackBot     bot;
+    @NonNull
+    private String messageContent;
+    @NonNull
+    private SlackBot bot;
+    @NonNull
+    private SlackUser user;
+    @NonNull
     private SlackChannel channel;
-    private String       timestamp;
-    private String       threadTimestamp;
-    private SlackFile    slackFile;
-    private String   jsonSource;
+    @NonNull
+    private String timestamp;
+    @NonNull
     private MessageSubType msgSubType;
+    private String threadTimestamp;
+    private SlackFile slackFile;
+    private String jsonSource;
     private Map<String, Integer> reactions;
     private ArrayList<SlackAttachment> attachments;
-    
-    public SlackMessagePosted(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, MessageSubType msgSubType)
-    {
+
+    public SlackMessagePosted(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, MessageSubType msgSubType) {
         this.channel = channel;
         this.messageContent = messageContent;
         this.user = user;
@@ -29,8 +38,7 @@ public class SlackMessagePosted implements SlackEvent {
         this.msgSubType = msgSubType;
     }
 
-    public SlackMessagePosted(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, SlackFile slackFile, String jsonSource, MessageSubType msgSubType, String threadTimestamp)
-    {
+    public SlackMessagePosted(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, SlackFile slackFile, String jsonSource, MessageSubType msgSubType, String threadTimestamp) {
         this.channel = channel;
         this.messageContent = messageContent;
         this.user = user;
@@ -54,7 +62,7 @@ public class SlackMessagePosted implements SlackEvent {
     public SlackFile getSlackFile() {
         return slackFile;
     }
-    
+
 
     public String getMessageContent() {
         return messageContent;
@@ -97,8 +105,7 @@ public class SlackMessagePosted implements SlackEvent {
         return reactions == null ? 0 : reactions.size();
     }
 
-    public MessageSubType getMessageSubType()
-    {
+    public MessageSubType getMessageSubType() {
         return msgSubType;
     }
 
@@ -106,7 +113,9 @@ public class SlackMessagePosted implements SlackEvent {
         return timestamp;
     }
 
-    public ArrayList<SlackAttachment> getAttachments() { return attachments; }
+    public ArrayList<SlackAttachment> getAttachments() {
+        return attachments;
+    }
 
     public String getThreadTimestamp() {
         return threadTimestamp;

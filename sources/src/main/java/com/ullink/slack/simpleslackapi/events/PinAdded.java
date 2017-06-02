@@ -1,8 +1,8 @@
 package com.ullink.slack.simpleslackapi.events;
 
+import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.SlackChannel;
 import lombok.Data;
 
 @Data

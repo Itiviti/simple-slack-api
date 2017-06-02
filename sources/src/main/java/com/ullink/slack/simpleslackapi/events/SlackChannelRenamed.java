@@ -1,30 +1,15 @@
 package com.ullink.slack.simpleslackapi.events;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
+import lombok.Data;
 
+@Data
 public class SlackChannelRenamed implements SlackEvent {
-    private SlackChannel slackChannel;
-    private String       newName;
-
-    public SlackChannelRenamed(SlackChannel slackChannel, String newName)
-    {
-        this.slackChannel = slackChannel;
-        this.newName = newName;
-    }
-
-    public SlackChannel getSlackChannel()
-    {
-        return slackChannel;
-    }
-
-    public String getNewName()
-    {
-        return newName;
-    }
+    private final SlackChannel slackChannel;
+    private final String newName;
 
     @Override
-    public SlackEventType getEventType()
-    {
+    public SlackEventType getEventType() {
         return SlackEventType.SLACK_CHANNEL_RENAMED;
     }
 
