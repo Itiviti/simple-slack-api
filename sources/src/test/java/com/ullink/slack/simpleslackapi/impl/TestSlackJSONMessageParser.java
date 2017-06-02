@@ -70,10 +70,10 @@ public class TestSlackJSONMessageParser {
 
                 integrations.put(integration.getId(),integration);
 
-                SlackChannel channel1 = new SlackChannelImpl("TESTCHANNEL1", "testchannel1", null, null, false, false, false);
-                SlackChannel channel2 = new SlackChannelImpl("TESTCHANNEL2", "testchannel2", null, null, false, false, false);
-                SlackChannel channel3 = new SlackChannelImpl("TESTCHANNEL3", "testchannel3", null, null, false, false, false);
-                SlackChannel channel4 = new SlackChannelImpl("NEWCHANNEL", "new channel", "To have something new", "This channel so new it aint even old yet", false, false, false);
+                SlackChannel channel1 = new SlackChannel("TESTCHANNEL1", "testchannel1", null, null, false, false, false);
+                SlackChannel channel2 = new SlackChannel("TESTCHANNEL2", "testchannel2", null, null, false, false, false);
+                SlackChannel channel3 = new SlackChannel("TESTCHANNEL3", "testchannel3", null, null, false, false, false);
+                SlackChannel channel4 = new SlackChannel("NEWCHANNEL", "new channel", "To have something new", "This channel so new it aint even old yet", false, false, false);
                 channels.put(channel1.getId(), channel1);
                 channels.put(channel2.getId(), channel2);
                 channels.put(channel3.getId(), channel3);
@@ -183,7 +183,7 @@ public class TestSlackJSONMessageParser {
             public void refetchUsers() {}
 
             @Override
-            public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
+            public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive)
             {
                 return null;
             }
@@ -276,8 +276,8 @@ public class TestSlackJSONMessageParser {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(TEST_UPDATED_MESSAGE).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
-        Assertions.assertThat(event).isInstanceOf(SlackMessageUpdatedImpl.class);
-        SlackMessageUpdatedImpl slackMessageUpdated = (SlackMessageUpdatedImpl) event;
+        Assertions.assertThat(event).isInstanceOf(SlackMessageUpdated.class);
+        SlackMessageUpdated slackMessageUpdated = (SlackMessageUpdated) event;
         Assertions.assertThat(slackMessageUpdated.getMessageTimestamp()).isEqualTo("1413187521.000005");
         Assertions.assertThat(slackMessageUpdated.getTimeStamp()).isEqualTo("1358878755.001234");
         Assertions.assertThat(slackMessageUpdated.getChannel().getId()).isEqualTo("TESTCHANNEL1");

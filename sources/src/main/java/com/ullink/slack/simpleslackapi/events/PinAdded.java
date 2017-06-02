@@ -1,20 +1,48 @@
 package com.ullink.slack.simpleslackapi.events;
 
-import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.SlackChannel;
 
+public class PinAdded implements SlackEvent {
 
-public interface PinAdded extends SlackEvent {
+  private final SlackUser sender;
+  private final SlackChannel channel;
+  private final String timestamp;
+  private final SlackFile file;
+  private final String message;
 
-    SlackUser getSender();
+  public PinAdded(SlackUser sender, SlackChannel channel, String timestamp, SlackFile file, String message) {
+        this.sender = sender;
+        this.channel = channel;
+        this.timestamp = timestamp;
+        this.file = file;
+        this.message = message;
+    }
 
-    SlackChannel getChannel();
+    public SlackUser getSender() {
+        return this.sender;
+    }
 
-    String getTimestamp();
+    public SlackChannel getChannel() {
+        return this.channel;
+    }
 
-    SlackFile getFile();
+    public String getTimestamp() {
+        return this.timestamp;
+    }
 
-    String getMessage();
+    public SlackFile getFile() {
+        return this.file;
+    }
+
+    public String getMessage() {
+        return this.message;
+    }
+  
+    @Override
+    public SlackEventType getEventType() {
+        return SlackEventType.PIN_ADDED;
+    }
 
 }

@@ -3,13 +3,7 @@ package com.ullink.slack.simpleslackapi.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackFile;
-import com.ullink.slack.simpleslackapi.SlackIntegration;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.*;
 
 import java.util.ArrayList;
@@ -105,48 +99,48 @@ class SlackJSONMessageParser {
     {
         JsonObject channelJSONObject = obj.get("channel").getAsJsonObject();
         SlackChannel slackChannel = parseChannelDescription(channelJSONObject);
-        return new SlackChannelJoinedImpl(slackChannel);
+        return new SlackChannelJoined(slackChannel);
     }
 
     private static SlackChannelLeft extractChannelLeftEvent(SlackSession slackSession, JsonObject obj)
     {
         String channelId = GsonHelper.getStringOrNull(obj.get("channel"));
         SlackChannel slackChannel = slackSession.findChannelById(channelId);
-        return new SlackChannelLeftImpl(slackChannel);
+        return new SlackChannelLeft(slackChannel);
     }
 
     private static SlackGroupJoined extractGroupJoinedEvent(SlackSession slackSession, JsonObject obj)
     {
         JsonObject channelJSONObject = obj.get("channel").getAsJsonObject();
         SlackChannel slackChannel = parseChannelDescription(channelJSONObject);
-        return new SlackGroupJoinedImpl(slackChannel);
+        return new SlackGroupJoined(slackChannel);
     }
 
     private static SlackChannelRenamed extractChannelRenamedEvent(SlackSession slackSession, JsonObject obj)
     {
         String channelId = GsonHelper.getStringOrNull(obj.get("channel"));
         String newName = GsonHelper.getStringOrNull(obj.get("name"));
-        return new SlackChannelRenamedImpl(slackSession.findChannelById(channelId), newName);
+        return new SlackChannelRenamed(slackSession.findChannelById(channelId), newName);
     }
 
     private static SlackChannelDeleted extractChannelDeletedEvent(SlackSession slackSession, JsonObject obj)
     {
         String channelId = GsonHelper.getStringOrNull(obj.get("channel"));
-        return new SlackChannelDeletedImpl(slackSession.findChannelById(channelId));
+        return new SlackChannelDeleted(slackSession.findChannelById(channelId));
     }
 
     private static SlackChannelUnarchived extractChannelUnarchiveEvent(SlackSession slackSession, JsonObject obj)
     {
         String channelId = GsonHelper.getStringOrNull(obj.get("channel"));
         String userId = GsonHelper.getStringOrNull(obj.get("user"));
-        return new SlackChannelUnarchivedImpl(slackSession.findChannelById(channelId), slackSession.findUserById(userId));
+        return new SlackChannelUnarchived(slackSession.findChannelById(channelId), slackSession.findUserById(userId));
     }
 
     private static SlackChannelArchived extractChannelArchiveEvent(SlackSession slackSession, JsonObject obj)
     {
         String channelId = GsonHelper.getStringOrNull(obj.get("channel"));
         String userId = GsonHelper.getStringOrNull(obj.get("user"));
-        return new SlackChannelArchivedImpl(slackSession.findChannelById(channelId), slackSession.findUserById(userId));
+        return new SlackChannelArchived(slackSession.findChannelById(channelId), slackSession.findUserById(userId));
     }
 
     private static SlackChannelCreated extractChannelCreatedEvent(SlackSession slackSession, JsonObject obj)
@@ -155,7 +149,7 @@ class SlackJSONMessageParser {
         SlackChannel channel = parseChannelDescription(channelJSONObject);
         String creatorId = GsonHelper.getStringOrNull(channelJSONObject.get("creator"));
         SlackUser user = slackSession.findUserById(creatorId);
-        return new SlackChannelCreatedImpl(channel, user);
+        return new SlackChannelCreated(channel, user);
     }
 
     private static SlackEvent extractMessageEvent(SlackSession slackSession, JsonObject obj)
@@ -187,7 +181,7 @@ class SlackJSONMessageParser {
             if (channelId.startsWith("D"))
             {
                 // direct messaging, on the fly channel creation
-                return new SlackChannelImpl(channelId, channelId, "", "", true, false, false);
+                return new SlackChannel(channelId, channelId, "", "", true, false, false);
             }
             else
             {
@@ -197,33 +191,33 @@ class SlackJSONMessageParser {
         return null;
     }
 
-    private static SlackMessageUpdatedImpl parseMessageUpdated(JsonObject obj, SlackChannel channel, String ts)
+    private static SlackMessageUpdated parseMessageUpdated(JsonObject obj, SlackChannel channel, String ts)
     {
         JsonObject message = obj.get("message").getAsJsonObject();
         String text = GsonHelper.getStringOrNull(message.get("text"));
         String messageTs = GsonHelper.getStringOrNull(message.get("ts"));
-        SlackMessageUpdatedImpl toto = new SlackMessageUpdatedImpl(channel, messageTs, ts, text);
+        SlackMessageUpdated toto = new SlackMessageUpdated(channel, messageTs, ts, text);
         ArrayList<SlackAttachment> attachments = extractAttachmentsFromMessageJSON(message);
         toto.setAttachments(attachments);
         return toto;
     }
 
-    private static SlackMessageDeletedImpl parseMessageDeleted(JsonObject obj, SlackChannel channel, String ts)
+    private static SlackMessageDeleted parseMessageDeleted(JsonObject obj, SlackChannel channel, String ts)
     {
         String deletedTs = GsonHelper.getStringOrNull(obj.get("deleted_ts"));
-        return new SlackMessageDeletedImpl(channel, deletedTs, ts);
+        return new SlackMessageDeleted(channel, deletedTs, ts);
     }
 
-    private static SlackMessagePostedImpl parseBotMessage(JsonObject obj, SlackChannel channel, String ts, SlackSession slackSession)
+    private static SlackMessagePosted parseBotMessage(JsonObject obj, SlackChannel channel, String ts, SlackSession slackSession)
     {
         String text = GsonHelper.getStringOrNull(obj.get("text"));
         String subtype =  GsonHelper.getStringOrNull(obj.get("subtype"));
         String botId = GsonHelper.getStringOrNull(obj.get("bot_id"));
         SlackUser user = slackSession.findUserById(botId);
-        return new SlackMessagePostedImpl(text, user, user, channel, ts, SlackMessagePosted.MessageSubType.fromCode(subtype));
+        return new SlackMessagePosted(text, user, user, channel, ts, SlackMessagePosted.MessageSubType.fromCode(subtype));
     }
 
-    private static SlackMessagePostedImpl parseMessagePublished(JsonObject obj, SlackChannel channel, String ts, SlackSession slackSession) {
+    private static SlackMessagePosted parseMessagePublished(JsonObject obj, SlackChannel channel, String ts, SlackSession slackSession) {
         String text = GsonHelper.getStringOrNull(obj.get("text"));
         String userId = GsonHelper.getStringOrNull(obj.get("user"));
         if (userId == null) {
@@ -243,7 +237,7 @@ class SlackJSONMessageParser {
         }
         Map<String, Integer> reacs = extractReactionsFromMessageJSON(obj);
         ArrayList<SlackAttachment> attachments = extractAttachmentsFromMessageJSON(obj);
-        SlackMessagePostedImpl message = new SlackMessagePostedImpl(text, null, user, channel, ts, null, obj.toString(), SlackMessagePosted.MessageSubType.fromCode(subtype), threadTimestamp);
+        SlackMessagePosted message = new SlackMessagePosted(text, null, user, channel, ts, null, obj.toString(), SlackMessagePosted.MessageSubType.fromCode(subtype), threadTimestamp);
         message.setReactions(reacs);
         message.setAttachments(attachments);
         return message;
@@ -279,7 +273,7 @@ class SlackJSONMessageParser {
         file.setPermalinkPublic(GsonHelper.getStringOrNull(rawFile.get("permalink_public")));
     }
 
-    private static SlackMessagePostedImpl parseMessagePublishedWithFile(JsonObject obj, SlackChannel channel, String ts, SlackSession slackSession)
+    private static SlackMessagePosted parseMessagePublishedWithFile(JsonObject obj, SlackChannel channel, String ts, SlackSession slackSession)
     {
         SlackFile file = new SlackFile();
         if (obj.get("file")!=null) {
@@ -305,7 +299,7 @@ class SlackJSONMessageParser {
 
         String threadTimestamp = GsonHelper.getStringOrNull(obj.get("thread_ts"));
 
-        return new SlackMessagePostedImpl(text, user, user, channel, ts,file,obj.toString(), SlackMessagePosted.MessageSubType.fromCode(subtype), threadTimestamp);
+        return new SlackMessagePosted(text, user, user, channel, ts,file,obj.toString(), SlackMessagePosted.MessageSubType.fromCode(subtype), threadTimestamp);
     }
 
     private static SlackChannel parseChannelDescription(JsonObject channelJSONObject) {
@@ -320,7 +314,7 @@ class SlackJSONMessageParser {
             purpose = GsonHelper.getStringOrNull((channelJSONObject.get("purpose").getAsJsonObject().get("value")));
         }
         boolean isArchived = GsonHelper.getBooleanOrDefaultValue(channelJSONObject.get("is_archived"), false);
-        return new SlackChannelImpl(id, name, topic, purpose, id.startsWith("D"),false, isArchived);
+        return new SlackChannel(id, name, topic, purpose, id.startsWith("D"),false, isArchived);
     }
 
 
@@ -335,19 +329,19 @@ class SlackJSONMessageParser {
         SlackUser user = slackSession.findUserById(GsonHelper.getStringOrNull(obj.get("user")));
         SlackUser itemUser = slackSession.findUserById(GsonHelper.getStringOrNull(obj.get("item_user")));
         String timestamp = GsonHelper.getStringOrNull(obj.get("event_ts"));
-        return new ReactionAddedImpl(emojiName, user, itemUser, channel, messageId, fileId, fileCommentId, timestamp);
+        return new ReactionAdded(emojiName, user, itemUser, channel, messageId, fileId, fileCommentId, timestamp);
     }
 
     private static SlackUserChange extractUserChangeEvent(JsonObject obj) {
         JsonObject user = obj.get("user").getAsJsonObject();
         SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(user);
-        return new SlackUserChangeImpl(slackUser);
+        return new SlackUserChange(slackUser);
     }
 
     private static SlackTeamJoin extractTeamJoinEvent(JsonObject obj) {
         JsonObject user = obj.get("user").getAsJsonObject();
         SlackUser slackUser = SlackJSONParsingUtils.buildSlackUser(user);
-        return new SlackTeamJoinImpl(slackUser);
+        return new SlackTeamJoin(slackUser);
     }
 
     private static PresenceChange extractPresenceChangeEvent(SlackSession slackSession, JsonObject obj) {
@@ -359,7 +353,7 @@ class SlackJSONMessageParser {
         } else if ("away".equals(presence)) {
             value = SlackPersona.SlackPresence.AWAY;
         }
-        return new PresenceChangeImpl(userId, value);
+        return new PresenceChange(userId, value);
     }
 
     private static ReactionRemoved extractReactionRemovedEvent(SlackSession slackSession, JsonObject obj) {
@@ -373,7 +367,7 @@ class SlackJSONMessageParser {
         SlackUser user = slackSession.findUserById(GsonHelper.getStringOrNull(obj.get("user")));
         SlackUser itemUser = slackSession.findUserById(GsonHelper.getStringOrNull(obj.get("item_user")));
         String timestamp = GsonHelper.getStringOrNull(obj.get("event_ts"));
-        return new ReactionRemovedImpl(emojiName, user, itemUser, channel, messageId, fileId, fileCommentId, timestamp);
+        return new ReactionRemoved(emojiName, user, itemUser, channel, messageId, fileId, fileCommentId, timestamp);
     }
 
     private static UserTyping extractUserTypingEvent(SlackSession slackSession, JsonObject obj) {
@@ -383,7 +377,7 @@ class SlackJSONMessageParser {
         SlackChannel slackChannel = slackSession.findChannelById(channelId);
         SlackUser slackUser = slackSession.findUserById(userId);
 
-        return new UserTypingImpl(slackChannel, slackUser, SlackEventType.USER_TYPING);
+        return new UserTyping(slackChannel, slackUser, SlackEventType.USER_TYPING);
     }
 
     private static PinRemoved extractPinRemovedEvent(SlackSession slackSession, JsonObject obj) {
@@ -405,7 +399,7 @@ class SlackJSONMessageParser {
 	        message = GsonHelper.getStringOrNull(messageObj.get("text"));
 	    }
 	    String timestamp = GsonHelper.getStringOrNull(obj.get("event_ts"));
-        return new PinRemovedImpl(sender, channel, timestamp, file, message);
+        return new PinRemoved(sender, channel, timestamp, file, message);
     }
 
     private static PinAdded extractPinAddedEvent(SlackSession slackSession, JsonObject obj) {
@@ -428,7 +422,7 @@ class SlackJSONMessageParser {
 	    }
 	    String timestamp = GsonHelper.getStringOrNull(obj.get("event_ts"));
 
-        return new PinAddedImpl(sender, channel, timestamp, file, message);
+        return new PinAdded(sender, channel, timestamp, file, message);
     }
 
     private static Map<String, Integer> extractReactionsFromMessageJSON(JsonObject obj) {

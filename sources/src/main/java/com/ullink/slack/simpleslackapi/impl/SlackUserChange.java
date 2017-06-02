@@ -2,13 +2,13 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
-import com.ullink.slack.simpleslackapi.events.SlackTeamJoin;
+import com.ullink.slack.simpleslackapi.events.SlackUserChangeEvent;
 
-public class SlackTeamJoinImpl implements SlackTeamJoin {
+public class SlackUserChange implements SlackUserChangeEvent {
 
     private final SlackUser slackUser;
 
-    SlackTeamJoinImpl(SlackUser slackUser) {
+    public SlackUserChange(SlackUser slackUser) {
         this.slackUser = slackUser;
     }
 
@@ -19,6 +19,6 @@ public class SlackTeamJoinImpl implements SlackTeamJoin {
 
     @Override
     public SlackEventType getEventType() {
-        return SlackEventType.SLACK_TEAM_JOIN;
+        return SlackEventType.SLACK_USER_CHANGE;
     }
 }

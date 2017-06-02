@@ -1,19 +1,48 @@
 package com.ullink.slack.simpleslackapi.events;
 
-import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackFile;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.SlackChannel;
 
-public interface PinRemoved extends SlackEvent {
+public class PinRemoved implements SlackEvent {
 
-    SlackUser getSender();
+    private final SlackUser sender;
+    private final SlackChannel channel;
+    private final String timestamp;
+    private final SlackFile file;
+    private final String message;
 
-    SlackChannel getChannel();
+    public PinRemoved(SlackUser sender, SlackChannel channel, String timestamp, SlackFile file, String message) {
+        this.sender = sender;
+        this.channel = channel;
+        this.timestamp = timestamp;
+        this.file = file;
+        this.message = message;
+    }
 
-    String getTimestamp();
+    public SlackUser getSender() {
+        return this.sender;
+    }
 
-    SlackFile getFile();
+    public SlackChannel getChannel() {
+        return this.channel;
+    }
 
-    String getMessage();
+    public String getTimestamp() {
+        return this.timestamp;
+    }
+
+    public SlackFile getFile() {
+        return this.file;
+    }
+
+    public String getMessage() {
+        return this.message;
+    }
+
+    @Override
+    public SlackEventType getEventType() {
+        return SlackEventType.PIN_REMOVED;
+    }
 
 }

@@ -1,16 +1,118 @@
 package com.ullink.slack.simpleslackapi.events;
 
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackBot;
+import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackFile;
-import com.ullink.slack.simpleslackapi.SlackUser;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public interface SlackMessagePosted extends SlackMessageEvent {
-    enum MessageSubType {
+public class SlackMessagePosted implements SlackEvent {
+    private String       messageContent;
+    private SlackUser    user;
+    private SlackBot     bot;
+    private SlackChannel channel;
+    private String       timestamp;
+    private String       threadTimestamp;
+    private SlackFile    slackFile;
+    private String   jsonSource;
+    private MessageSubType msgSubType;
+    private Map<String, Integer> reactions;
+    private ArrayList<SlackAttachment> attachments;
+    
+    public SlackMessagePosted(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, MessageSubType msgSubType)
+    {
+        this.channel = channel;
+        this.messageContent = messageContent;
+        this.user = user;
+        this.bot = bot;
+        this.timestamp = timestamp;
+        this.msgSubType = msgSubType;
+    }
+
+    public SlackMessagePosted(String messageContent, SlackBot bot, SlackUser user, SlackChannel channel, String timestamp, SlackFile slackFile, String jsonSource, MessageSubType msgSubType, String threadTimestamp)
+    {
+        this.channel = channel;
+        this.messageContent = messageContent;
+        this.user = user;
+        this.bot = bot;
+        this.timestamp = timestamp;
+        this.jsonSource = jsonSource;
+        this.slackFile = slackFile;
+        this.msgSubType = msgSubType;
+        this.threadTimestamp = threadTimestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "SlackMessagePosted{" + "messageContent=" + messageContent + ", user=" + user + ", bot=" + bot + ", channel=" + channel + ", timestamp=" + timestamp + ", reactions=" + reactions + '}';
+    }
+
+    public String getJsonSource() {
+        return jsonSource;
+    }
+
+    public SlackFile getSlackFile() {
+        return slackFile;
+    }
+    
+
+    public String getMessageContent() {
+        return messageContent;
+    }
+
+    public SlackUser getSender() {
+        return user;
+    }
+
+    public SlackBot getBot() {
+        return bot;
+    }
+
+    public SlackChannel getChannel() {
+        return channel;
+    }
+
+    public String getTimeStamp() {
+        return timestamp;
+    }
+
+    @Override
+    public SlackEventType getEventType() {
+        return SlackEventType.SLACK_MESSAGE_POSTED;
+    }
+
+    public Map<String, Integer> getReactions() {
+        return reactions;
+    }
+
+    public void setReactions(Map<String, Integer> reactions) {
+        this.reactions = reactions;
+    }
+
+    public void setAttachments(ArrayList<SlackAttachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    public int getTotalCountOfReactions() {
+        return reactions == null ? 0 : reactions.size();
+    }
+
+    public MessageSubType getMessageSubType()
+    {
+        return msgSubType;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public ArrayList<SlackAttachment> getAttachments() { return attachments; }
+
+    public String getThreadTimestamp() {
+        return threadTimestamp;
+    }
+
+    public enum MessageSubType {
         BOT_MESSAGE("bot_message"),
         CHANNEL_ARCHIVE("channel_archive"),
         CHANNEL_JOIN("channel_join"),
@@ -44,7 +146,7 @@ public interface SlackMessagePosted extends SlackMessageEvent {
         }
 
         static public final MessageSubType fromCode(String code) {
-            for (MessageSubType subType : MessageSubType.values()) {
+            for (MessageSubType subType : SlackMessagePosted.MessageSubType.values()) {
                 if (subType.code.equals(code)) {
                     return subType;
                 }
@@ -52,28 +154,5 @@ public interface SlackMessagePosted extends SlackMessageEvent {
             return UNKNOWN;
         }
     }
-
-    String getMessageContent();
-
-    SlackUser getSender();
-
-    @Deprecated
-    SlackBot getBot();
-
-    SlackChannel getChannel();
-    
-    SlackFile getSlackFile();
-    
-    String getJsonSource();
-    
-    String getTimestamp();
-    
-    Map<String, Integer> getReactions();
-    
-    int getTotalCountOfReactions();
-    MessageSubType getMessageSubType();
-
-    ArrayList<SlackAttachment> getAttachments();
-
-    String getThreadTimestamp();
 }
+

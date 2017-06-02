@@ -2,6 +2,7 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 
+//TODO: figure out this hierarchy
 public class SlackMessageReplyImpl extends SlackReplyImpl implements SlackMessageReply {
     private long replyTo;
     private String timestamp;

@@ -5,10 +5,7 @@ import java.util.Map;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.ullink.slack.simpleslackapi.SlackIntegration;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackTeam;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.*;
 
 class SlackJSONParsingUtils {
 
@@ -62,7 +59,7 @@ class SlackJSONParsingUtils {
         return new SlackUserImpl(id, name, realName, email, skype, title, phone, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot, tz, tzLabel, tzOffset == null ? null : new Integer(tzOffset.intValue()), slackPresence);
     }
 
-    static final SlackChannelImpl buildSlackChannel(JsonObject jsonChannel, Map<String, SlackUser> knownUsersById) {
+    static final SlackChannel buildSlackChannel(JsonObject jsonChannel, Map<String, SlackUser> knownUsersById) {
         String id =  GsonHelper.getStringOrNull(jsonChannel.get("id"));
         String name = GsonHelper.getStringOrNull(jsonChannel.get("name"));
 
@@ -86,7 +83,7 @@ class SlackJSONParsingUtils {
             isArchived = jsonChannel.get("is_archived").getAsBoolean();
         }
 
-        SlackChannelImpl toReturn = new SlackChannelImpl(id, name, topic, purpose, false, isMember, isArchived);
+        SlackChannel toReturn = new SlackChannel(id, name, topic, purpose, false, isMember, isArchived);
         JsonArray membersJson = GsonHelper.getJsonArrayOrNull(jsonChannel.get("members"));
         if (membersJson != null) {
             for (JsonElement jsonMembersObject : membersJson) {
@@ -98,10 +95,10 @@ class SlackJSONParsingUtils {
         return toReturn;
     }
 
-    static final SlackChannelImpl buildSlackImChannel(JsonObject jsonChannel, Map<String, SlackUser> knownUsersById)
+    static final SlackChannel buildSlackImChannel(JsonObject jsonChannel, Map<String, SlackUser> knownUsersById)
     {
         String id = GsonHelper.getStringOrNull(jsonChannel.get("id"));
-        SlackChannelImpl toReturn = new SlackChannelImpl(id, null, null, null, true, false, false);
+        SlackChannel toReturn = new SlackChannel(id, null, null, null, true, false, false);
         String memberId = GsonHelper.getStringOrNull(jsonChannel.get("user"));
         SlackUser user = knownUsersById.get(memberId);
         toReturn.addUser(user);
