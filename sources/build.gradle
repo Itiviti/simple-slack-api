@@ -204,6 +204,10 @@ dependencies {
     compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.13.1', optional
     compile 'javax.websocket:javax.websocket-api:1.1', optional
 
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly 'org.projectlombok:lombok:1.16.16'
+
+
     testCompile 'org.jmockit:jmockit:1.12'
     testCompile 'org.assertj:assertj-core:3.8.0'
     testCompile 'junit:junit:4.12'
