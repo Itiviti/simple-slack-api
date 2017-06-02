@@ -1,8 +1,7 @@
-package com.ullink.slack.simpleslackapi.impl;
+package com.ullink.slack.simpleslackapi.events.userchange;
 
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackEventType;
-import com.ullink.slack.simpleslackapi.events.SlackUserChangeEvent;
 
 public class SlackUserChange implements SlackUserChangeEvent {
 

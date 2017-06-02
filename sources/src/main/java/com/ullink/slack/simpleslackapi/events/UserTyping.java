@@ -1,4 +1,4 @@
-package com.ullink.slack.simpleslackapi.impl;
+package com.ullink.slack.simpleslackapi.events;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackUser;

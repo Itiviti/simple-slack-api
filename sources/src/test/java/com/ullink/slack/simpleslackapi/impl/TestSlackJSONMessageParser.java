@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.*;
+import com.ullink.slack.simpleslackapi.events.userchange.SlackTeamJoin;
+import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChange;
 import com.ullink.slack.simpleslackapi.replies.*;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
