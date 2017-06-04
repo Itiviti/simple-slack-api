@@ -110,7 +110,7 @@ class SlackJSONParsingUtils {
         String id = GsonHelper.getStringOrNull(jsonTeam.get("id"));
         String name = GsonHelper.getStringOrNull(jsonTeam.get("name"));
         String domain = GsonHelper.getStringOrNull(jsonTeam.get("domain"));
-        return new SlackTeamImpl(id, name, domain);
+        return new SlackTeam(id, name, domain);
     }
 
     static final SlackIntegration buildSlackIntegration(JsonObject jsonIntegration) {
