@@ -1,6 +1,6 @@
 package com.ullink.slack.simpleslackapi;
 
-import com.ullink.slack.simpleslackapi.events.SlackMessageEvent;
+import com.ullink.slack.simpleslackapi.events.SlackEvent;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 
 /**
@@ -9,7 +9,7 @@ import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
  *
  */
 @Deprecated
-public interface SlackMessage extends SlackMessageEvent {
+public interface SlackMessage extends SlackEvent {
 
     String getMessageContent();
 
@@ -19,4 +19,5 @@ public interface SlackMessage extends SlackMessageEvent {
 
     SlackChannel getChannel();
 
+    String getTimeStamp();
 }

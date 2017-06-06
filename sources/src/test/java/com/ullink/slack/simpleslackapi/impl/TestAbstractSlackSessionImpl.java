@@ -19,11 +19,11 @@ public class TestAbstractSlackSessionImpl
         @Override
         public void connect()
         {
-            channels.put("channelid1",new SlackChannelImpl("channelid1", "testchannel1", "topicchannel1", "topicchannel1", false, false, false));
-            channels.put("channelid2",new SlackChannelImpl("channelid2", "testchannel2", "topicchannel2", "topicchannel2", false, false, false));
-            channels.put("channelid3",new SlackChannelImpl("channelid3", "testchannel3", "topicchannel3", "topicchannel3", false, false, false));
-            channels.put("channelid4",new SlackChannelImpl("channelid4", "testchannel4", "topicchannel4", "topicchannel4", false, false, false));
-            channels.put("channelid5",new SlackChannelImpl("channelid5", "testchannel5", "topicchannel5", "topicchannel5", false, false, false));
+            channels.put("channelid1",new SlackChannel("channelid1", "testchannel1", "topicchannel1", "topicchannel1", false, false, false));
+            channels.put("channelid2",new SlackChannel("channelid2", "testchannel2", "topicchannel2", "topicchannel2", false, false, false));
+            channels.put("channelid3",new SlackChannel("channelid3", "testchannel3", "topicchannel3", "topicchannel3", false, false, false));
+            channels.put("channelid4",new SlackChannel("channelid4", "testchannel4", "topicchannel4", "topicchannel4", false, false, false));
+            channels.put("channelid5",new SlackChannel("channelid5", "testchannel5", "topicchannel5", "topicchannel5", false, false, false));
 
             users.put("userid1",new SlackUserImpl("userid1", "username1", "realname1","userid1@my.mail", "testSkype", "testPhone", "testTitle", false,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
             users.put("userid2",new SlackUserImpl("userid2", "username2", "realname2","userid2@my.mail", "testSkype", "testPhone", "testTitle", false,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));

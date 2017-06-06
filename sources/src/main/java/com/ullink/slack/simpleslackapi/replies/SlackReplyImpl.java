@@ -1,13 +1,13 @@
-package com.ullink.slack.simpleslackapi.impl;
+package com.ullink.slack.simpleslackapi.replies;
 
 import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
 
-class SlackReplyImpl implements ParsedSlackReply {
+public class SlackReplyImpl implements ParsedSlackReply {
 
     private boolean ok;
     private String error;
 
-    SlackReplyImpl(boolean ok, String error) {
+    public SlackReplyImpl(boolean ok, String error) {
         this.ok = ok;
         this.error = error;
     }

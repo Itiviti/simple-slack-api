@@ -7,11 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackIntegration;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackTeam;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,7 +94,7 @@ class SlackJSONSessionStatusParser {
         for (JsonElement jsonObject : channelsJson)
         {
             JsonObject jsonChannel = jsonObject.getAsJsonObject();
-            SlackChannelImpl channel = SlackJSONParsingUtils.buildSlackChannel(jsonChannel, users);
+            SlackChannel channel = SlackJSONParsingUtils.buildSlackChannel(jsonChannel, users);
             LOGGER.debug("slack public channel found : " + channel.getId());
             channels.put(channel.getId(), channel);
         }
@@ -109,7 +105,7 @@ class SlackJSONSessionStatusParser {
             for (JsonElement jsonObject : groupsJson)
             {
                 JsonObject jsonChannel = jsonObject.getAsJsonObject();
-                SlackChannelImpl channel = SlackJSONParsingUtils.buildSlackChannel(jsonChannel, users);
+                SlackChannel channel = SlackJSONParsingUtils.buildSlackChannel(jsonChannel, users);
                 LOGGER.debug("slack private group found : " + channel.getId());
                 channels.put(channel.getId(), channel);
             }
@@ -122,7 +118,7 @@ class SlackJSONSessionStatusParser {
             for (JsonElement jsonObject : imsJson)
             {
                 JsonObject jsonChannel = jsonObject.getAsJsonObject();
-                SlackChannelImpl channel = SlackJSONParsingUtils.buildSlackImChannel(jsonChannel, users);
+                SlackChannel channel = SlackJSONParsingUtils.buildSlackImChannel(jsonChannel, users);
                 LOGGER.debug("slack im channel found : " + channel.getId());
                 channels.put(channel.getId(), channel);
             }
