@@ -14,7 +14,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected Map<String, SlackUser>               users                    = new ConcurrentHashMap<>();
     protected Map<String, SlackIntegration>        integrations             = new ConcurrentHashMap<>();
     protected SlackPersona                         sessionPersona;
-    protected SlackTeam                            team;
+    protected SlackTeam team;
 
     protected List<SlackChannelArchivedListener>   channelArchiveListener   = new ArrayList<>();
     protected List<SlackChannelCreatedListener>    channelCreateListener    = new ArrayList<>();
@@ -101,7 +101,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
             // direct channel case
             if (channelId != null && channelId.startsWith("D"))
             {
-                toReturn = new SlackChannelImpl(channelId, "", "", "", true, false, false);
+                toReturn = new SlackChannel(channelId, "", "", "", true, false, false);
             }
         }
         return toReturn;

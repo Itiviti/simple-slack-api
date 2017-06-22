@@ -1,8 +1,9 @@
 package com.ullink.slack.simpleslackapi;
 
 import java.util.List;
-import org.threeten.bp.LocalDate;
+
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import org.threeten.bp.LocalDate;
 
 public interface ChannelHistoryModule {
     

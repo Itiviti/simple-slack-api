@@ -1,16 +1,53 @@
 package com.ullink.slack.simpleslackapi;
 
 import java.util.concurrent.TimeUnit;
+
 import com.ullink.slack.simpleslackapi.replies.SlackReply;
 
-public interface SlackMessageHandle<T extends SlackReply> {
-    // the id given to the message sent
-    long getMessageId();
+public class SlackMessageHandle<T extends SlackReply> {
 
-    // server response
-    T getReply();
+    private static final long WAIT_TIME_IN_MILLISECOND = 1L;
+    private long                messageId;
+    private volatile T          slackReply;
 
-    boolean isAcked();
+    public SlackMessageHandle(long messageId)
+    {
+        this.messageId = messageId;
+    }
 
-    void waitForReply(long timeout, TimeUnit unit);
+    public long getMessageId()
+    {
+        return messageId;
+    }
+
+    public T getReply()
+    {
+        return slackReply;
+    }
+
+    public void setReply(T slackReply)
+    {
+        this.slackReply = slackReply;
+    }
+
+    public boolean isAcked()
+    {
+        return false;
+    }
+
+    public void waitForReply(long timeout, TimeUnit unit)
+    {
+        long nanoStart = System.nanoTime();
+        while ((System.nanoTime() - nanoStart) < unit.toNanos(timeout) && slackReply == null)
+        {
+            try
+            {
+                Thread.sleep(WAIT_TIME_IN_MILLISECOND);
+            }
+            catch (InterruptedException e)
+            {
+                return;
+            }
+        }
+    }
 }
