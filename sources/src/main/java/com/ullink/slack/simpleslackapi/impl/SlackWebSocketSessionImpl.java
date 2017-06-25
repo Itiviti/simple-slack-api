@@ -253,20 +253,22 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         this.authToken = authToken;
         this.reconnectOnDisconnection = reconnectOnDisconnection;
         this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : 30000;
-        this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(null, 0, null, null);
+        this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(null, -1, null, null);
         addInternalListeners();
     }
 
     SlackWebSocketSessionImpl(WebSocketContainerProvider webSocketContainerProvider, String authToken, Proxy.Type proxyType, String proxyAddress, int proxyPort, String proxyUser, String proxyPassword, boolean reconnectOnDisconnection, long heartbeat, TimeUnit unit) {
         this.authToken = authToken;
-        this.proxyAddress = proxyAddress;
-        this.proxyPort = proxyPort;
-        this.proxyHost = new HttpHost(proxyAddress, proxyPort);
+        if (proxyType != null && proxyType != Proxy.Type.DIRECT) {
+            this.proxyAddress = proxyAddress;
+            this.proxyPort = proxyPort;
+            this.proxyHost = new HttpHost(proxyAddress, proxyPort);
+            this.proxyUser = proxyUser;
+            this.proxyPassword = proxyPassword;
+        }
         this.reconnectOnDisconnection = reconnectOnDisconnection;
         this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : DEFAULT_HEARTBEAT_IN_MILLIS;
-        this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(proxyAddress, proxyPort, proxyUser, proxyPassword);
-        this.proxyUser = proxyUser;
-        this.proxyPassword = proxyPassword;
+        this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(this.proxyAddress, this.proxyPort, this.proxyUser, this.proxyPassword);
         addInternalListeners();
     }
 
