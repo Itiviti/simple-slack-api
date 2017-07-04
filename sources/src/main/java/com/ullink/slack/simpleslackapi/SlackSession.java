@@ -39,7 +39,6 @@ public interface SlackSession {
 
     @Deprecated
     SlackBot findBotById(String botId);
-    
 
     SlackMessageHandle<ParsedSlackReply> inviteUser(String email, String firstName, boolean setActive);
 
@@ -51,6 +50,8 @@ public interface SlackSession {
 
     SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration);
 
+    SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, JsonObject message, SlackChatConfiguration chatConfiguration);
+
     SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage);
 
     SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl);
@@ -61,22 +62,24 @@ public interface SlackSession {
 
     SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment);
 
+    SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, JsonObject message);
+
     SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, boolean unfurl);
 
     SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message);
 
-    SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte [] data, String fileName);
+    SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName);
 
-    SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte [] data, String fileName);
+    SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte[] data, String fileName);
 
-    SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte [] data, String fileName);
+    SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName);
 
     SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage);
 
     SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment);
-    
+
     SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, String message, SlackAttachment attachment);
-    
+
     SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message);
 
     SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message);
@@ -90,9 +93,9 @@ public interface SlackSession {
     SlackMessageHandle<SlackChannelReply> joinChannel(String channelName);
 
     SlackMessageHandle<SlackChannelReply> leaveChannel(SlackChannel channel);
-    
+
     SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user);
-    
+
     SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel);
 
     SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel);
@@ -157,7 +160,6 @@ public interface SlackSession {
 
     void removeUserTypingListener(UserTypingListener listener);
 
-
     /*
      * Subscribe to events related to the actions to the slack
      * server. At this time a set of status information is exchanged that
@@ -168,7 +170,7 @@ public interface SlackSession {
      * questions.
      */
     void addSlackConnectedListener(SlackConnectedListener listener);
-    
+
     void removeSlackConnectedListener(SlackConnectedListener listener);
 
     void addSlackDisconnectedListener(SlackDisconnectedListener listener);
@@ -176,17 +178,16 @@ public interface SlackSession {
     void removeSlackDisconnectedListener(SlackDisconnectedListener listener);
 
     /**
-     * 
      * @return true if actions is open
      */
     boolean isConnected();
-    
+
     void addReactionAddedListener(ReactionAddedListener listener);
-    
+
     void removeReactionAddedListener(ReactionAddedListener listener);
-    
+
     void addReactionRemovedListener(ReactionRemovedListener listener);
-    
+
     void removeReactionRemovedListener(ReactionRemovedListener listener);
 
     void addSlackUserChangeListener(SlackUserChangeListener listener);
@@ -206,7 +207,7 @@ public interface SlackSession {
     void removePresenceChangeListener(PresenceChangeListener listener);
 
     void addPinRemovedListener(PinRemovedListener listener);
-  
+
     void removePinRemovedListener(PinRemovedListener listener);
 
     long getHeartbeat();

@@ -111,6 +111,11 @@ public class TestSlackJSONMessageParser {
                 throw new UnsupportedOperationException();
             }
 
+            @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, JsonObject message, SlackChatConfiguration chatConfiguration)
+            {
+                return null;
+            }
+
             @Override
             public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName)
             {
