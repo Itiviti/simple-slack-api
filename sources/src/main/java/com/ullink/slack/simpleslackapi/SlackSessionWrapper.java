@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
+import com.google.gson.JsonObject;
 import com.ullink.slack.simpleslackapi.listeners.PinAddedListener;
 import com.ullink.slack.simpleslackapi.listeners.PinRemovedListener;
 import com.ullink.slack.simpleslackapi.listeners.PresenceChangeListener;
@@ -136,6 +137,11 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.sendMessage(channel, preparedMessage, chatConfiguration);
     }
 
+    @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, JsonObject message, SlackChatConfiguration chatConfiguration)
+    {
+        return delegate.sendMessage(channel, message, chatConfiguration);
+    }
+
     @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage)
     {
         return delegate.sendMessage(channel, preparedMessage);
@@ -159,6 +165,11 @@ public class SlackSessionWrapper implements SlackSession
     @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment)
     {
         return delegate.sendMessage(channel, message, attachment);
+    }
+
+    @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, JsonObject message)
+    {
+        return delegate.sendMessage(channel, message);
     }
 
     @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, boolean unfurl)

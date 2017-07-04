@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.google.gson.JsonObject;
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackConnected;
 import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
@@ -65,6 +66,11 @@ public class TestAbstractSlackSessionImpl
 
         @Override
         public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+            return null;
+        }
+
+        @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, JsonObject message, SlackChatConfiguration chatConfiguration)
+        {
             return null;
         }
 

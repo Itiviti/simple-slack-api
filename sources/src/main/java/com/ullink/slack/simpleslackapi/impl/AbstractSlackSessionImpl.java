@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.google.gson.JsonObject;
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
@@ -162,6 +163,11 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment)
     {
         return sendMessage(channel, message, attachment, DEFAULT_CONFIGURATION);
+    }
+
+    @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, JsonObject message)
+    {
+        return sendMessage(channel, message, DEFAULT_CONFIGURATION);
     }
 
     @Override
