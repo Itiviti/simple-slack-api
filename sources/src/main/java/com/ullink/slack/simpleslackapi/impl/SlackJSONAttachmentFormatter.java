@@ -1,14 +1,14 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.ullink.slack.simpleslackapi.SlackAction;
+import com.ullink.slack.simpleslackapi.SlackAttachment;
+import com.ullink.slack.simpleslackapi.SlackField;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackAction;
-import com.ullink.slack.simpleslackapi.SlackField;
 
 class SlackJSONAttachmentFormatter
 {
@@ -67,6 +67,9 @@ class SlackJSONAttachmentFormatter
             }
             if (attachments[i].getFooterIcon() != null) {
                 attachmentJSON.addProperty("footer_icon", attachments[i].getFooterIcon());
+            }
+            if (attachments[i].getTimestamp() != null) {
+                attachmentJSON.addProperty("ts", attachments[i].getTimestamp());
             }
             if (attachments[i].getMiscRootFields() != null)
             {
