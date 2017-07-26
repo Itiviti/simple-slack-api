@@ -335,16 +335,20 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     public void reconnect() throws IOException
     {
-        disconnect();
         while (true)
         {
-            if (connectionMonitoringThread.isInterrupted())
+            if (connectionMonitoringThread.isInterrupted() && !this.isConnected())
             {
                 connect();
                 break;
             }
+            else
+            {
+                disconnect();
+            }
         }
     }
+
 
     @Override
     public boolean isConnected()
