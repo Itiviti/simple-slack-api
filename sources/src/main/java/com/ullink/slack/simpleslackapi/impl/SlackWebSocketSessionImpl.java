@@ -400,51 +400,47 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
         establishConnectionThread = null;
 
-        establishConnectionThread = new Thread()
+        establishConnectionThread = new Thread(() ->
         {
-            @Override public void run()
+            try
             {
-                try
+                websocketSession = client.connectToServer(new Endpoint()
                 {
-                    websocketSession = client.connectToServer(new Endpoint()
+                    @Override
+                    public void onOpen(Session session, EndpointConfig config)
                     {
-                        @Override
-                        public void onOpen(Session session, EndpointConfig config)
-                        {
-                            session.addMessageHandler(handler);
-                        }
+                        session.addMessageHandler(handler);
+                    }
 
-                        @Override
-                        public void onError(Session session, Throwable thr)
-                        {
-                            LOGGER.error("Endpoint#onError called", thr);
-                            websocketSession = null;
-                        }
+                    @Override
+                    public void onError(Session session, Throwable thr)
+                    {
+                        LOGGER.error("Endpoint#onError called", thr);
+                    }
 
-                    }, URI.create(webSocketConnectionURL));
-                }
-                catch (DeploymentException e)
-                {
-                    LOGGER.error(e.toString());
-                    throw new RuntimeException(e);
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-                if (websocketSession != null)
-                {
-                    SlackConnected slackConnected = new SlackConnected(sessionPersona);
-                    dispatcher.dispatch(slackConnected);
-                    LOGGER.debug("websocket actions established");
-                    LOGGER.info("slack session ready");
-                }
-                else
-                {
-                    throw new RuntimeException("Unable to establish a connection to this websocket URL " + webSocketConnectionURL);
-                }
+                }, URI.create(webSocketConnectionURL));
             }
-        };
+            catch (DeploymentException e)
+            {
+                LOGGER.error(e.toString());
+                throw new RuntimeException(e);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            if (websocketSession != null)
+            {
+                SlackConnected slackConnected = new SlackConnected(sessionPersona);
+                dispatcher.dispatch(slackConnected);
+                LOGGER.debug("websocket actions established");
+                LOGGER.info("slack session ready");
+            }
+            else
+            {
+                throw new RuntimeException("Unable to establish a connection to this websocket URL " + webSocketConnectionURL);
+            }
+        });
         establishConnectionThread.start();
     }
 
