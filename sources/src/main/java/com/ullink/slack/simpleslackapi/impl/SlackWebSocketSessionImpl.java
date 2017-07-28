@@ -93,6 +93,8 @@ import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import com.ullink.slack.simpleslackapi.replies.SlackUserPresenceReply;
 import com.ullink.slack.simpleslackapi.utils.ReaderUtils;
+
+
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String> {
     private static final String SLACK_API_SCHEME = "https";
 
@@ -408,9 +410,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             }, URI.create(webSocketConnectionURL));
         } catch (DeploymentException e) {
             LOGGER.error(e.toString());
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException(e);
         }
         if (websocketSession != null) {
             SlackConnected slackConnected = new SlackConnected(sessionPersona);
@@ -418,7 +418,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             LOGGER.debug("websocket actions established");
             LOGGER.info("slack session ready");
         } else {
-            throw new RuntimeException("Unable to establish a connection to this websocket URL " + webSocketConnectionURL);
+            throw new IOException("Unable to establish a connection to this websocket URL " + webSocketConnectionURL);
         }
     }
 
@@ -517,8 +517,15 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private void stopConnectionMonitoring() {
         if (connectionMonitoringThread != null) {
-            while (!connectionMonitoringThread.isInterrupted())
-                connectionMonitoringThread.interrupt();
+            while (true)
+            {
+                try{
+                    connectionMonitoringThread.interrupt();
+                    connectionMonitoringThread.join();
+                } catch (InterruptedException e) {
+                    // ouch - let's try again!
+                }
+            }
         }
     }
 
