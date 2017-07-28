@@ -1,26 +1,25 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.ullink.slack.simpleslackapi.*;
-import com.ullink.slack.simpleslackapi.events.*;
-import com.ullink.slack.simpleslackapi.SlackChatConfiguration.Avatar;
-import com.ullink.slack.simpleslackapi.events.userchange.SlackTeamJoin;
-import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChange;
-import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChangeEvent;
-import com.ullink.slack.simpleslackapi.listeners.PresenceChangeListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackEventListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackTeamJoinListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
-import com.ullink.slack.simpleslackapi.replies.*;
-import com.ullink.slack.simpleslackapi.utils.ReaderUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.ConnectException;
+import java.net.Proxy;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.websocket.DeploymentException;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
+import javax.websocket.MessageHandler;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -41,18 +40,59 @@ import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.websocket.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.ConnectException;
-import java.net.Proxy;
-import java.net.URI;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.ullink.slack.simpleslackapi.SlackAttachment;
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackChatConfiguration;
+import com.ullink.slack.simpleslackapi.SlackChatConfiguration.Avatar;
+import com.ullink.slack.simpleslackapi.SlackMessageHandle;
+import com.ullink.slack.simpleslackapi.SlackPersona;
+import com.ullink.slack.simpleslackapi.SlackPreparedMessage;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.WebSocketContainerProvider;
+import com.ullink.slack.simpleslackapi.events.PinAdded;
+import com.ullink.slack.simpleslackapi.events.PinRemoved;
+import com.ullink.slack.simpleslackapi.events.PresenceChange;
+import com.ullink.slack.simpleslackapi.events.ReactionAdded;
+import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
+import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
+import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
+import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
+import com.ullink.slack.simpleslackapi.events.SlackChannelJoined;
+import com.ullink.slack.simpleslackapi.events.SlackChannelLeft;
+import com.ullink.slack.simpleslackapi.events.SlackChannelRenamed;
+import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
+import com.ullink.slack.simpleslackapi.events.SlackConnected;
+import com.ullink.slack.simpleslackapi.events.SlackDisconnected;
+import com.ullink.slack.simpleslackapi.events.SlackEvent;
+import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
+import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import com.ullink.slack.simpleslackapi.events.SlackMessageUpdated;
+import com.ullink.slack.simpleslackapi.events.UserTyping;
+import com.ullink.slack.simpleslackapi.events.userchange.SlackTeamJoin;
+import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChange;
+import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChangeEvent;
+import com.ullink.slack.simpleslackapi.listeners.PresenceChangeListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackEventListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackTeamJoinListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
+import com.ullink.slack.simpleslackapi.replies.EmojiSlackReply;
+import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
+import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
+import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+import com.ullink.slack.simpleslackapi.replies.SlackUserPresenceReply;
+import com.ullink.slack.simpleslackapi.utils.ReaderUtils;
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String> {
     private static final String SLACK_API_SCHEME = "https";
 
@@ -125,7 +165,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private final long                        heartbeat;
     private WebSocketContainerProvider        webSocketContainerProvider;
     private volatile String                   webSocketConnectionURL;
-    private Thread establishConnectionThread;
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage message) {
@@ -302,11 +341,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     public void reconnect() throws IOException {
         while (true) {
-            if (connectionMonitoringThread.isInterrupted() && !this.isConnected()) {
-                connect();
+            if (!this.isConnected()) {
+                connectImpl();
                 break;
             } else {
-                disconnect();
+                disconnectImpl();
             }
         }
     }
@@ -354,44 +393,33 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         final WebSocketContainer client = webSocketContainerProvider.getWebSocketContainer();
         final MessageHandler handler = this;
         LOGGER.debug("initiating actions to websocket");
-        if (establishConnectionThread != null) {
-            establishConnectionThread.interrupt();
+        try {
+            websocketSession = client.connectToServer(new Endpoint() {
+                @Override
+                public void onOpen(Session session, EndpointConfig config) {
+                    session.addMessageHandler(handler);
+                }
+
+                @Override
+                public void onError(Session session, Throwable thr) {
+                    LOGGER.error("Endpoint#onError called", thr);
+                }
+
+            }, URI.create(webSocketConnectionURL));
+        } catch (DeploymentException e) {
+            LOGGER.error(e.toString());
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        establishConnectionThread = null;
-
-        establishConnectionThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    websocketSession = client.connectToServer(new Endpoint() {
-                        @Override
-                        public void onOpen(Session session, EndpointConfig config) {
-                            session.addMessageHandler(handler);
-                        }
-
-                        @Override
-                        public void onError(Session session, Throwable thr) {
-                            LOGGER.error("Endpoint#onError called", thr);
-                        }
-
-                    }, URI.create(webSocketConnectionURL));
-                } catch (DeploymentException e) {
-                    LOGGER.error(e.toString());
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (websocketSession != null) {
-                    SlackConnected slackConnected = new SlackConnected(sessionPersona);
-                    dispatcher.dispatch(slackConnected);
-                    LOGGER.debug("websocket actions established");
-                    LOGGER.info("slack session ready");
-                } else {
-                    throw new RuntimeException("Unable to establish a connection to this websocket URL " + webSocketConnectionURL);
-                }
-            }
-        };
-        establishConnectionThread.start();
+        if (websocketSession != null) {
+            SlackConnected slackConnected = new SlackConnected(sessionPersona);
+            dispatcher.dispatch(slackConnected);
+            LOGGER.debug("websocket actions established");
+            LOGGER.info("slack session ready");
+        } else {
+            throw new RuntimeException("Unable to establish a connection to this websocket URL " + webSocketConnectionURL);
+        }
     }
 
     private String consumeToString(InputStream content) throws IOException
