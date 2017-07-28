@@ -54,6 +54,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String> {
     private static final String SLACK_API_SCHEME = "https";
 
@@ -72,9 +73,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private static final String CHANNELS_JOIN_COMMAND     = "channels.join";
 
     private static final String CHANNELS_SET_TOPIC_COMMAND     = "channels.setTopic";
-    
+
     private static final String CHANNELS_INVITE_COMMAND     = "channels.invite";
-    
+
     private static final String CHANNELS_ARCHIVE_COMMAND     = "channels.archive";
 
     private static final String CHANNELS_UNARCHIVE_COMMAND     = "channels.unarchive";
@@ -299,6 +300,18 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         disconnectImpl();
         stopConnectionMonitoring();
     }
+
+    public void reconnect() throws IOException {
+        while (true) {
+            if (!this.isConnected()) {
+                connectImpl();
+                break;
+            } else {
+                disconnectImpl();
+            }
+        }
+    }
+
     @Override
     public boolean isConnected()
     {
@@ -336,32 +349,26 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         establishWebsocketConnection();
     }
 
-    private void establishWebsocketConnection() throws IOException
-    {
+    private void establishWebsocketConnection() throws IOException {
         lastPingSent = 0;
         lastPingAck = 0;
-        WebSocketContainer client = webSocketContainerProvider.getWebSocketContainer();
+        final WebSocketContainer client = webSocketContainerProvider.getWebSocketContainer();
         final MessageHandler handler = this;
         LOGGER.debug("initiating actions to websocket");
-
         try {
-            websocketSession = client.connectToServer(new Endpoint()
-            {
+            websocketSession = client.connectToServer(new Endpoint() {
                 @Override
-                public void onOpen(Session session, EndpointConfig config)
-                {
+                public void onOpen(Session session, EndpointConfig config) {
                     session.addMessageHandler(handler);
                 }
 
                 @Override
                 public void onError(Session session, Throwable thr) {
                     LOGGER.error("Endpoint#onError called", thr);
-                    websocketSession = null;
                 }
 
             }, URI.create(webSocketConnectionURL));
-        }
-        catch (DeploymentException e) {
+        } catch (DeploymentException e) {
             LOGGER.error(e.toString());
             throw new IOException(e);
         }
@@ -419,52 +426,43 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                         if (wantDisconnect) {
                             this.interrupt();
                         }
-
                         if (lastPingSent != lastPingAck || websocketSession == null) {
                             // disconnection happened
                             LOGGER.warn("Connection lost...");
                             try {
-                                if (websocketSession != null)
-                                {
+                                if (websocketSession != null) {
                                     websocketSession.close();
                                 }
-                            }
-                            catch (IOException e) {
+                            } catch (IOException e) {
                                 LOGGER.error("exception while trying to close the websocket ", e);
                             }
                             websocketSession = null;
                             if (reconnectOnDisconnection) {
-                                establishWebsocketConnection();
-                            }
-                            else {
+                                reconnect();
+                            } else {
                                 this.interrupt();
                             }
-                        }
-                        else {
+                        } else {
                             lastPingSent = getNextMessageId();
                             LOGGER.debug("sending ping " + lastPingSent);
                             try {
                                 if (websocketSession.isOpen()) {
                                     websocketSession.getBasicRemote().sendText("{\"type\":\"ping\",\"id\":" + lastPingSent + "}");
+                                } else if (reconnectOnDisconnection) {
+                                    reconnect();
                                 }
-                                else if (reconnectOnDisconnection) {
-                                    establishWebsocketConnection();
-                                }
-                            }
-                            catch (IllegalStateException e) {
+                            } catch (IllegalStateException e) {
                                 LOGGER.warn("exception caught while using websocket ", e);
                                 // websocketSession might be closed in this case
                                 if (reconnectOnDisconnection) {
-                                    establishWebsocketConnection();
+                                    reconnect();
                                 }
                             }
                         }
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         LOGGER.info("monitoring thread interrupted");
                         break;
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                         LOGGER.error("unexpected exception on monitoring thread ", e);
                     }
                 }
@@ -479,18 +477,19 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private void stopConnectionMonitoring() {
         if (connectionMonitoringThread != null) {
-            while (true) {
-                try {
+            while (true)
+            {
+                try{
                     connectionMonitoringThread.interrupt();
                     connectionMonitoringThread.join();
                     break;
-                }
-                catch (InterruptedException ex) {
+                } catch (InterruptedException e) {
                     // ouch - let's try again!
                 }
             }
         }
     }
+
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
@@ -643,23 +642,23 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     @Override
     public SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user) {
-      SlackMessageHandle<SlackChannelReply> handle = new SlackMessageHandle<>(getNextMessageId());
-      Map<String, String> arguments = new HashMap<>();
-      arguments.put("token", authToken);
-      arguments.put("channel", channel.getId());
-      arguments.put("user", user.getId());
-      postSlackCommand(arguments, CHANNELS_INVITE_COMMAND, handle);
-      return handle;
+        SlackMessageHandle<SlackChannelReply> handle = new SlackMessageHandle<>(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channel", channel.getId());
+        arguments.put("user", user.getId());
+        postSlackCommand(arguments, CHANNELS_INVITE_COMMAND, handle);
+        return handle;
     }
-    
+
     @Override
     public SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel) {
-      SlackMessageHandle<ParsedSlackReply> handle = new SlackMessageHandle<>(getNextMessageId());
-      Map<String, String> arguments = new HashMap<>();
-      arguments.put("token", authToken);
-      arguments.put("channel", channel.getId());
-      postSlackCommand(arguments, CHANNELS_ARCHIVE_COMMAND, handle);
-      return handle;
+        SlackMessageHandle<ParsedSlackReply> handle = new SlackMessageHandle<>(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channel", channel.getId());
+        postSlackCommand(arguments, CHANNELS_ARCHIVE_COMMAND, handle);
+        return handle;
     }
 
     @Override public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel)
@@ -951,8 +950,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             LOGGER.debug("pong received " + lastPingAck);
         }
         else if ("reconnect_url".equals(object.get("type").getAsString())) {
-            webSocketConnectionURL = object.get("url").getAsString();
-            LOGGER.debug("new websocket connection received " + webSocketConnectionURL);
+            String newWebSocketConnectionURL = object.get("url").getAsString();
+            LOGGER.debug("new websocket connection received " + newWebSocketConnectionURL);
         }
         else
         {
@@ -1005,9 +1004,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             SlackUser user = users.get(event.getUserId());
             SlackUserImpl newUser = new SlackUserImpl(user.getId(), user.getUserName(), user.getRealName(), user.getUserMail(), user.getUserSkype(), user.getUserTitle(), user.getUserPhone(),
-                user.isDeleted(), user.isAdmin(), user.isOwner(), user.isPrimaryOwner(), user.isRestricted(),
-                user.isUltraRestricted(), user.isBot(), user.getTimeZone(), user.getTimeZoneLabel(), user.getTimeZoneOffset(),
-                event.getPresence());
+                    user.isDeleted(), user.isAdmin(), user.isOwner(), user.isPrimaryOwner(), user.isRestricted(),
+                    user.isUltraRestricted(), user.isBot(), user.getTimeZone(), user.getTimeZoneLabel(), user.getTimeZoneOffset(),
+                    event.getPresence());
             users.put(event.getUserId(), newUser);
         }
     };
