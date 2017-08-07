@@ -564,6 +564,19 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
+    public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName, String title, String initialComment) {
+        SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channels", channel.getId());
+        arguments.put("filename", fileName);
+        arguments.put("title", title);
+        arguments.put("initial_comment", initialComment);
+        postSlackCommandWithFile(arguments, data, fileName,FILE_UPLOAD_COMMAND, handle);
+        return handle;
+    }
+
+    @Override
     public SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, SlackChannel channel) {
         SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
