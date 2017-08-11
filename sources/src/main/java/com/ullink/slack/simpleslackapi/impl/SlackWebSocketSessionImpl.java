@@ -297,6 +297,20 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         disconnectImpl();
         stopConnectionMonitoring();
     }
+
+    public void reconnect() throws IOException{
+        while(true) {
+            if (!this.isConnected()) {
+                connectImpl();
+                break;
+            } else {
+                disconnectImpl();
+            }
+
+        }
+    }
+
+
     @Override
     public boolean isConnected()
     {
@@ -354,7 +368,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 @Override
                 public void onError(Session session, Throwable thr) {
                     LOGGER.error("Endpoint#onError called", thr);
-                    websocketSession = null;
                 }
 
             }, URI.create(webSocketConnectionURL));
@@ -432,7 +445,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                             }
                             websocketSession = null;
                             if (reconnectOnDisconnection) {
-                                establishWebsocketConnection();
+                                reconnect();
                             }
                             else {
                                 this.interrupt();
@@ -446,14 +459,14 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                                     websocketSession.getBasicRemote().sendText("{\"type\":\"ping\",\"id\":" + lastPingSent + "}");
                                 }
                                 else if (reconnectOnDisconnection) {
-                                    establishWebsocketConnection();
+                                    reconnect();
                                 }
                             }
                             catch (IllegalStateException e) {
                                 LOGGER.warn("exception caught while using websocket ", e);
                                 // websocketSession might be closed in this case
                                 if (reconnectOnDisconnection) {
-                                    establishWebsocketConnection();
+                                    reconnect();
                                 }
                             }
                         }
@@ -949,8 +962,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             LOGGER.debug("pong received " + lastPingAck);
         }
         else if ("reconnect_url".equals(object.get("type").getAsString())) {
-            webSocketConnectionURL = object.get("url").getAsString();
-            LOGGER.debug("new websocket connection received " + webSocketConnectionURL);
+            String newWebSocketConnectionURL = object.get("url").getAsString();
+            LOGGER.debug("new websocket connection received " + newWebSocketConnectionURL);
         }
         else
         {
