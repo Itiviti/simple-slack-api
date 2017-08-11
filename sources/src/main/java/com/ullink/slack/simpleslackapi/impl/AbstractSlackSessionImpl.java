@@ -210,6 +210,58 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage)
+    {
+        return sendEphemeralMessage(channel, user, preparedMessage, DEFAULT_CONFIGURATION);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
+    {
+        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
+                .withMessage(message)
+                .withUnfurl(unfurl)
+                .addAttachment(attachment)
+                .build();
+
+        return sendEphemeralMessage(channel, user, preparedMessage, chatConfiguration);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
+    {
+        return sendEphemeralMessage(channel, user, message, attachment, chatConfiguration, DEFAULT_UNFURL);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, boolean unfurl)
+    {
+        return sendEphemeralMessage(channel, user, message, attachment, DEFAULT_CONFIGURATION, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment)
+    {
+        return sendEphemeralMessage(channel, user, message, attachment, DEFAULT_CONFIGURATION);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, boolean unfurl)
+    {
+        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
+                .withMessage(message)
+                .withUnfurl(unfurl)
+                .build();
+        return sendEphemeralMessage(channel, user, preparedMessage, DEFAULT_CONFIGURATION);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message)
+    {
+        return sendEphemeralMessage(channel, user, message, DEFAULT_UNFURL);
+    }
+
+    @Override
     public void addChannelArchivedListener(SlackChannelArchivedListener listener)
     {
         channelArchiveListener.add(listener);
