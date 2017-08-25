@@ -171,6 +171,46 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.sendMessage(channel, message);
     }
 
+    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration)
+    {
+        return delegate.sendEphemeralMessage(channel, user, preparedMessage, chatConfiguration);
+    }
+
+    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage)
+    {
+        return delegate.sendEphemeralMessage(channel, user, preparedMessage);
+    }
+
+    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
+    {
+        return delegate.sendEphemeralMessage(channel, user, message, attachment, chatConfiguration, unfurl);
+    }
+
+    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
+    {
+        return delegate.sendEphemeralMessage(channel, user, message, attachment, chatConfiguration);
+    }
+
+    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, boolean unfurl)
+    {
+        return delegate.sendEphemeralMessage(channel, user, message, attachment, unfurl);
+    }
+
+    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment)
+    {
+        return delegate.sendEphemeralMessage(channel, user, message, attachment);
+    }
+
+    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, boolean unfurl)
+    {
+        return delegate.sendEphemeralMessage(channel, user, message, unfurl);
+    }
+
+    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message)
+    {
+        return delegate.sendEphemeralMessage(channel, user, message);
+    }
+
     @Override public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName)
     {
         return delegate.sendFile(channel, data, fileName);
