@@ -94,6 +94,7 @@ Many thanks to everyone who has contributed to this library :
 * Harry Fox
 * Logan Clément
 * Rhys Kenwell
+* Aman Gupta
 
 (Let me know if I forgot someone, I'll fix that ASAP ;) )
 
