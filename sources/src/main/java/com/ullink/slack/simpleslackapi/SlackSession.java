@@ -83,6 +83,8 @@ public interface SlackSession {
 
     SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte [] data, String fileName);
 
+    SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte [] data, String fileName, String title, String initialComment);
+
     SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte [] data, String fileName);
 
     SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte [] data, String fileName);
