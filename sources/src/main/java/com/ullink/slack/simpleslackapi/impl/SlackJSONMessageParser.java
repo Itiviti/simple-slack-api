@@ -487,5 +487,3 @@ class SlackJSONMessageParser {
         return attachments;
     }
 }
-
-
