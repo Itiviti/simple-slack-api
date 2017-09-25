@@ -253,6 +253,11 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.updateMessage(timeStamp, channel, message);
     }
 
+    @Override public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments)
+    {
+        return delegate.updateMessage(timeStamp, channel, message, attachments);
+    }
+
     @Override public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message)
     {
         return delegate.sendMessageOverWebSocket(channel, message);

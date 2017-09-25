@@ -666,6 +666,19 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
+    public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments) {
+        SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("ts", timeStamp);
+        arguments.put("channel", channel.getId());
+        arguments.put("text", message);
+        arguments.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachments).toString());
+        postSlackCommand(arguments, CHAT_UPDATE_COMMAND, handle);
+        return handle;
+    }
+
+    @Override
     public SlackMessageHandle<SlackMessageReply> addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode) {
         SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
