@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/Ullink/simple-slack-api.svg?branch=master)](https://travis-ci.org/Ullink/simple-slack-api)
 [![GitHub release](https://img.shields.io/github/release/Ullink/simple-slack-api.svg)](https://github.com/Ullink/simple-slack-api/releases)
+[![Coverage Status](https://coveralls.io/repos/github/Ullink/simple-slack-api/badge.svg?branch=master)](https://coveralls.io/github/Ullink/simple-slack-api?branch=master)
 [![Join the chat at https://gitter.im/Ullink/simple-slack-api](https://badges.gitter.im/Ullink/simple-slack-api.svg)](https://gitter.im/Ullink/simple-slack-api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Simple Slack API
