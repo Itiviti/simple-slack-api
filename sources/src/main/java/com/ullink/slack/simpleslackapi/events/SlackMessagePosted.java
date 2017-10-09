@@ -162,6 +162,11 @@ public class SlackMessagePosted implements SlackEvent {
             }
             return UNKNOWN;
         }
+
+        public String getCode()
+        {
+            return code;
+        }
     }
 }
 
