@@ -1,0 +1,15 @@
+apply plugin: "jacoco"
+apply plugin: "com.github.kt3k.coveralls"
+
+jacocoTestReport.dependsOn test
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.enabled true
+    }
+}
+
+coveralls {
+    jacocoReportPath = "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+}
