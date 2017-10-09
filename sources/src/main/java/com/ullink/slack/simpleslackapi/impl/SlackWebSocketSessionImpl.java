@@ -1038,6 +1038,10 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         final JsonObject object = parseObject(message);
 
         LOGGER.debug("receiving from websocket " + message);
+        if (object.get("type") == null) {
+            LOGGER.info("unable to parse message, missing 'type' attribute: " + message);
+            return;
+        }
         if ("pong".equals(object.get("type").getAsString())) {
             lastPingAck = object.get("reply_to").getAsInt();
             LOGGER.debug("pong received " + lastPingAck);
