@@ -120,9 +120,9 @@ class SlackJSONMessageParser {
 
     private static SlackChannelRenamed extractChannelRenamedEvent(SlackSession slackSession, JsonObject obj)
     {
-        String channelId = GsonHelper.getStringOrNull(obj.get("channel"));
-        String newName = GsonHelper.getStringOrNull(obj.get("name"));
-        return new SlackChannelRenamed(slackSession.findChannelById(channelId), newName);
+        JsonObject channelJSONObject = obj.get("channel").getAsJsonObject();
+        SlackChannel channel = parseChannelDescription(channelJSONObject);
+        return new SlackChannelRenamed(channel, channel.getName());
     }
 
     private static SlackChannelDeleted extractChannelDeletedEvent(SlackSession slackSession, JsonObject obj)
