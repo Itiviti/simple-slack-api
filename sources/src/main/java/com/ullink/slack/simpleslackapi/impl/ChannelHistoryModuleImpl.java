@@ -77,14 +77,47 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
                 return fetchHistoryOfChannel(params,FETCH_CHANNEL_HISTORY_COMMAND);
         }
     }
+    @Override
+    public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, LocalDate day, int numberOfMessages,boolean filterEvents) {
+        Map<String, String> params = new HashMap<>();
+        params.put("channel", channelId);
+        if (day != null) {
+            ZonedDateTime start = ZonedDateTime.of(day.atStartOfDay(), ZoneId.of("UTC"));
+            ZonedDateTime end = ZonedDateTime.of(day.atStartOfDay().plusDays(1).minus(1, ChronoUnit.MILLIS), ZoneId.of("UTC"));
+            params.put("oldest", convertDateToSlackTimestamp(start));
+            params.put("latest", convertDateToSlackTimestamp(end));
+        }
+        if (numberOfMessages > -1) {
+            params.put("count", String.valueOf(numberOfMessages));
+        } else {
+            params.put("count", String.valueOf(DEFAULT_HISTORY_FETCH_SIZE));
+        }
+        SlackChannel channel =session.findChannelById(channelId);
+        if(filterEvents) {
+            switch (channel.getType()) {
+                case INSTANT_MESSAGING:
+                    return fetchHistoryOfChannel(params, FETCH_IM_HISTORY_COMMAND);
+                case PRIVATE_GROUP:
+                    return fetchHistoryOfChannel(params, FETCH_GROUP_HISTORY_COMMAND);
+                default:
+                    return fetchHistoryOfChannel(params, FETCH_CHANNEL_HISTORY_COMMAND);
+            }
+        }
+        else
+        {
+            switch (channel.getType()) {
+                case INSTANT_MESSAGING:
+                    return fetchCompleteHistoryOfChannel(params,FETCH_IM_HISTORY_COMMAND);
+                case PRIVATE_GROUP:
+                    return fetchCompleteHistoryOfChannel(params,FETCH_GROUP_HISTORY_COMMAND);
+                default:
+                    return fetchCompleteHistoryOfChannel(params,FETCH_CHANNEL_HISTORY_COMMAND);
+            }
+        }
+    }
 
     private List<SlackMessagePosted> fetchHistoryOfChannel(Map<String, String> params, String command) {
-        SlackMessageHandle<GenericSlackReply> handle = session.postGenericSlackCommand(params, command);
-        GenericSlackReply replyEv = handle.getReply();
-        String answer = replyEv.getPlainAnswer();
-        JsonParser parser = new JsonParser();
-        JsonObject jsonObject = parser.parse(answer).getAsJsonObject();
-        JsonArray events = GsonHelper.getJsonArrayOrNull(jsonObject.get("messages"));
+        JsonArray events = fetchEventsHistoryOfChannel(params,command);
         List<SlackMessagePosted> messages = new ArrayList<>();
         if (events != null) {
             for (JsonElement eventJson : events) {
@@ -95,6 +128,27 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
             }
         }
         return messages;
+    }
+
+    private List<SlackMessagePosted> fetchCompleteHistoryOfChannel(Map<String, String> params, String command) {
+        JsonArray events = fetchEventsHistoryOfChannel(params,command);
+        List<SlackMessagePosted> messages = new ArrayList<>();
+        if (events != null) {
+            for (JsonElement eventJson : events) {
+                JsonObject event = eventJson.getAsJsonObject();
+                    messages.add((SlackMessagePosted) SlackJSONMessageParser.decode(session, event));
+            }
+        }
+        return messages;
+    }
+
+    private JsonArray fetchEventsHistoryOfChannel(Map<String, String> params, String command){
+        SlackMessageHandle<GenericSlackReply> handle = session.postGenericSlackCommand(params, command);
+        GenericSlackReply replyEv = handle.getReply();
+        String answer = replyEv.getPlainAnswer();
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(answer).getAsJsonObject();
+        return GsonHelper.getJsonArrayOrNull(jsonObject.get("messages"));
     }
 
     @Override
