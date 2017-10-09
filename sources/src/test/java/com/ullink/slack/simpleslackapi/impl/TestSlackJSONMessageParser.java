@@ -151,6 +151,11 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments) {
+                return null;
+            }
+
+            @Override
             public SlackMessageHandle addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode) {
                 return null;
             }
