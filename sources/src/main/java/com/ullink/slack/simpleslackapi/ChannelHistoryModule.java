@@ -44,6 +44,8 @@ public interface ChannelHistoryModule {
 
     }
 
+    SlackMessagePosted fetchMessageFromChannel(String channelId, String messageTimestamp);
+
     List<SlackMessagePosted> fetchHistoryOfChannel(String channelName);
 
     List<SlackMessagePosted> fetchHistoryOfChannel(String channelName, LocalDate day);
