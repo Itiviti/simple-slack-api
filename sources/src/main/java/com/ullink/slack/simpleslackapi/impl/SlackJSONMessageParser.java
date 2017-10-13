@@ -93,7 +93,7 @@ class SlackJSONMessageParser {
             case USER_TYPING:
                 return extractUserTypingEvent(slackSession, obj);
             default:
-                return SlackEvent.UNKNOWN_EVENT;
+                return new UnknownEvent(obj.toString());
         }
     }
 
