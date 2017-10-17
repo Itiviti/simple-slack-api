@@ -509,6 +509,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+        if (channel == null) {
+            throw new IllegalArgumentException("Channel can't be null");
+        }
         SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
