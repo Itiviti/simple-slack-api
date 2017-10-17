@@ -5,6 +5,7 @@ import com.ullink.slack.simpleslackapi.replies.*;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public interface SlackSession {
@@ -42,6 +43,9 @@ public interface SlackSession {
     
 
     SlackMessageHandle<ParsedSlackReply> inviteUser(String email, String firstName, boolean setActive);
+
+    SlackMessageHandle<ParsedSlackReply> inviteUser(String email, List<SlackChannel> channels, String firstName,
+                                                    String lastName, boolean resend, boolean restricted, boolean setActive);
 
     void connect() throws IOException;
 

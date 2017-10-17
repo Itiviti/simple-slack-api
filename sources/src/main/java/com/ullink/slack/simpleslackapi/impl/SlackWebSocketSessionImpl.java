@@ -21,6 +21,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackTeamJoinListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
 import com.ullink.slack.simpleslackapi.replies.*;
 import com.ullink.slack.simpleslackapi.utils.ReaderUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -509,6 +510,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+        if (channel == null) {
+            throw new IllegalArgumentException("Channel can't be null");
+        }
         SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
@@ -1081,12 +1085,31 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public SlackMessageHandle<ParsedSlackReply> inviteUser(String email, String firstName, boolean setActive) {
 
+        return inviteUser(email, null, firstName, null, false, false, setActive);
+    }
+
+    @Override
+    public SlackMessageHandle<ParsedSlackReply> inviteUser(String email, List<SlackChannel> channels,
+                                                           String firstName, String lastName, boolean resend,
+                                                           boolean restricted, boolean setActive) {
+
         SlackMessageHandle<ParsedSlackReply> handle = new SlackMessageHandle<>(getNextMessageId());
+        if (channels == null) {
+            channels = Collections.emptyList();
+        }
+        List<String> channelsIds = new ArrayList<>(channels.size());
+        for (SlackChannel channel : channels) {
+            channelsIds.add(channel.getId());
+        }
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("email", email);
+        arguments.put("channels", StringUtils.join(channelsIds, ","));
         arguments.put("first_name", firstName);
-        arguments.put("set_active", ""+setActive);
+        arguments.put("last_name", lastName);
+        arguments.put("resend", "" + resend);
+        arguments.put("restricted", "" + restricted);
+        arguments.put("set_active", "" + setActive);
         postSlackCommand(arguments, INVITE_USER_COMMAND, handle);
         return handle;
     }

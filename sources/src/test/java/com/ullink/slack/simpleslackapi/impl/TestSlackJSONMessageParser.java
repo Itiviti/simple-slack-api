@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class TestSlackJSONMessageParser {
@@ -203,6 +204,11 @@ public class TestSlackJSONMessageParser {
             @Override
             public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive)
             {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<ParsedSlackReply> inviteUser(String email, List<SlackChannel> channels, String firstName, String lastName, boolean resend, boolean restricted, boolean setActive) {
                 return null;
             }
 

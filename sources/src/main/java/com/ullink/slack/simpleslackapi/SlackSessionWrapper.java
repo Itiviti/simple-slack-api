@@ -2,6 +2,7 @@ package com.ullink.slack.simpleslackapi;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.ullink.slack.simpleslackapi.listeners.PinAddedListener;
@@ -114,6 +115,11 @@ public class SlackSessionWrapper implements SlackSession
     @Override public SlackMessageHandle<ParsedSlackReply> inviteUser(String email, String firstName, boolean setActive)
     {
         return delegate.inviteUser(email, firstName, setActive);
+    }
+
+    @Override
+    public SlackMessageHandle<ParsedSlackReply> inviteUser(String email, List<SlackChannel> channels, String firstName, String lastName, boolean resend, boolean restricted, boolean setActive) {
+        return delegate.inviteUser(email, channels, firstName, lastName, resend, restricted, setActive);
     }
 
     @Override public void connect() throws IOException

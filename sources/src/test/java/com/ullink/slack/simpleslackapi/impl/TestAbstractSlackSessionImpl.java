@@ -6,6 +6,8 @@ import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.replies.*;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAbstractSlackSessionImpl
@@ -165,6 +167,11 @@ public class TestAbstractSlackSessionImpl
         @Override
         public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
         {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<ParsedSlackReply> inviteUser(String email, List<SlackChannel> channels, String firstName, String lastName, boolean resend, boolean restricted, boolean setActive) {
             return null;
         }
 
