@@ -6,6 +6,8 @@ import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.replies.*;
 import org.junit.Test;
 
+import java.io.File;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAbstractSlackSessionImpl
@@ -94,6 +96,26 @@ public class TestAbstractSlackSessionImpl
         @Override
         public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName)
         {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendCodeSnippet(SlackChannel channel, String title, String snippet, String language) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendCodeSnippetToUser(SlackUser user, String title, String snippet, String language) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendImage(SlackChannel channel, String title, File img) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendImageToUser(SlackUser user, String title, File img) {
             return null;
         }
 

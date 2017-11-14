@@ -3,6 +3,7 @@ package com.ullink.slack.simpleslackapi;
 import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
@@ -88,6 +89,14 @@ public interface SlackSession {
     SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte [] data, String fileName);
 
     SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte [] data, String fileName);
+
+    public SlackMessageHandle<SlackMessageReply> sendCodeSnippet(SlackChannel channel, String title, String snippet, String language);
+
+    public SlackMessageHandle<SlackMessageReply> sendCodeSnippetToUser(SlackUser user, String title, String snippet, String language);
+
+    public SlackMessageHandle<SlackMessageReply> sendImage(SlackChannel channel, String title, File img);
+
+    public SlackMessageHandle<SlackMessageReply> sendImageToUser(SlackUser user, String title, File img);
 
     SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage);
 

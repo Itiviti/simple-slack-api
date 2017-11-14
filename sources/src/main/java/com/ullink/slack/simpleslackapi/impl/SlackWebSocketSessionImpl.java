@@ -43,10 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.websocket.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.Proxy;
 import java.net.URI;
@@ -642,6 +639,51 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("title", title);
         arguments.put("initial_comment", initialComment);
         postSlackCommandWithFile(arguments, data, fileName,FILE_UPLOAD_COMMAND, handle);
+        return handle;
+    }
+
+    public SlackMessageHandle<SlackMessageReply> sendCodeSnippetToUser(SlackUser user, String title, String snippet, String language) {
+        SlackChannel iMChannel = getIMChannelForUser(user);
+        return sendCodeSnippet(iMChannel, title, snippet, language);
+    }
+
+    public SlackMessageHandle<SlackMessageReply> sendCodeSnippet(SlackChannel channel, String title, String snippet, String language) {
+        SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channels", channel.getId());
+        arguments.put("title", title);
+        arguments.put("filetype", language);
+        postSlackCommandWithFile(arguments, snippet.getBytes(), title, FILE_UPLOAD_COMMAND, handle);
+        return handle;
+    }
+
+    public SlackMessageHandle<SlackMessageReply> sendImageToUser(SlackUser user, String title, File img) {
+        SlackChannel iMChannel = getIMChannelForUser(user);
+        return sendImage(iMChannel, title, img);
+    }
+
+    public SlackMessageHandle<SlackMessageReply> sendImage(SlackChannel channel, String title, File img) {
+        SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
+        Map<String, String> arguments = new HashMap<>();
+        arguments.put("token", authToken);
+        arguments.put("channels", channel.getId());
+        arguments.put("title", title);
+
+        // convert file to byte []
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buf = new byte[1024];
+        try (FileInputStream fis = new FileInputStream(img)) {
+            for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                //Writes to this byte array output stream
+                bos.write(buf, 0, readNum);
+            }
+        } catch (IOException ex) {
+        }
+
+        byte[] imgBytes = bos.toByteArray();
+
+        postSlackCommandWithFile(arguments, imgBytes, title, FILE_UPLOAD_COMMAND, handle);
         return handle;
     }
 
