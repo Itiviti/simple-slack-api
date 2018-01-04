@@ -21,9 +21,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackTeamJoinListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
 import com.ullink.slack.simpleslackapi.replies.*;
 import com.ullink.slack.simpleslackapi.utils.ReaderUtils;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -121,6 +119,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private AtomicLong                        messageId = new AtomicLong();
 
     private final boolean                     reconnectOnDisconnection;
+    private final boolean                     isRateLimitSupported;
     private volatile boolean                  wantDisconnect;
 
     private Thread                            connectionMonitoringThread; //TODO: replace this with a scheduled executor
@@ -251,15 +250,16 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
-    SlackWebSocketSessionImpl(WebSocketContainerProvider webSocketContainerProvider, String authToken, boolean reconnectOnDisconnection, long heartbeat, TimeUnit unit) {
+    SlackWebSocketSessionImpl(WebSocketContainerProvider webSocketContainerProvider, String authToken, boolean reconnectOnDisconnection, boolean isRateLimitSupported, long heartbeat, TimeUnit unit) {
         this.authToken = authToken;
         this.reconnectOnDisconnection = reconnectOnDisconnection;
+        this.isRateLimitSupported = isRateLimitSupported;
         this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : 30000;
         this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(null, -1, null, null);
         addInternalListeners();
     }
 
-    SlackWebSocketSessionImpl(WebSocketContainerProvider webSocketContainerProvider, String authToken, Proxy.Type proxyType, String proxyAddress, int proxyPort, String proxyUser, String proxyPassword, boolean reconnectOnDisconnection, long heartbeat, TimeUnit unit) {
+    SlackWebSocketSessionImpl(WebSocketContainerProvider webSocketContainerProvider, String authToken, Proxy.Type proxyType, String proxyAddress, int proxyPort, String proxyUser, String proxyPassword, boolean reconnectOnDisconnection, boolean isRateLimitSupported, long heartbeat, TimeUnit unit) {
         this.authToken = authToken;
         if (proxyType != null && proxyType != Proxy.Type.DIRECT) {
             this.proxyAddress = proxyAddress;
@@ -269,6 +269,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             this.proxyPassword = proxyPassword;
         }
         this.reconnectOnDisconnection = reconnectOnDisconnection;
+        this.isRateLimitSupported = isRateLimitSupported;
         this.heartbeat = heartbeat != 0 ? unit.toMillis(heartbeat) : DEFAULT_HEARTBEAT_IN_MILLIS;
         this.webSocketContainerProvider = webSocketContainerProvider != null ? webSocketContainerProvider : new DefaultWebSocketContainerProvider(this.proxyAddress, this.proxyPort, this.proxyUser, this.proxyPassword);
         addInternalListeners();
@@ -326,8 +327,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         LOGGER.info("connecting to slack");
         HttpClient httpClient = getHttpClient();
         HttpGet request = new HttpGet(SLACK_HTTPS_AUTH_URL + authToken);
-        HttpResponse response;
-        response = httpClient.execute(request);
+        HttpResponse response = httpClient.execute(request);
         LOGGER.debug(response.getStatusLine().toString());
         String jsonResponse = consumeToString(response.getEntity().getContent());
         SlackJSONSessionStatusParser sessionParser = new SlackJSONSessionStatusParser(jsonResponse);
@@ -911,26 +911,26 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     private HttpClient getHttpClient() {
-        HttpClient client;
+        HttpClientBuilder builder = HttpClientBuilder.create();
         if (proxyHost != null)
         {
             if(null == this.proxyUser)
             {
-                client = HttpClientBuilder.create().setRoutePlanner(new DefaultProxyRoutePlanner(proxyHost)).build();
+                builder.setRoutePlanner(new DefaultProxyRoutePlanner(proxyHost));
             }
             else
             {
                 RequestConfig config = RequestConfig.custom().setProxy(this.proxyHost).build();
                 CredentialsProvider credsProvider = new BasicCredentialsProvider();
                 credsProvider.setCredentials(new AuthScope(this.proxyHost), new UsernamePasswordCredentials(this.proxyUser, this.proxyPassword));
-                client = HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).setDefaultRequestConfig(config).build();
+                builder.setDefaultCredentialsProvider(credsProvider).setDefaultRequestConfig(config);
             }
         }
-        else
+        if (isRateLimitSupported)
         {
-            client = HttpClientBuilder.create().build();
+            builder.setServiceUnavailableRetryStrategy(new SlackRateLimitRetryStrategy());
         }
-        return client;
+        return builder.build();
     }
 
     @Override

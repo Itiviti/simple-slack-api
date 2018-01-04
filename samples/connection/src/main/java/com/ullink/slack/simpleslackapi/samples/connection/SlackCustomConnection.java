@@ -114,7 +114,9 @@ public class SlackCustomConnection
                             }
                         };
                     }
-                }).build();
+                })
+                .withRateLimitSupport(false) //opt-out from rate limit auto retry
+                .build();
         session.connect();
     }
 }
