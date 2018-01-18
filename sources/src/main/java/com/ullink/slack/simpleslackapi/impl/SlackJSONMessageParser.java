@@ -53,7 +53,7 @@ class SlackJSONMessageParser {
 
     static SlackEvent decode(SlackSession slackSession, JsonObject obj) {
         if (obj.get("type") == null) {
-            return SlackEvent.UNKNOWN_EVENT;
+          return new UnknownEvent(obj.toString());
         }
         String type = GsonHelper.getStringOrNull(obj.get("type"));
         EventType eventType = EventType.getByCode(type);
@@ -93,7 +93,7 @@ class SlackJSONMessageParser {
             case USER_TYPING:
                 return extractUserTypingEvent(slackSession, obj);
             default:
-                return SlackEvent.UNKNOWN_EVENT;
+                return new UnknownEvent(obj.toString());
         }
     }
 
@@ -170,7 +170,7 @@ class SlackJSONMessageParser {
             case FILE_SHARE:
                 return parseMessagePublishedWithFile(obj, channel, ts, slackSession);
             case MESSAGE_REPLIED:
-                return SlackEvent.UNKNOWN_EVENT; // This event should not be handled
+                return new UnknownEvent(obj.toString()); // This event should not be handled
             default:
                 return parseMessagePublished(obj, channel, ts, slackSession);
         }

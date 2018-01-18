@@ -4,10 +4,10 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
         classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
         classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
+        classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1"
     }
 }
 
@@ -15,14 +15,14 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'signing'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 apply plugin: 'nebula.optional-base'
 apply plugin: 'com.github.ben-manes.versions'
+apply from: project.rootProject.file("gradle/scripts/coverage.gradle")
 
 group = 'com.ullink.slack'
 archivesBaseName = 'simpleslackapi'
-version = '1.2.0-SNAPSHOT'
+version = '1.2.0'
 
 
 def pomConfig = {
@@ -153,38 +153,6 @@ signing {
     sign configurations.archives
 }
 
-bintray {
-    if (this.hasProperty('bintray_user')) {
-        user = bintray_user //this usually comes from gradle.properties file in ~/.gradle
-        key = bintray_api_key //this usually comes from gradle.properties file in ~/.gradle
-
-        publications = ['mavenJava'] //When uploading Maven-based publication files
-        dryRun = false //Whether to run this as dry-run, without deploying
-        publish = true //If version should be auto published after an upload
-        pkg {
-            repo = 'maven'
-            name = 'com.ullink.slack:simpleslackapi'
-            desc = 'simple slack API package!'
-            websiteUrl = 'https://github.com/Ullink/simple-slack-api'
-            issueTrackerUrl = 'https://github.com/Ullink/simple-slack-api/issues'
-            vcsUrl = 'https://github.com/Ullink/simple-slack-api.git'
-            licenses = ['Apache-2.0']
-            labels = ['slack']
-            publicDownloadNumbers = true
-            version {
-                name = project.version //Bintray logical version name
-                desc = ''
-                mavenCentralSync {
-                    sync = true //Optional (true by default). Determines whether to sync the version to Maven Central.
-                    user = ossrhUsername //OSS user token
-                    password = ossrhPassword //OSS user password
-                    close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
-                }
-            }
-        }
-    }
-}
-
 test {
     testLogging {
         exceptionFormat = 'full'
@@ -192,19 +160,15 @@ test {
     }
 }
 
-
-
 dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'org.apache.httpcomponents:httpclient:4.5.3'
     compile 'org.apache.httpcomponents:httpmime:4.5.3'
-    //compile 'ch.qos.logback:logback-classic:1.2.3', optional //Don't always need a logging implementation, especially as a library
     compile 'org.threeten:threetenbp:1.3.1'
     compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.13.1'
     compile 'javax.websocket:javax.websocket-api:1.1'
 
-    // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly 'org.projectlombok:lombok:1.16.16'
 
 

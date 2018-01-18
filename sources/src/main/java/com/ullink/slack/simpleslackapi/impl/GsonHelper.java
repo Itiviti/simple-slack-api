@@ -30,12 +30,12 @@ class GsonHelper
 
     static Boolean getBooleanOrDefaultValue(JsonElement jsonElement, Boolean defaultValue)
     {
-        return jsonElement != null ? jsonElement.getAsBoolean() : defaultValue;
+        return jsonElement != null ? (Boolean) jsonElement.getAsBoolean() : defaultValue;
     }
 
     static Long getLongOrDefaultValue(JsonElement jsonElement, Long defaultValue)
     {
-        return jsonElement != null && !jsonElement.isJsonNull() ? jsonElement.getAsLong() : defaultValue;
+        return jsonElement != null && !jsonElement.isJsonNull() ? (Long) jsonElement.getAsLong() : defaultValue;
     }
 
     static String getStringOrDefaultValue(JsonElement jsonElement, String defaultValue)
