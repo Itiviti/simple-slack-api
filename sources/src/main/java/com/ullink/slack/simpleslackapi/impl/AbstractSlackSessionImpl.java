@@ -132,7 +132,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     {
         for (SlackUser user : users.values())
         {
-            if (userMail.equals(user.getUserMail()))
+            if (userMail.equalsIgnoreCase(user.getUserMail()))
             {
                 return user;
             }
