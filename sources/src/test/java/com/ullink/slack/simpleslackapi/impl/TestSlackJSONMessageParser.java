@@ -72,10 +72,10 @@ public class TestSlackJSONMessageParser {
 
                 integrations.put(integration.getId(),integration);
 
-                SlackChannel channel1 = new SlackChannel("TESTCHANNEL1", "testchannel1", null, null, false, false, false);
-                SlackChannel channel2 = new SlackChannel("TESTCHANNEL2", "testchannel2", null, null, false, false, false);
-                SlackChannel channel3 = new SlackChannel("TESTCHANNEL3", "testchannel3", null, null, false, false, false);
-                SlackChannel channel4 = new SlackChannel("NEWCHANNEL", "new channel", "To have something new", "This channel so new it aint even old yet", false, false, false);
+                SlackChannel channel1 = new SlackChannel("TESTCHANNEL1", "testchannel1", getMembersForChannelCallable("TESTCHANNEL1"), null, null, false, false, false);
+                SlackChannel channel2 = new SlackChannel("TESTCHANNEL2", "testchannel2", getMembersForChannelCallable("TESTCHANNEL2"), null, null, false, false, false);
+                SlackChannel channel3 = new SlackChannel("TESTCHANNEL3", "testchannel3", getMembersForChannelCallable("TESTCHANNEL3"), null, null, false, false, false);
+                SlackChannel channel4 = new SlackChannel("NEWCHANNEL", "new channel", getMembersForChannelCallable("NEWCHANNEL"), "To have something new", "This channel so new it aint even old yet", false, false, false);
                 channels.put(channel1.getId(), channel1);
                 channels.put(channel2.getId(), channel2);
                 channels.put(channel3.getId(), channel3);
@@ -193,6 +193,11 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public GetMembersForChannelCallable getMembersForChannelCallable(String channelId) {
+                return null;
+            }
+
+            @Override
             public SlackMessageHandle<EmojiSlackReply> listEmoji() {
                 return null;
             }
@@ -246,7 +251,7 @@ public class TestSlackJSONMessageParser {
         };
         try {
             session.connect();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

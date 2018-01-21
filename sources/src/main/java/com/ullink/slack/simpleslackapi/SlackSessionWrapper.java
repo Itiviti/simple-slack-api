@@ -25,7 +25,11 @@ import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackTeamJoinListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
 import com.ullink.slack.simpleslackapi.listeners.UserTypingListener;
-import com.ullink.slack.simpleslackapi.replies.*;
+import com.ullink.slack.simpleslackapi.replies.EmojiSlackReply;
+import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
+import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
+import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 
 public class SlackSessionWrapper implements SlackSession
 {
@@ -49,6 +53,11 @@ public class SlackSessionWrapper implements SlackSession
     @Override public Collection<SlackUser> getUsers()
     {
         return delegate.getUsers();
+    }
+
+    @Override
+    public GetMembersForChannelCallable getMembersForChannelCallable(String channelId) {
+        return delegate.getMembersForChannelCallable(channelId);
     }
 
     @Override public Collection<SlackBot> getBots()

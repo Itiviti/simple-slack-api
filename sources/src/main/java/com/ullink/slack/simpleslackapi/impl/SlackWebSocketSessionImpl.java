@@ -52,7 +52,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String> {
+public class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String> {
     private static final String SLACK_API_SCHEME = "https";
 
     private static final String SLACK_API_HOST = "slack.com";
@@ -99,6 +99,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private static final String LIST_USERS = "users.list";
 
+    private static final String CONVERSTATIONS_MEMBERS = "conversations.members";
 
     private static final Logger               LOGGER                     = LoggerFactory.getLogger(SlackWebSocketSessionImpl.class);
 
@@ -250,6 +251,26 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
+    public class GetMembersForChannelImpl implements GetMembersForChannelCallable {
+        private String channelId;
+
+        GetMembersForChannelImpl() {}
+
+        GetMembersForChannelImpl(String channelId) {
+            this.channelId = channelId;
+        }
+
+        public GetMembersForChannelImpl setChannelId(String channelId) {
+            this.channelId = channelId;
+            return this;
+        }
+
+        @Override
+        public Set<SlackUser> call() {
+            return getMembersForChannel(channelId);
+        }
+    }
+
     SlackWebSocketSessionImpl(WebSocketContainerProvider webSocketContainerProvider, String authToken, boolean reconnectOnDisconnection, boolean isRateLimitSupported, long heartbeat, TimeUnit unit) {
         this.authToken = authToken;
         this.reconnectOnDisconnection = reconnectOnDisconnection;
@@ -303,7 +324,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         stopConnectionMonitoring();
     }
 
-    public void reconnect() throws IOException{
+    public void reconnect() throws Exception{
         while(true) {
             if (!this.isConnected()) {
                 connectImpl();
@@ -330,7 +351,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         HttpResponse response = httpClient.execute(request);
         LOGGER.debug(response.getStatusLine().toString());
         String jsonResponse = consumeToString(response.getEntity().getContent());
-        SlackJSONSessionStatusParser sessionParser = new SlackJSONSessionStatusParser(jsonResponse);
+        final SlackJSONSessionStatusParser sessionParser = new SlackJSONSessionStatusParser(jsonResponse, new GetMembersForChannelImpl());
         sessionParser.parse();
         if (sessionParser.getError() != null)
         {
@@ -350,6 +371,40 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         webSocketConnectionURL = sessionParser.getWebSocketURL();
         LOGGER.debug("retrieved websocket URL : " + webSocketConnectionURL);
         establishWebsocketConnection();
+    }
+
+    private Set<SlackUser> getMembersForChannel(String channelId) {
+        JsonParser parser = new JsonParser();
+        Set<SlackUser> membersForChannel = new HashSet<>();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("token", authToken);
+        params.put("channel", channelId);
+        JsonObject answerJson;
+
+        do {
+          SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, CONVERSTATIONS_MEMBERS);
+          String answer = handle.getReply().getPlainAnswer();
+          answerJson = parser.parse(answer).getAsJsonObject();
+          for (JsonElement member : answerJson.get("members").getAsJsonArray()) {
+            membersForChannel.add(users.get(member.getAsString()));
+          }
+          updateCursor(params, answerJson);
+        } while (hasMoreMembers(answerJson));
+
+        return membersForChannel;
+    }
+
+    private boolean hasMoreMembers(JsonObject answerJson) {
+      return !answerJson.get("response_metadata").isJsonNull() &&
+          !answerJson.get("response_metadata").getAsJsonObject().get("next_cursor").isJsonNull() &&
+          !answerJson.get("response_metadata").getAsJsonObject().get("next_cursor").getAsString().isEmpty();
+    }
+
+    private void updateCursor(Map<String, String> params, JsonObject answerJson) {
+      if (hasMoreMembers(answerJson)) {
+        params.put("cursor", answerJson.get("response_metadata").getAsJsonObject().get("next_cursor").getAsString());
+      }
     }
 
     private void establishWebsocketConnection() throws IOException
@@ -479,7 +534,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                         LOGGER.info("monitoring thread interrupted");
                         break;
                     }
-                    catch (IOException e) {
+                    catch (Exception e) {
                         LOGGER.error("unexpected exception on monitoring thread ", e);
                     }
                 }
@@ -796,6 +851,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             return null;
         }
         return handle;
+    }
+
+    @Override
+    public GetMembersForChannelImpl getMembersForChannelCallable(String channelId) {
+      return new GetMembersForChannelImpl(channelId);
     }
 
     public SlackMessageHandle<EmojiSlackReply> listEmoji() {
@@ -1116,7 +1176,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         @Override public void onEvent(SlackChannelArchived event, SlackSession session)
         {
             SlackChannel channel = channels.get(event.getSlackChannel().getId());
-            SlackChannel newChannel = new SlackChannel(channel.getId(), channel.getName(), channel.getTopic(), channel.getPurpose(), channel.isDirect(), channel.isMember(), true);
+            SlackChannel newChannel = new SlackChannel(channel.getId(), channel.getName(), getMembersForChannelCallable(channel.getId()), channel.getTopic(), channel.getPurpose(), channel.isDirect(), channel.isMember(), true);
             channels.put(newChannel.getId(), newChannel);
         }
     };
@@ -1142,7 +1202,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         @Override public void onEvent(SlackChannelRenamed event, SlackSession session)
         {
             SlackChannel channel = channels.get(event.getSlackChannel().getId());
-            SlackChannel newChannel = new SlackChannel(channel.getId(), event.getNewName(), channel.getTopic(), channel.getPurpose(), channel.isDirect(), channel.isMember(), channel.isArchived());
+            SlackChannel newChannel = new SlackChannel(channel.getId(), event.getNewName(), getMembersForChannelCallable(channel.getId()), channel.getTopic(), channel.getPurpose(), channel.isDirect(), channel.isMember(), channel.isArchived());
             channels.put(newChannel.getId(), newChannel);
         }
     };
@@ -1152,7 +1212,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         @Override public void onEvent(SlackChannelUnarchived event, SlackSession session)
         {
             SlackChannel channel = channels.get(event.getSlackChannel().getId());
-            SlackChannel newChannel = new SlackChannel(channel.getId(), channel.getName(), channel.getTopic(), channel.getPurpose(), channel.isDirect(), channel.isMember(), false);
+            SlackChannel newChannel = new SlackChannel(channel.getId(), channel.getName(), getMembersForChannelCallable(channel.getId()), channel.getTopic(), channel.getPurpose(), channel.isDirect(), channel.isMember(), false);
             channels.put(newChannel.getId(), newChannel);
         }
     };

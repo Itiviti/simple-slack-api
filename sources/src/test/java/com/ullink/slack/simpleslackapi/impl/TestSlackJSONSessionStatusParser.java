@@ -22,7 +22,7 @@ public class TestSlackJSONSessionStatusParser
             strBuilder.append(line);
         }
 
-        SlackJSONSessionStatusParser parser = new SlackJSONSessionStatusParser(strBuilder.toString());
+      SlackJSONSessionStatusParser parser = new SlackJSONSessionStatusParser(strBuilder.toString(), null);
         parser.parse();
 
         assertThat(parser.getChannels()).containsOnlyKeys("CHANNELID1", "CHANNELID2", "CHANNELID3", "GROUPID1", "DIM01");
