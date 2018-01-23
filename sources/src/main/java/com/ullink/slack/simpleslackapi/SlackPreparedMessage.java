@@ -9,7 +9,7 @@ public class SlackPreparedMessage {
     private final String message;
     private final boolean unfurl;
     private final boolean linkNames;
-    private final SlackAttachment[] attachments;
+    private final List<SlackAttachment> attachments;
     private final String threadTimestamp;
     private final boolean replyBroadcast;
 
@@ -17,7 +17,7 @@ public class SlackPreparedMessage {
         this.message = message;
         this.unfurl = unfurl;
         this.linkNames = linkNames;
-        this.attachments = attachments;
+        this.attachments = Arrays.asList(attachments);
         this.threadTimestamp = threadTimestamp;
         this.replyBroadcast = replyBroadcast;
     }
@@ -35,7 +35,7 @@ public class SlackPreparedMessage {
     }
 
     public SlackAttachment[] getAttachments() {
-        return attachments;
+        return attachments.toArray(new SlackAttachment[]{});
     }
 
     public String getThreadTimestamp() {
@@ -120,7 +120,7 @@ public class SlackPreparedMessage {
         return "SlackPreparedMessage{" +
                 "message='" + message + '\'' +
                 ", unfurl=" + unfurl +
-                ", attachments=" + Arrays.toString(attachments) +
+                ", attachments=" + attachments +
                 '}';
     }
 }

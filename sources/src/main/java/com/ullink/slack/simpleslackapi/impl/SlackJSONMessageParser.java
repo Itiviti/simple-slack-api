@@ -12,7 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 class SlackJSONMessageParser {
+    private static final Logger LOGGER                     = LoggerFactory.getLogger(SlackJSONMessageParser.class);
 
     public static enum SlackMessageSubType
     {
@@ -270,6 +274,7 @@ class SlackJSONMessageParser {
             file.setImageExifRotation(GsonHelper.getLongOrNull(rawFile.get("image_exif_rotation")));
         } catch(Exception e){
             //this properties will be null if something goes wrong
+            LOGGER.error("Failed to parse slack file", e);
         }
         file.setPermalink(GsonHelper.getStringOrNull(rawFile.get("permalink")));
         file.setPermalinkPublic(GsonHelper.getStringOrNull(rawFile.get("permalink_public")));

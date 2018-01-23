@@ -56,7 +56,7 @@ class SlackJSONParsingUtils {
         {
             slackPresence = SlackPersona.SlackPresence.AWAY;
         }
-        return new SlackUserImpl(id, name, realName, email, skype, title, phone, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot, tz, tzLabel, tzOffset == null ? null : new Integer(tzOffset.intValue()), slackPresence);
+        return new SlackUserImpl(id, name, realName, email, skype, title, phone, deleted, admin, owner, primaryOwner, restricted, ultraRestricted, bot, tz, tzLabel, tzOffset, slackPresence);
     }
 
     static final SlackChannel buildSlackChannel(JsonObject jsonChannel, Map<String, SlackUser> knownUsersById) {

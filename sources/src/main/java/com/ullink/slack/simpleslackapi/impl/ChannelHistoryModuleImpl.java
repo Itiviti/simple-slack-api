@@ -159,7 +159,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
         return messages;
     }
 
-    public class ChannelHistoryReactionAddedListener implements ReactionAddedListener {
+    public static class ChannelHistoryReactionAddedListener implements ReactionAddedListener {
 
         List<SlackMessagePosted> messages = new ArrayList<>();
 
@@ -174,7 +174,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
                 for (String reaction : message.getReactions().keySet()) {
                     if (emojiName.equals(reaction)) {
                         int count = message.getReactions().get(emojiName);
-                        message.getReactions().put(emojiName, count++);
+                        message.getReactions().put(emojiName, ++count);
                         return;
                     }
                 }
@@ -183,7 +183,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
         }
     };
 
-    public class ChannelHistoryReactionRemovedListener implements ReactionRemovedListener {
+    public static class ChannelHistoryReactionRemovedListener implements ReactionRemovedListener {
 
         List<SlackMessagePosted> messages = new ArrayList<>();
 
@@ -210,7 +210,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
         }
     }
 
-    public class ChannelHistoryMessagePostedListener implements SlackMessagePostedListener {
+    public static class ChannelHistoryMessagePostedListener implements SlackMessagePostedListener {
 
         List<SlackMessagePosted> messages = new ArrayList<>();
 
