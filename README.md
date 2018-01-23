@@ -96,6 +96,7 @@ Many thanks to everyone who has contributed to this library :
 * Logan Clément
 * Rhys Kenwell
 * Aman Gupta
+* Miklos Sagi
 
 (Let me know if I forgot someone, I'll fix that ASAP ;) )
 
