@@ -82,6 +82,10 @@ public class SlackAction {
             this.dismissText = dismissText;
         }
 
+        public SlackConfirmation() {
+
+        }
+
         public String getTitle() {
             return title;
         }

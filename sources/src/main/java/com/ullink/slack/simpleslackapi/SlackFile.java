@@ -28,7 +28,7 @@ public class SlackFile {
     private String comment;
     
     public SlackFile() {
-        super();
+
     }
 
     public String getId() {
