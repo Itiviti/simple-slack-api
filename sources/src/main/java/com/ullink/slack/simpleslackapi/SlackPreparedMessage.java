@@ -4,6 +4,7 @@ package com.ullink.slack.simpleslackapi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class SlackPreparedMessage {
     private final String message;
@@ -122,5 +123,26 @@ public class SlackPreparedMessage {
                 ", unfurl=" + unfurl +
                 ", attachments=" + Arrays.toString(attachments) +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SlackPreparedMessage that = (SlackPreparedMessage) o;
+        return isUnfurl() == that.isUnfurl() &&
+                isLinkNames() == that.isLinkNames() &&
+                isReplyBroadcast() == that.isReplyBroadcast() &&
+                Objects.equals(getMessage(), that.getMessage()) &&
+                Arrays.equals(getAttachments(), that.getAttachments()) &&
+                Objects.equals(getThreadTimestamp(), that.getThreadTimestamp());
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = Objects.hash(getMessage(), isUnfurl(), isLinkNames(), getThreadTimestamp(), isReplyBroadcast());
+        result = 31 * result + Arrays.hashCode(getAttachments());
+        return result;
     }
 }
