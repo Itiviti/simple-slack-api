@@ -4,14 +4,17 @@ package com.ullink.slack.simpleslackapi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class SlackPreparedMessage {
-    private final String message;
-    private final boolean unfurl;
-    private final boolean linkNames;
-    private final List<SlackAttachment> attachments;
-    private final String threadTimestamp;
-    private final boolean replyBroadcast;
+
+    private String message;
+    private boolean unfurl;
+    private boolean linkNames;
+    private List<SlackAttachment> attachments;
+    private String threadTimestamp;
+    private boolean replyBroadcast;
+
 
     private SlackPreparedMessage(String message, boolean unfurl, boolean linkNames, SlackAttachment[] attachments, String threadTimestamp, boolean replyBroadcast) {
         this.message = message;
@@ -20,6 +23,10 @@ public class SlackPreparedMessage {
         this.attachments = Arrays.asList(attachments);
         this.threadTimestamp = threadTimestamp;
         this.replyBroadcast = replyBroadcast;
+    }
+
+    public SlackPreparedMessage(){
+
     }
 
     public String getMessage() {
@@ -122,5 +129,26 @@ public class SlackPreparedMessage {
                 ", unfurl=" + unfurl +
                 ", attachments=" + attachments +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SlackPreparedMessage that = (SlackPreparedMessage) o;
+        return isUnfurl() == that.isUnfurl() &&
+                isLinkNames() == that.isLinkNames() &&
+                isReplyBroadcast() == that.isReplyBroadcast() &&
+                Objects.equals(getMessage(), that.getMessage()) &&
+                Arrays.equals(getAttachments(), that.getAttachments()) &&
+                Objects.equals(getThreadTimestamp(), that.getThreadTimestamp());
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = Objects.hash(getMessage(), isUnfurl(), isLinkNames(), getThreadTimestamp(), isReplyBroadcast());
+        result = 31 * result + Arrays.hashCode(getAttachments());
+        return result;
     }
 }
