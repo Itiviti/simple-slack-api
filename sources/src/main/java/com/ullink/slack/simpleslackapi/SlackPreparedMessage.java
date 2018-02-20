@@ -7,18 +7,20 @@ import java.util.List;
 import java.util.Objects;
 
 public class SlackPreparedMessage {
+
     private String message;
     private boolean unfurl;
     private boolean linkNames;
-    private SlackAttachment[] attachments;
+    private List<SlackAttachment> attachments;
     private String threadTimestamp;
     private boolean replyBroadcast;
+
 
     private SlackPreparedMessage(String message, boolean unfurl, boolean linkNames, SlackAttachment[] attachments, String threadTimestamp, boolean replyBroadcast) {
         this.message = message;
         this.unfurl = unfurl;
         this.linkNames = linkNames;
-        this.attachments = attachments;
+        this.attachments = Arrays.asList(attachments);
         this.threadTimestamp = threadTimestamp;
         this.replyBroadcast = replyBroadcast;
     }
@@ -40,7 +42,7 @@ public class SlackPreparedMessage {
     }
 
     public SlackAttachment[] getAttachments() {
-        return attachments;
+        return attachments.toArray(new SlackAttachment[]{});
     }
 
     public String getThreadTimestamp() {
@@ -125,7 +127,7 @@ public class SlackPreparedMessage {
         return "SlackPreparedMessage{" +
                 "message='" + message + '\'' +
                 ", unfurl=" + unfurl +
-                ", attachments=" + Arrays.toString(attachments) +
+                ", attachments=" + attachments +
                 '}';
     }
 

@@ -48,6 +48,7 @@ import java.io.Reader;
 import java.net.ConnectException;
 import java.net.Proxy;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -234,7 +235,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 case USER_TYPING:
                     dispatchImpl((UserTyping) event, userTypingListener);
                     break;
-                case UNKNOWN:
+                default:
                     LOGGER.warn("event of type " + event.getEventType() + " not handled: " + ((UnknownEvent)event).getJsonPayload());
             }
         }
@@ -867,7 +868,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             builder.addBinaryBody("file",fileContent, ContentType.DEFAULT_BINARY,fileName);
             request.setEntity(builder.build());
             HttpResponse response = client.execute(request);
-            String jsonResponse = ReaderUtils.readAll(new InputStreamReader(response.getEntity().getContent()));
+            String jsonResponse = ReaderUtils.readAll(new InputStreamReader(response.getEntity().getContent(), Charset.forName("UTF-8")));
             LOGGER.debug("PostMessage return: " + jsonResponse);
             ParsedSlackReply reply = SlackJSONReplyParser.decode(parseObject(jsonResponse),this);
             handle.setReply(reply);
