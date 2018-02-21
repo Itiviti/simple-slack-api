@@ -1,12 +1,45 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.*;
-import com.ullink.slack.simpleslackapi.listeners.*;
-import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import com.ullink.slack.simpleslackapi.SlackAttachment;
+import com.ullink.slack.simpleslackapi.SlackBot;
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackChatConfiguration;
+import com.ullink.slack.simpleslackapi.SlackIntegration;
+import com.ullink.slack.simpleslackapi.SlackMessageHandle;
+import com.ullink.slack.simpleslackapi.SlackPersona;
+import com.ullink.slack.simpleslackapi.SlackPreparedMessage;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.SlackTeam;
+import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.listeners.PinAddedListener;
+import com.ullink.slack.simpleslackapi.listeners.PinRemovedListener;
+import com.ullink.slack.simpleslackapi.listeners.PresenceChangeListener;
+import com.ullink.slack.simpleslackapi.listeners.ReactionAddedListener;
+import com.ullink.slack.simpleslackapi.listeners.ReactionRemovedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelJoinedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelLeftListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackDisconnectedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackTeamJoinListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
+import com.ullink.slack.simpleslackapi.listeners.UserTypingListener;
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
@@ -102,7 +135,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
             // direct channel case
             if (channelId != null && channelId.startsWith("D"))
             {
-                toReturn = new SlackChannel(channelId, "", "", "", true, false, false);
+                toReturn = new SlackChannel(channelId, "", getMembersForChannelCallable(channelId),"", "", true, false, false);
             }
         }
         return toReturn;
