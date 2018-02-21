@@ -485,7 +485,18 @@ class SlackJSONMessageParser {
                             GsonHelper.getBooleanOrDefaultValue(field.get("short"),false));
                 }
             }
+            if (obj.get("actions") != null) {
+                for (JsonElement fieldElement : obj.get("actions").getAsJsonArray()) {
+                    JsonObject action = fieldElement.getAsJsonObject();
+                    slackAttachment.addAction(
+                            GsonHelper.getStringOrNull(action.get("name")),
+                            GsonHelper.getStringOrNull(action.get("value")),
+                            GsonHelper.getStringOrNull(action.get("text")),
+                            GsonHelper.getStringOrNull(action.get("type"))
+                    );
 
+                }
+            }
             attachments.add(slackAttachment);
         }
 
