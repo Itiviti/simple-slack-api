@@ -1,11 +1,11 @@
 package com.ullink.slack.simpleslackapi;
 
+import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import org.threeten.bp.LocalDate;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import org.threeten.bp.LocalDate;
 
 public interface ChannelHistoryModule {
 
@@ -65,6 +65,10 @@ public interface ChannelHistoryModule {
     List<SlackMessagePosted> fetchUpdatingHistoryOfChannel(String channelId, int numberOfMessages);
 
     List<SlackMessagePosted> fetchUpdatingHistoryOfChannel(String channelId, LocalDate day, int numberOfMessages);
+
+    void markHistoryOfChannelAsRead(String channelId, String messageTimestamp);
+
+    void markHistoryOfChannelAsRead(String channelId);
 
     
 }

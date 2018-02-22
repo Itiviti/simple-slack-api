@@ -1,30 +1,26 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ullink.slack.simpleslackapi.ChannelHistoryModule;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
+import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.ReactionAdded;
 import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import com.ullink.slack.simpleslackapi.listeners.ReactionAddedListener;
+import com.ullink.slack.simpleslackapi.listeners.ReactionRemovedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.temporal.ChronoUnit;
-import com.ullink.slack.simpleslackapi.ChannelHistoryModule;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.listeners.ReactionAddedListener;
-import com.ullink.slack.simpleslackapi.listeners.ReactionRemovedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
+
+import java.util.*;
 
 public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
@@ -32,6 +28,9 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
     private static final String FETCH_CHANNEL_HISTORY_COMMAND = "channels.history";
     private static final String FETCH_GROUP_HISTORY_COMMAND = "groups.history";
     private static final String FETCH_IM_HISTORY_COMMAND = "im.history";
+    private static final String MARK_CHANNEL_HISTORY_COMMAND = "channels.mark";
+    private static final String MARK_GROUP_HISTORY_COMMAND = "groups.mark";
+    private static final String MARK_IM_HISTORY_COMMAND = "im.mark";
     private static final int DEFAULT_HISTORY_FETCH_SIZE = 1000;
 
     public ChannelHistoryModuleImpl(SlackSession session) {
@@ -158,6 +157,45 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
         session.addMessagePostedListener(new ChannelHistoryMessagePostedListener(messages));
         return messages;
     }
+
+	@Override
+	public void markHistoryOfChannelAsRead(String channelId, String messageTimestamp) {
+		Map<String, String> params = new HashMap<>();
+		params.put("channel", channelId);
+		params.put("ts", messageTimestamp);
+		SlackChannel channel = session.findChannelById(channelId);
+		switch (channel.getType()) {
+			case INSTANT_MESSAGING:
+				markHistoryOfChannelAsRead(params, MARK_IM_HISTORY_COMMAND);
+				break;
+			case PRIVATE_GROUP:
+				markHistoryOfChannelAsRead(params, MARK_GROUP_HISTORY_COMMAND);
+				break;
+			default:
+				markHistoryOfChannelAsRead(params, MARK_CHANNEL_HISTORY_COMMAND);
+				break;
+		}
+	}
+
+	@Override
+	public void markHistoryOfChannelAsRead(String channelId) {
+		markHistoryOfChannelAsRead(channelId, convertDateToSlackTimestamp(ZonedDateTime.now()));
+
+	}
+
+    private void markHistoryOfChannelAsRead(Map<String, String> params, String command) {
+        SlackMessageHandle<GenericSlackReply> handle = session.postGenericSlackCommand(params, command);
+        GenericSlackReply replyEv = handle.getReply();
+        String answer = replyEv.getPlainAnswer();
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(answer).getAsJsonObject();
+        boolean result = GsonHelper.getBooleanOrDefaultValue(jsonObject.get("ok"),false);
+        if(!result){
+			throw new IllegalArgumentException(GsonHelper.getStringOrDefaultValue(jsonObject.get("error"),"channel_not_found"));
+		}
+
+    }
+
 
     public static class ChannelHistoryReactionAddedListener implements ReactionAddedListener {
 
