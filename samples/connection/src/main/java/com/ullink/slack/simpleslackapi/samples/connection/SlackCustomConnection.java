@@ -1,6 +1,6 @@
 package com.ullink.slack.simpleslackapi.samples.connection;
 
-import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.entity.SlackSession;
 import com.ullink.slack.simpleslackapi.WebSocketContainerProvider;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 

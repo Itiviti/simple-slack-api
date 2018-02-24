@@ -1,9 +1,7 @@
 package com.ullink.slack.simpleslackapi.events;
 
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.events.SlackEvent;
-import com.ullink.slack.simpleslackapi.events.SlackEventType;
+import com.ullink.slack.simpleslackapi.entity.SlackChannel;
+import com.ullink.slack.simpleslackapi.entity.SlackUser;
 
 public class UserTyping implements SlackEvent {
   private final SlackChannel slackChannel;

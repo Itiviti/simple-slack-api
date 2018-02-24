@@ -1,7 +1,10 @@
 package actions;
 
 import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.entity.*;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
+
+import java.util.Collections;
 
 /**
  * This sample code is showing how to send some messages assuming you already have a SlackSession
@@ -84,11 +87,11 @@ public class SendingMessages
         SlackChannel channel = session.findChannelByName("achannel");
 
         //build a message object
-        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
-                .withMessage("Hey, this is a message")
-                .withUnfurl(false)
-                .addAttachment(new SlackAttachment())
-                .addAttachment(new SlackAttachment())
+        SlackPreparedMessage preparedMessage = SlackPreparedMessage.builder()
+                .message("Hey, this is a message")
+                .unfurl(false)
+                .attachments(Collections.<SlackAttachment>emptyList())
+                .attachments(Collections.<SlackAttachment>emptyList())
                 .build();
 
         session.sendMessage(channel, preparedMessage);

@@ -5,8 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.entity.*;
 import com.ullink.slack.simpleslackapi.events.*;
-import com.ullink.slack.simpleslackapi.SlackChatConfiguration.Avatar;
+import com.ullink.slack.simpleslackapi.entity.SlackChatConfiguration.Avatar;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackTeamJoin;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChange;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChangeEvent;
@@ -534,7 +535,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             arguments.put("username", chatConfiguration.getUserName());
         }
-        if (preparedMessage.getAttachments() != null && preparedMessage.getAttachments().length > 0)
+        if (preparedMessage.getAttachments() != null && !preparedMessage.getAttachments().isEmpty())
         {
             arguments.put("attachments", SlackJSONAttachmentFormatter
                     .encodeAttachments(preparedMessage.getAttachments()).toString());
@@ -585,7 +586,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             arguments.put("username", chatConfiguration.getUserName());
         }
-        if (preparedMessage.getAttachments() != null && preparedMessage.getAttachments().length > 0)
+        if (preparedMessage.getAttachments() != null && !preparedMessage.getAttachments().isEmpty())
         {
             arguments.put("attachments", SlackJSONAttachmentFormatter
                     .encodeAttachments(preparedMessage.getAttachments()).toString());
@@ -677,7 +678,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("ts", timeStamp);
         arguments.put("channel", channel.getId());
         arguments.put("text", message);
-        arguments.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachments).toString());
+        arguments.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(Arrays.asList(attachments)).toString());
         postSlackCommand(arguments, CHAT_UPDATE_COMMAND, handle);
         return handle;
     }

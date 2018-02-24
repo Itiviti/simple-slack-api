@@ -1,7 +1,6 @@
 package com.ullink.slack.simpleslackapi.events;
 
-import com.ullink.slack.simpleslackapi.*;
-import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.entity.*;
 import lombok.Data;
 import lombok.NonNull;
 

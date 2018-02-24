@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.entity.*;
 import com.ullink.slack.simpleslackapi.events.*;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackTeamJoin;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChange;

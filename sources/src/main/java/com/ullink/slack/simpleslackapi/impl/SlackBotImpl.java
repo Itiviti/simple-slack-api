@@ -1,6 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.SlackBot;
+import com.ullink.slack.simpleslackapi.entity.SlackBot;
 
 @Deprecated
 class SlackBotImpl extends SlackPersonaImpl implements SlackBot

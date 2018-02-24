@@ -3,7 +3,7 @@ package com.ullink.slack.simpleslackapi.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.entity.*;
 import com.ullink.slack.simpleslackapi.events.*;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackTeamJoin;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChange;

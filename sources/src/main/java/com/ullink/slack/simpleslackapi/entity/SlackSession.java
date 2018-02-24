@@ -1,5 +1,6 @@
-package com.ullink.slack.simpleslackapi;
+package com.ullink.slack.simpleslackapi.entity;
 
+import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.*;
 

@@ -1,8 +1,8 @@
 package actions;
 
-import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.entity.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.entity.SlackSession;
 import com.ullink.slack.simpleslackapi.replies.EmojiSlackReply;
 
 import java.util.Map;

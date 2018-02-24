@@ -3,7 +3,7 @@ package com.ullink.slack.simpleslackapi.impl;
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
 
-import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.entity.SlackSession;
 import com.ullink.slack.simpleslackapi.WebSocketContainerProvider;
 
 public class SlackSessionFactory {

@@ -1,8 +1,8 @@
 package actions;
 
 import com.ullink.slack.simpleslackapi.ChannelHistoryModule;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.entity.SlackChannel;
+import com.ullink.slack.simpleslackapi.entity.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.ChannelHistoryModuleFactory;
 import org.threeten.bp.LocalDate;

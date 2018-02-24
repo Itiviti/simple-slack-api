@@ -3,7 +3,7 @@ package com.ullink.slack.simpleslackapi.impl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ullink.slack.simpleslackapi.replies.*;
-import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.entity.SlackSession;
 
 class SlackJSONReplyParser
 {

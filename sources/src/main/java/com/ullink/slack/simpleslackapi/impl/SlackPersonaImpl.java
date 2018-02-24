@@ -1,6 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.SlackPersona;
+import com.ullink.slack.simpleslackapi.entity.SlackPersona;
 
 class SlackPersonaImpl implements SlackPersona {
     final String  id;
