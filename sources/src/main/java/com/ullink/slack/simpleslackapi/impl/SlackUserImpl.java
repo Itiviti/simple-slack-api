@@ -1,6 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.entity.SlackUser;
 
 class SlackUserImpl extends SlackPersonaImpl implements SlackUser {
     @Override

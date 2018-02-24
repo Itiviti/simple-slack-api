@@ -1,6 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.ullink.slack.simpleslackapi.SlackIntegration;
+import com.ullink.slack.simpleslackapi.entity.SlackIntegration;
 
 class SlackIntegrationImpl implements SlackIntegration {
 

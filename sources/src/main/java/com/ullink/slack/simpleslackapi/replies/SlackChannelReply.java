@@ -1,6 +1,6 @@
 package com.ullink.slack.simpleslackapi.replies;
 
-import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.entity.SlackChannel;
 
 public class SlackChannelReply extends SlackReplyImpl implements ParsedSlackReply {
     private SlackChannel slackChannel;

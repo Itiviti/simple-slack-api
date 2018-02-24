@@ -1,8 +1,8 @@
 package events;
 
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.entity.SlackChannel;
+import com.ullink.slack.simpleslackapi.entity.SlackSession;
+import com.ullink.slack.simpleslackapi.entity.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 
