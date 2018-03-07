@@ -671,17 +671,12 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("title", title);
 
         // convert file to byte []
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        byte[] buf = new byte[1024];
-        try (FileInputStream fis = new FileInputStream(img)) {
-            for (int readNum; (readNum = fis.read(buf)) != -1;) {
-                //Writes to this byte array output stream
-                bos.write(buf, 0, readNum);
-            }
-        } catch (IOException ex) {
+        byte[] imgBytes = new byte[(int) img.length()];
+        try (InputStream is = new FileInputStream(img)) {
+            is.read(imgBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        byte[] imgBytes = bos.toByteArray();
 
         postSlackCommandWithFile(arguments, imgBytes, title, FILE_UPLOAD_COMMAND, handle);
         return handle;
