@@ -235,6 +235,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 				dispatchImpl((UserTyping) event, userTypingListener);
 				break;
 			default:
+				//sloppy fix for ClassCastException from ? to UnknownEvent Error.
 				if (event instanceof UnknownEvent) {
 					LOGGER.warn("event of type " + event.getEventType() + " not handled: " + ((UnknownEvent) event).getJsonPayload());
 				} else {
