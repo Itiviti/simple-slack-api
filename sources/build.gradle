@@ -161,7 +161,7 @@ test {
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.google.code.gson:gson:2.8.2'
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'org.apache.httpcomponents:httpclient:4.5.3'
     compile 'org.apache.httpcomponents:httpmime:4.5.3'
