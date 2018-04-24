@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 class SlackJSONMessageParser {
     private static final Logger LOGGER                     = LoggerFactory.getLogger(SlackJSONMessageParser.class);
 
-    public static enum SlackMessageSubType
+    public enum SlackMessageSubType
     {
         CHANNEL_JOIN("channel_join"), CHANNEL_LEAVE("channel_leave"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), OTHER("-"), FILE_SHARE("file_share"), MESSAGE_REPLIED("message_replied");
 
@@ -96,6 +96,8 @@ class SlackJSONMessageParser {
                 return extractPinRemovedEvent(slackSession, obj);
             case USER_TYPING:
                 return extractUserTypingEvent(slackSession, obj);
+            case HELLO:
+                return new Hello();
             default:
                 return new UnknownEvent(obj.toString());
         }

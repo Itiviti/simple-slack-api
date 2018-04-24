@@ -22,6 +22,7 @@ public enum EventType
     PIN_ADDED("pin_added"),
     PIN_REMOVED("pin_removed"),
     USER_TYPING("user_typing"),
+    HELLO("hello"),
     OTHER("-");
 
     private static final Map<String, EventType> CODE_MAP = new HashMap<>();
