@@ -40,33 +40,84 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
     @Override
     public SlackMessagePosted fetchMessageFromChannel(String channelId, String messageTimestamp) {
+        List<SlackMessagePosted> history;
+        history = fetchHistoryOfChannel(channelId, messageTimestamp, 1);
+        if (history != null) {
+            return history.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId) {
+        return fetchHistoryOfChannel(channelId, (LocalDate) null);
+    }
+
+    @Override
+    public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, String messageTimestamp) {
+        return fetchHistoryOfChannel(channelId, messageTimestamp, -1);
+    }
+
+    @Override
+    public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, String messageTimestamp, int numberOfMessages) {
+        return fetchHistoryOfChannel(channelId, messageTimestamp, null, numberOfMessages);
+    }
+
+    @Override
+    public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, String latest, String oldest, int numberOfMessages) {
+        return fetchHistoryOfChannel(channelId, latest, oldest, numberOfMessages, null);
+    }
+
+    @Override
+    public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, String latest, String oldest, int numberOfMessages, Set<String> allowedSubtypes) {
+        return fetchHistoryOfChannel(channelId, latest, oldest, numberOfMessages, allowedSubtypes);
+    }
+
+    @Override
+    public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, String latest, String oldest, int numberOfMessages, Set<String> allowedSubtypes, boolean listenForUpdates) {
         Map<String, String> params = new HashMap<>();
         params.put("channel", channelId);
-        params.put("count", "1");
-        params.put("latest", messageTimestamp);
+        if (numberOfMessages > -1) {
+            params.put("count", String.valueOf(numberOfMessages));
+        } else {
+            params.put("count", String.valueOf(DEFAULT_HISTORY_FETCH_SIZE));
+        }
+
+        if (oldest != null) {
+            params.put("oldest", oldest);
+        }
+
+        if (latest != null) {
+            params.put("latest", latest);
+        }
+
+        if (allowedSubtypes == null) {
+            allowedSubtypes = MessageSubTypeFilter.USERS_AND_INTERNAL_MESSAGES.getRetainedSubtypes();
+        }
         params.put("inclusive", "true");
         SlackChannel channel = session.findChannelById(channelId);
         List<SlackMessagePosted> retrievedList;
         switch (channel.getType()) {
             case INSTANT_MESSAGING:
-                retrievedList = fetchHistoryOfChannel(params,FETCH_IM_HISTORY_COMMAND, MessageSubTypeFilter.USERS_AND_INTERNAL_MESSAGES.getRetainedSubtypes());
+                retrievedList = fetchRawHistoryOfChannel(params,FETCH_IM_HISTORY_COMMAND, allowedSubtypes);
                 break;
             case PRIVATE_GROUP:
-                retrievedList = fetchHistoryOfChannel(params,FETCH_GROUP_HISTORY_COMMAND, MessageSubTypeFilter.USERS_AND_INTERNAL_MESSAGES.getRetainedSubtypes());
+                retrievedList = fetchRawHistoryOfChannel(params,FETCH_GROUP_HISTORY_COMMAND, allowedSubtypes);
                 break;
             default:
-                retrievedList = fetchHistoryOfChannel(params,FETCH_CHANNEL_HISTORY_COMMAND, MessageSubTypeFilter.USERS_AND_INTERNAL_MESSAGES.getRetainedSubtypes());
+                retrievedList = fetchRawHistoryOfChannel(params,FETCH_CHANNEL_HISTORY_COMMAND, allowedSubtypes);
                 break;
         }
         if (retrievedList != null && retrievedList.size()>0) {
-            return retrievedList.get(0);
+            if (listenForUpdates) {
+                session.addReactionAddedListener(new ChannelHistoryReactionAddedListener(retrievedList));
+                session.addReactionRemovedListener(new ChannelHistoryReactionRemovedListener(retrievedList));
+                session.addMessagePostedListener(new ChannelHistoryMessagePostedListener(retrievedList));
+            }
+            return retrievedList;
         }
         return null;
-    }
-
-    @Override
-    public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId) {
-        return fetchHistoryOfChannel(channelId, null, -1);
     }
 
     @Override
@@ -76,7 +127,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
     @Override
     public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, int numberOfMessages) {
-        return fetchHistoryOfChannel(channelId, null, numberOfMessages);
+        return fetchHistoryOfChannel(channelId, (LocalDate) null, numberOfMessages);
     }
 
     @Override
@@ -90,32 +141,25 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
     }
 
     @Override
+    public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, int numberOfMessages, Set<String> allowedSubtypes) {
+        return fetchHistoryOfChannel(channelId, null, null, numberOfMessages, allowedSubtypes);
+    }
+
+    @Override
     public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, LocalDate day, int numberOfMessages, Set<String> allowedSubtypes) {
-        Map<String, String> params = new HashMap<>();
-        params.put("channel", channelId);
         if (day != null) {
-            ZonedDateTime start = ZonedDateTime.of(day.atStartOfDay(), ZoneId.of("UTC"));
-            ZonedDateTime end = ZonedDateTime.of(day.atStartOfDay().plusDays(1).minus(1, ChronoUnit.MILLIS), ZoneId.of("UTC"));
-            params.put("oldest", convertDateToSlackTimestamp(start));
-            params.put("latest", convertDateToSlackTimestamp(end));
-        }
-        if (numberOfMessages > -1) {
-            params.put("count", String.valueOf(numberOfMessages));
+            return fetchHistoryOfChannel(channelId, numberOfMessages, allowedSubtypes);
         } else {
-            params.put("count", String.valueOf(DEFAULT_HISTORY_FETCH_SIZE));
-        }
-        SlackChannel channel = session.findChannelById(channelId);
-        switch (channel.getType()) {
-            case INSTANT_MESSAGING:
-                return fetchHistoryOfChannel(params,FETCH_IM_HISTORY_COMMAND, allowedSubtypes);
-            case PRIVATE_GROUP:
-                return fetchHistoryOfChannel(params,FETCH_GROUP_HISTORY_COMMAND, allowedSubtypes);
-            default:
-                return fetchHistoryOfChannel(params,FETCH_CHANNEL_HISTORY_COMMAND, allowedSubtypes);
+            return fetchHistoryOfChannel(channelId,
+                    convertDateToSlackTimestamp(ZonedDateTime.of(day.atStartOfDay(), ZoneId.of("UTC"))),
+                    convertDateToSlackTimestamp(ZonedDateTime.of(day.atStartOfDay().plusDays(1).minus(1, ChronoUnit.MILLIS), ZoneId.of("UTC"))),
+                    numberOfMessages,
+                    allowedSubtypes);
+
         }
     }
 
-    private List<SlackMessagePosted> fetchHistoryOfChannel(Map<String, String> params, String command, Set<String> retainedMessageSubtypes) {
+    private List<SlackMessagePosted> fetchRawHistoryOfChannel(Map<String, String> params, String command, Set<String> retainedMessageSubtypes) {
         SlackMessageHandle<GenericSlackReply> handle = session.postGenericSlackCommand(params, command);
         GenericSlackReply replyEv = handle.getReply();
         String answer = replyEv.getPlainAnswer();
@@ -132,30 +176,6 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
                 }
             }
         }
-        return messages;
-    }
-
-    @Override
-    public List<SlackMessagePosted> fetchUpdatingHistoryOfChannel(String channelId) {
-        return fetchUpdatingHistoryOfChannel(channelId, null, -1);
-    }
-
-    @Override
-    public List<SlackMessagePosted> fetchUpdatingHistoryOfChannel(String channelId, LocalDate day) {
-        return fetchUpdatingHistoryOfChannel(channelId, day, -1);
-    }
-
-    @Override
-    public List<SlackMessagePosted> fetchUpdatingHistoryOfChannel(String channelId, int numberOfMessages) {
-        return fetchUpdatingHistoryOfChannel(channelId, null, numberOfMessages);
-    }
-
-    @Override
-    public List<SlackMessagePosted> fetchUpdatingHistoryOfChannel(String channelId, LocalDate day, int numberOfMessages) {
-        List<SlackMessagePosted> messages = fetchHistoryOfChannel(channelId, day, numberOfMessages);
-        session.addReactionAddedListener(new ChannelHistoryReactionAddedListener(messages));
-        session.addReactionRemovedListener(new ChannelHistoryReactionRemovedListener(messages));
-        session.addMessagePostedListener(new ChannelHistoryMessagePostedListener(messages));
         return messages;
     }
 

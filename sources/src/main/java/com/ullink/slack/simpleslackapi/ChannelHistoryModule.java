@@ -48,6 +48,18 @@ public interface ChannelHistoryModule {
 
     List<SlackMessagePosted> fetchHistoryOfChannel(String channelName);
 
+    List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, int numberOfMessages, Set<String> allowedSubtypes);
+
+    List<SlackMessagePosted> fetchHistoryOfChannel(String channelName, String messageTimestamp);
+
+    List<SlackMessagePosted> fetchHistoryOfChannel(String channelName, String messageTimestamp, int numberOfMessages);
+
+    List<SlackMessagePosted> fetchHistoryOfChannel(String channelName, String latest, String oldest, int numberOfMessages);
+
+    List<SlackMessagePosted> fetchHistoryOfChannel(String channelName, String latest, String oldest, int numberOfMessages, Set<String> allowedSubtypes);
+
+    List<SlackMessagePosted> fetchHistoryOfChannel(String channelName, String latest, String oldest, int numberOfMessages, Set<String> allowedSubtypes, boolean listenForUpdates);
+
     List<SlackMessagePosted> fetchHistoryOfChannel(String channelName, LocalDate day);
 
     List<SlackMessagePosted> fetchHistoryOfChannel(String channelName, int numberOfMessages);
@@ -57,14 +69,6 @@ public interface ChannelHistoryModule {
     List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, LocalDate day, int numberOfMessages, MessageSubTypeFilter filter);
 
     List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, LocalDate day, int numberOfMessages, Set<String> allowedSubtypes);
-
-    List<SlackMessagePosted> fetchUpdatingHistoryOfChannel(String channelId);
-    
-    List<SlackMessagePosted> fetchUpdatingHistoryOfChannel(String channelId, LocalDate day);
-
-    List<SlackMessagePosted> fetchUpdatingHistoryOfChannel(String channelId, int numberOfMessages);
-
-    List<SlackMessagePosted> fetchUpdatingHistoryOfChannel(String channelId, LocalDate day, int numberOfMessages);
 
     
 }
