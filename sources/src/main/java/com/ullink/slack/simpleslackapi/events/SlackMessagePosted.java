@@ -146,6 +146,7 @@ public class SlackMessagePosted implements SlackEvent {
         PINNED_ITEM("pinned_item"),
         UNPINNED_ITEM("unpinned_item"),
         MESSAGE_REPLIED("message_replied"),
+        OTHER("-"),
         UNKNOWN("");
 
         String code;

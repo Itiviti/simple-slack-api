@@ -20,7 +20,32 @@ class SlackJSONMessageParser {
 
     public static enum SlackMessageSubType
     {
-        CHANNEL_JOIN("channel_join"), CHANNEL_LEAVE("channel_leave"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), OTHER("-"), FILE_SHARE("file_share"), MESSAGE_REPLIED("message_replied");
+        BOT_MESSAGE("bot_message"),
+        CHANNEL_ARCHIVE("channel_archive"),
+        CHANNEL_JOIN("channel_join"),
+        CHANNEL_LEAVE("channel_leave"),
+        CHANNEL_LEFT("channel_left"),
+        CHANNEL_NAME("channel_name"),
+        CHANNEL_PURPOSE("channel_purpose"),
+        CHANNEL_TOPIC("channel_topic"),
+        CHANNEL_UNARCHIVE("channel_unarchive"),
+        FILE_COMMENT("file_comment"),
+        FILE_MENTION("file_mention"),
+        FILE_SHARE("file_share"),
+        GROUP_JOIN("group_join"),
+        GROUP_LEAVE("group_leave"),
+        GROUP_NAME("group_name"),
+        GROUP_PURPOSE("group_purpose"),
+        GROUP_TOPIC("group_topic"),
+        GROUP_UNARCHIVE("group_unarchive"),
+        ME_MESSAGE("me_message"),
+        MESSAGE_CHANGED("message_changed"),
+        MESSAGE_DELETED("message_deleted"),
+        PINNED_ITEM("pinned_item"),
+        UNPINNED_ITEM("unpinned_item"),
+        MESSAGE_REPLIED("message_replied"),
+        OTHER("-"),
+        UNKNOWN("");
 
         private static final Map<String, SlackMessageSubType> CODE_MAP = new HashMap<>();
 
@@ -173,8 +198,9 @@ class SlackJSONMessageParser {
                 return parseMessageDeleted(obj, channel, ts);
             case FILE_SHARE:
                 return parseMessagePublishedWithFile(obj, channel, ts, slackSession);
+            case FILE_COMMENT:
             case MESSAGE_REPLIED:
-                return new UnknownEvent(obj.toString()); // This event should not be handled
+                return new UnknownEvent(obj.toString()); // These events need threading to be implemented
             default:
                 return parseMessagePublished(obj, channel, ts, slackSession);
         }
