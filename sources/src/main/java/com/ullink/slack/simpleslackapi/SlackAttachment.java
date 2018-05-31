@@ -22,7 +22,7 @@ public class SlackAttachment {
     private String              image_url;
 
     private String              color;
-    private Long                timestamp;
+    private String              timestamp;
 
     private Map<String, String> miscRootFields;
 
@@ -122,7 +122,7 @@ public class SlackAttachment {
 
     public void setFooterIcon(String footer_icon) { this.footer_icon = footer_icon; }
 
-    public void setTimestamp(Long timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -186,7 +186,7 @@ public class SlackAttachment {
 
     public String getFooterIcon() { return footer_icon; }
 
-    public Long getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 }

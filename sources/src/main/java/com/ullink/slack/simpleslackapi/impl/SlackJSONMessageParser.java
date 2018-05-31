@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class SlackJSONMessageParser {
-    private static final Logger LOGGER                     = LoggerFactory.getLogger(SlackJSONMessageParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SlackJSONMessageParser.class);
 
     public static enum SlackMessageSubType
     {
@@ -476,7 +476,7 @@ class SlackJSONMessageParser {
             slackAttachment.setImageUrl(GsonHelper.getStringOrNull(obj.get("image_url")));
             slackAttachment.setFooter(GsonHelper.getStringOrNull(obj.get("footer")));
             slackAttachment.setFooterIcon(GsonHelper.getStringOrNull(obj.get("footer_icon")));
-            slackAttachment.setTimestamp(GsonHelper.getLongOrNull(obj.get("ts")));
+            slackAttachment.setTimestamp(GsonHelper.getStringOrNull(obj.get("ts"))); //This isn't a number idiot, it's a unique id look at the docs
 
             if(obj.get("fields") != null) {
                 for (JsonElement fieldElement : obj.get("fields").getAsJsonArray()) {
