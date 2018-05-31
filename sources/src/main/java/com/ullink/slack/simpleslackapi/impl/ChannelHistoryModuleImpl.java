@@ -51,7 +51,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
     @Override
     public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId) {
-        return fetchHistoryOfChannel(channelId, (LocalDate) null);
+        return fetchHistoryOfChannel(channelId, (String) null);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
     @Override
     public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, LocalDate day, int numberOfMessages, Set<String> allowedSubtypes) {
-        if (day != null) {
+        if (day == null) {
             return fetchHistoryOfChannel(channelId, numberOfMessages, allowedSubtypes);
         } else {
             return fetchHistoryOfChannel(channelId,
