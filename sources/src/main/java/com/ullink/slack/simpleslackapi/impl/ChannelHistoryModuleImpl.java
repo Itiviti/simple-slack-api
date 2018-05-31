@@ -71,7 +71,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
     @Override
     public List<SlackMessagePosted> fetchHistoryOfChannel(String channelId, String latest, String oldest, int numberOfMessages, Set<String> allowedSubtypes) {
-        return fetchHistoryOfChannel(channelId, latest, oldest, numberOfMessages, allowedSubtypes);
+        return fetchHistoryOfChannel(channelId, latest, oldest, numberOfMessages, allowedSubtypes,false);
     }
 
     @Override
