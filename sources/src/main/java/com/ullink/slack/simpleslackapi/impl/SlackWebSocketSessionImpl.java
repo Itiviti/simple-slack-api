@@ -105,8 +105,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private static final Logger               LOGGER                     = LoggerFactory.getLogger(SlackWebSocketSessionImpl.class);
 
-    //private static final String               SLACK_HTTPS_AUTH_URL       = "https://slack.com/api/rtm.start?token=";
-
     private  static final int                 DEFAULT_HEARTBEAT_IN_MILLIS = 30000;
 
     private volatile Session                  websocketSession;
@@ -858,7 +856,6 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         try
         {
 	        URIBuilder uriBuilder = new URIBuilder(slackApiBase+command);
-	        //uriBuilder.setScheme(SLACK_API_SCHEME).setHost(SLACK_API_HOST).setPath(SLACK_API_PATH+"/"+command);
 	        
 	        for (Map.Entry<String, String> arg : params.entrySet())
 	        {
