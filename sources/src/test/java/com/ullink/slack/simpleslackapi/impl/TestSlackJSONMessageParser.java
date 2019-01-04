@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -137,6 +138,26 @@ public class TestSlackJSONMessageParser {
             @Override
             public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName)
             {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendCodeSnippet(SlackChannel channel, String title, String snippet, String language) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendCodeSnippetToUser(SlackUser user, String title, String snippet, String language) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendImage(SlackChannel channel, String title, File img) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendImageToUser(SlackUser user, String title, File img) {
                 return null;
             }
 

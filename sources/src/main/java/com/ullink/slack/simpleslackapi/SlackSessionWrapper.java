@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
@@ -231,6 +232,26 @@ public class SlackSessionWrapper implements SlackSession
     public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName)
     {
         return delegate.sendFileToUser(userName, data, fileName);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendCodeSnippet(SlackChannel channel, String title, String snippet, String language) {
+        return delegate.sendCodeSnippet(channel, title, snippet, language);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendCodeSnippetToUser(SlackUser user, String title, String snippet, String language) {
+        return delegate.sendCodeSnippetToUser(user, title, snippet, language);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendImage(SlackChannel channel, String title, File img) {
+        return delegate.sendImage(channel, title, img);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendImageToUser(SlackUser user, String title, File img) {
+        return delegate.sendImageToUser(user, title, img);
     }
 
     @Override public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage)
