@@ -476,7 +476,7 @@ class SlackJSONMessageParser {
             slackAttachment.setImageUrl(GsonHelper.getStringOrNull(obj.get("image_url")));
             slackAttachment.setFooter(GsonHelper.getStringOrNull(obj.get("footer")));
             slackAttachment.setFooterIcon(GsonHelper.getStringOrNull(obj.get("footer_icon")));
-            slackAttachment.setTimestamp(GsonHelper.getLongOrNull(obj.get("ts")));
+            slackAttachment.setTimestamp(GsonHelper.getStringOrNull(obj.get("ts")));
 
             if(obj.get("fields") != null) {
                 for (JsonElement fieldElement : obj.get("fields").getAsJsonArray()) {
