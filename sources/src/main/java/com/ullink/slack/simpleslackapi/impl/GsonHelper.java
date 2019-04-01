@@ -1,8 +1,12 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 class GsonHelper
 {
@@ -35,7 +39,25 @@ class GsonHelper
 
     static Long getLongOrDefaultValue(JsonElement jsonElement, Long defaultValue)
     {
-        return jsonElement != null && !jsonElement.isJsonNull() ? (Long) jsonElement.getAsLong() : defaultValue;
+        if (jsonElement == null || jsonElement.isJsonNull()) {
+            return defaultValue;
+        }
+        if (jsonElement instanceof JsonPrimitive) {
+            JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
+            if (jsonPrimitive.isNumber()) {
+                return jsonPrimitive.getAsNumber().longValue();
+            }
+            String elementAsString = jsonElement.getAsString();
+            if (elementAsString.trim().isEmpty()) {
+                return defaultValue;
+            }
+            try {
+                return NumberFormat.getInstance().parse(elementAsString).longValue();
+            } catch (ParseException e) {
+                return jsonElement.getAsLong();
+            }
+        }
+        return jsonElement.getAsLong();
     }
 
     static String getStringOrDefaultValue(JsonElement jsonElement, String defaultValue)
