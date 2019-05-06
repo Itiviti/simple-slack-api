@@ -225,11 +225,17 @@ class SlackJSONMessageParser {
 
     private static SlackMessagePosted parseMessagePublished(JsonObject obj, SlackChannel channel, String ts, SlackSession slackSession) {
         String text = GsonHelper.getStringOrNull(obj.get("text"));
-        String userId = GsonHelper.getStringOrNull(obj.get("user"));
+        String subtype = GsonHelper.getStringOrNull(obj.get("subtype"));
+        String userId = null;
+        //sloppy fix for finding userId inside File_comment subtype.
+        if (subtype !=null && subtype.equals("file_comment")) {
+            userId = GsonHelper.getStringOrNull(obj.get("comment").getAsJsonObject().get("user"));
+	} else {
+            userId = GsonHelper.getStringOrNull(obj.get("user"));
+	}
         if (userId == null) {
             userId = GsonHelper.getStringOrNull(obj.get("bot_id"));
         }
-        String subtype = GsonHelper.getStringOrNull(obj.get("subtype"));
         SlackUser user = slackSession.findUserById(userId);
         String threadTimestamp = GsonHelper.getStringOrNull(obj.get("thread_ts"));
         if (user == null) {
