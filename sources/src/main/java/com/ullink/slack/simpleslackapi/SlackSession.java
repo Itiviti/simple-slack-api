@@ -4,6 +4,7 @@ import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 
@@ -81,13 +82,13 @@ public interface SlackSession {
 
     SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message);
 
-    SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte [] data, String fileName);
+    SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName);
 
-    SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte [] data, String fileName, String title, String initialComment);
+    SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName, String title, String initialComment);
 
-    SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte [] data, String fileName);
+    SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, InputStream data, String fileName);
 
-    SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte [] data, String fileName);
+    SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, InputStream data, String fileName);
 
     SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage);
 

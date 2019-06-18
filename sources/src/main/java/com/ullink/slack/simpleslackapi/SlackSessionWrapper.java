@@ -1,6 +1,7 @@
 package com.ullink.slack.simpleslackapi;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 
@@ -211,24 +212,24 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.sendEphemeralMessage(channel, user, message);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName)
+    @Override public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName)
     {
         return delegate.sendFile(channel, data, fileName);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName, String title, String initialComment)
+    @Override public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName, String title, String initialComment)
     {
         return delegate.sendFile(channel, data, fileName, title, initialComment);
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte[] data, String fileName)
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, InputStream data, String fileName)
     {
         return delegate.sendFileToUser(user, data, fileName);
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName)
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, InputStream data, String fileName)
     {
         return delegate.sendFileToUser(userName, data, fileName);
     }
