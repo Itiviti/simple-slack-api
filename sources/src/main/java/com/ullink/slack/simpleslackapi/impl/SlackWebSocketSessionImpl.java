@@ -15,6 +15,7 @@ import com.ullink.slack.simpleslackapi.SlackPresence;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.WebSocketContainerProvider;
+import com.ullink.slack.simpleslackapi.blocks.Block;
 import com.ullink.slack.simpleslackapi.events.PinAdded;
 import com.ullink.slack.simpleslackapi.events.PinRemoved;
 import com.ullink.slack.simpleslackapi.events.PresenceChange;
@@ -584,7 +585,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         if (preparedMessage.getAttachments() != null && preparedMessage.getAttachments().length > 0)
         {
             arguments.put("attachments", SlackJSONAttachmentFormatter
-                    .encodeAttachments(preparedMessage.getAttachments()).toString());
+                .encodeAttachments(preparedMessage.getAttachments()).toString());
+        }
+        if (preparedMessage.getBlocks() != null && preparedMessage.getBlocks().size() > 0)
+        {
+            arguments.put("blocks", SlackJSONBlockFormatter.encodeBlocks(preparedMessage.getBlocks()));
         }
         if (!preparedMessage.isUnfurl())
         {
@@ -636,6 +641,10 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             arguments.put("attachments", SlackJSONAttachmentFormatter
                     .encodeAttachments(preparedMessage.getAttachments()).toString());
+        }
+        if (preparedMessage.getBlocks() != null && preparedMessage.getBlocks().size() > 0)
+        {
+            arguments.put("blocks", SlackJSONBlockFormatter.encodeBlocks(preparedMessage.getBlocks()));
         }
         if (!preparedMessage.isUnfurl())
         {
@@ -718,6 +727,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     @Override
     public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments) {
+        return updateMessage(timeStamp, channel, message, attachments, new ArrayList<Block>());
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments, List<Block> blocks) {
         SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
@@ -725,6 +739,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("channel", channel.getId());
         arguments.put("text", message);
         arguments.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachments).toString());
+        arguments.put("blocks", SlackJSONBlockFormatter.encodeBlocks(blocks).toString());
         postSlackCommand(arguments, CHAT_UPDATE_COMMAND, handle, SlackMessageReply.class);
         return handle;
     }

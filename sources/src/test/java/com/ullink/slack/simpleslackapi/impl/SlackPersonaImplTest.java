@@ -10,18 +10,10 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static com.ullink.slack.simpleslackapi.TestUtils.getFile;
+import static com.ullink.slack.simpleslackapi.TestUtils.gson;
 import static org.junit.Assert.*;
 
 public class SlackPersonaImplTest {
-
-  private Gson gson;
-
-  @Before
-  public void setUp() {
-    GsonBuilder builder = new GsonBuilder();
-    builder.registerTypeAdapter(SlackPresence.class, new SlackPresenceSerDes());
-    gson = builder.create();
-  }
 
   @Test
   public void testJsonSerialize() throws IOException {
@@ -36,7 +28,7 @@ public class SlackPersonaImplTest {
         .id("test123")
         .profile(SlackProfileImpl.builder().displayName("test test").email("test@test.com").phone("1234").presence(SlackPresence.ACTIVE).build())
         .build();
-    String json = gson.toJson(persona);
+    String json = gson().toJson(persona);
     assertNotNull(json);
     assertEquals(getFile("/persona.json"), json);
   }
@@ -44,7 +36,7 @@ public class SlackPersonaImplTest {
   @Test
   public void testJsonDeserialize() throws IOException {
     String json = getFile("/persona.json");
-    SlackPersonaImpl persona = gson.fromJson(json, SlackPersonaImpl.class);
+    SlackPersonaImpl persona = gson().fromJson(json, SlackPersonaImpl.class);
     assertEquals("test", persona.getUserName());
     assertEquals("CEST", persona.getTimeZone());
     assertEquals("test123", persona.getId());
@@ -56,7 +48,7 @@ public class SlackPersonaImplTest {
   @Test
   public void testJsonDeserializeUnknownField() throws IOException {
     String json = getFile("/persona.unknown-field.json");
-    SlackPersonaImpl persona = gson.fromJson(json, SlackPersonaImpl.class);
+    SlackPersonaImpl persona = gson().fromJson(json, SlackPersonaImpl.class);
     assertEquals("test", persona.getUserName());
     assertEquals("CEST", persona.getTimeZone());
     assertEquals("test123", persona.getId());
@@ -68,7 +60,7 @@ public class SlackPersonaImplTest {
   @Test
   public void testJsonDeserializeUnknownPresence() throws IOException {
     String json = getFile("/persona.unknown-presence.json");
-    SlackPersonaImpl persona = gson.fromJson(json, SlackPersonaImpl.class);
+    SlackPersonaImpl persona = gson().fromJson(json, SlackPersonaImpl.class);
     assertEquals(SlackPresence.UNKNOWN, persona.getPresence());
   }
 

@@ -2,8 +2,10 @@ package com.ullink.slack.simpleslackapi;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
+import com.ullink.slack.simpleslackapi.blocks.Block;
 import com.ullink.slack.simpleslackapi.listeners.PinAddedListener;
 import com.ullink.slack.simpleslackapi.listeners.PinRemovedListener;
 import com.ullink.slack.simpleslackapi.listeners.PresenceChangeListener;
@@ -256,6 +258,11 @@ public class SlackSessionWrapper implements SlackSession
     @Override public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments)
     {
         return delegate.updateMessage(timeStamp, channel, message, attachments);
+    }
+
+    @Override public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments, List<Block> blocks)
+    {
+        return delegate.updateMessage(timeStamp, channel, message, attachments, blocks);
     }
 
     @Override public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message)

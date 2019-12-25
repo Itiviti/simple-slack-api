@@ -8,18 +8,10 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static com.ullink.slack.simpleslackapi.TestUtils.getFile;
+import static com.ullink.slack.simpleslackapi.TestUtils.gson;
 import static org.junit.Assert.*;
 
 public class SlackChannelTest {
-
-  private Gson gson;
-
-  @Before
-  public void setUp() throws IOException {
-    GsonBuilder builder = new GsonBuilder();
-    builder.registerTypeAdapter(SlackPresence.class, new SlackPresenceSerDes());
-    gson = builder.create();
-  }
 
   @Test
   public void testJsonSerialize() throws IOException {
@@ -30,7 +22,7 @@ public class SlackChannelTest {
         .purpose("test_purpose")
         .direct(true)
         .build();
-    String json = gson.toJson(channel);
+    String json = gson().toJson(channel);
     assertNotNull(json);
     assertEquals(getFile("/channel.json"), json);
   }
@@ -39,7 +31,7 @@ public class SlackChannelTest {
   @Test
   public void testJsonDeserialize() throws IOException {
     String json = getFile("/channel.json");
-    SlackChannel object = gson.fromJson(json, SlackChannel.class);
+    SlackChannel object = gson().fromJson(json, SlackChannel.class);
     assertEquals("test", object.getId());
     assertEquals("test_name", object.getName());
     assertEquals("test_topic", object.getTopic());

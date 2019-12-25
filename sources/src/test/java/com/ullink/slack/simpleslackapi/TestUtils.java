@@ -1,5 +1,11 @@
 package com.ullink.slack.simpleslackapi;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.ullink.slack.simpleslackapi.blocks.Block;
+import com.ullink.slack.simpleslackapi.blocks.BlockSerDes;
+import org.junit.Before;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +23,18 @@ public class TestUtils {
       strBuilder.append(line);
     }
     return strBuilder.toString();
+  }
+
+  private static Gson gson;
+
+  public static Gson gson() throws IOException {
+    if (gson == null) {
+      GsonBuilder builder = new GsonBuilder();
+      builder.registerTypeAdapter(SlackPresence.class, new SlackPresenceSerDes());
+      builder.registerTypeAdapter(Block.class, new BlockSerDes());
+      gson = builder.create();
+    }
+    return gson;
   }
 
 

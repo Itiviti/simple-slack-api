@@ -8,20 +8,12 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static com.ullink.slack.simpleslackapi.TestUtils.getFile;
+import static com.ullink.slack.simpleslackapi.TestUtils.gson;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 public class SlackAttachmentTest {
-
-  private Gson gson;
-
-  @Before
-  public void setUp() throws IOException {
-    GsonBuilder builder = new GsonBuilder();
-    builder.registerTypeAdapter(SlackPresence.class, new SlackPresenceSerDes());
-    gson = builder.create();
-  }
 
   @Test
   public void testJsonSerialize() throws IOException {
@@ -29,7 +21,7 @@ public class SlackAttachmentTest {
     attachment.addField("field 1", "value 1", false);
     attachment.addField("field 2", "value 2", true);
     attachment.addAction("action 1", "text 1", "type", "value");
-    String json = gson.toJson(attachment);
+    String json = gson().toJson(attachment);
     assertNotNull(json);
     assertEquals(getFile("/attachment.json"), json);
   }
@@ -37,7 +29,7 @@ public class SlackAttachmentTest {
   @Test
   public void testJsonDeserialize() throws IOException {
     String json = getFile("/attachment.json");
-    SlackAttachment attachment = gson.fromJson(json, SlackAttachment.class);
+    SlackAttachment attachment = gson().fromJson(json, SlackAttachment.class);
     assertEquals("test", attachment.getTitle());
     assertEquals("fallback", attachment.getFallback());
     assertEquals("text", attachment.getText());

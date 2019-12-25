@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ullink.slack.simpleslackapi.SlackPresence;
 import com.ullink.slack.simpleslackapi.SlackPresenceSerDes;
+import com.ullink.slack.simpleslackapi.blocks.Block;
+import com.ullink.slack.simpleslackapi.blocks.BlockSerDes;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
@@ -23,6 +25,7 @@ public class SlackResponseHandler<T> implements ResponseHandler<T> {
     this.reference = reference;
     GsonBuilder builder = new GsonBuilder();
     builder.registerTypeAdapter(SlackPresence.class, new SlackPresenceSerDes());
+    builder.registerTypeAdapter(Block.class, new BlockSerDes());
     gson = builder.create();
 
   }
