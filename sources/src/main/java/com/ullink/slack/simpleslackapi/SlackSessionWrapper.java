@@ -318,12 +318,12 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.sendTyping(channel);
     }
 
-    @Override public SlackPersona.SlackPresence getPresence(SlackPersona persona)
+    @Override public SlackPresence getPresence(SlackPersona persona)
     {
         return delegate.getPresence(persona);
     }
 
-    @Override public void setPresence(SlackPersona.SlackPresence presence)
+    @Override public void setPresence(SlackPresence presence)
     {
         delegate.setPresence(presence);
     }

@@ -1,7 +1,5 @@
 package com.ullink.slack.simpleslackapi.replies;
 
-import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
-
 public class SlackReplyImpl implements ParsedSlackReply {
 
     private boolean ok;

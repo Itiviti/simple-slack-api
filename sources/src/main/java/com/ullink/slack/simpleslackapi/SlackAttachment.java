@@ -1,5 +1,7 @@
 package com.ullink.slack.simpleslackapi;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.Map;
 public class SlackAttachment {
 
     private String              title;
-    private String              titleLink;
+    private String              title_link;
     private String              fallback;
     private String              callback_id;
     private String              text;
@@ -22,9 +24,10 @@ public class SlackAttachment {
     private String              image_url;
 
     private String              color;
+    @SerializedName("ts")
     private String                timestamp;
 
-    private Map<String, String> miscRootFields;
+    private transient Map<String, String> miscRootFields;
 
     private List<SlackField>    fields = new ArrayList<>();
 
@@ -81,7 +84,7 @@ public class SlackAttachment {
 
     public void setTitleLink(String titleLink)
     {
-        this.titleLink = titleLink;
+        this.title_link = titleLink;
     }
 
     public void setFallback(String fallback)
@@ -131,7 +134,7 @@ public class SlackAttachment {
     }
 
     public String getTitleLink() {
-        return titleLink;
+        return title_link;
     }
 
     public String getFallback() {

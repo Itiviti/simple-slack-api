@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 class SlackJSONMessageParser {
     private static final Logger LOGGER                     = LoggerFactory.getLogger(SlackJSONMessageParser.class);
 
-    public static enum SlackMessageSubType
+    public enum SlackMessageSubType
     {
         CHANNEL_JOIN("channel_join"), CHANNEL_LEAVE("channel_leave"), MESSAGE_CHANGED("message_changed"), MESSAGE_DELETED("message_deleted"), OTHER("-"), FILE_SHARE("file_share"), MESSAGE_REPLIED("message_replied");
 
@@ -187,7 +187,7 @@ class SlackJSONMessageParser {
             if (channelId.startsWith("D"))
             {
                 // direct messaging, on the fly channel creation
-                return new SlackChannel(channelId, channelId, "", "", true, false, false);
+                return SlackChannel.builder().direct(true).id(channelId).topic("").purpose("").name(channelId).build();
             }
             else
             {
@@ -354,11 +354,11 @@ class SlackJSONMessageParser {
     private static PresenceChange extractPresenceChangeEvent(SlackSession slackSession, JsonObject obj) {
         String userId = GsonHelper.getStringOrNull(obj.get("user"));
         String presence = GsonHelper.getStringOrNull(obj.get("presence"));
-        SlackPersona.SlackPresence value = SlackPersona.SlackPresence.UNKNOWN;
+        SlackPresence value = SlackPresence.UNKNOWN;
         if ("active".equals(presence)) {
-            value = SlackPersona.SlackPresence.ACTIVE;
+            value = SlackPresence.ACTIVE;
         } else if ("away".equals(presence)) {
-            value = SlackPersona.SlackPresence.AWAY;
+            value = SlackPresence.AWAY;
         }
         return new PresenceChange(userId, value);
     }
@@ -449,7 +449,7 @@ class SlackJSONMessageParser {
     public static Map<String, String> extractEmojisFromMessageJSON(JsonObject emojiObject) {
         Map<String, String> emojis = new HashMap<>();
         for (Map.Entry<String,JsonElement> entry : emojiObject.entrySet()) {
-            emojis.put(entry.getKey().toString(), entry.getValue().getAsString());
+            emojis.put(entry.getKey(), entry.getValue().getAsString());
         }
         return emojis;
     }

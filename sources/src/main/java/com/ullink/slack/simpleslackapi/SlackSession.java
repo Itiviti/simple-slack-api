@@ -123,9 +123,9 @@ public interface SlackSession {
 
     SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel);
 
-    SlackPersona.SlackPresence getPresence(SlackPersona persona);
+    SlackPresence getPresence(SlackPersona persona);
 
-    void setPresence(SlackPersona.SlackPresence presence);
+    void setPresence(SlackPresence presence);
 
     SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(Map<String, String> params, String command);
 
