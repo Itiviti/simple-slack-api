@@ -56,13 +56,14 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public void setPresence(SlackPersona.SlackPresence presence) {};
+            public void setPresence(SlackPresence presence) {};
 
             @Override
             public void connect() {
-                SlackUser user1 = new SlackUserImpl("TESTUSER1", "test user 1", "", "", "testSkype", "testPhone", "testTitle", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0), SlackPersona.SlackPresence.ACTIVE);
-                SlackUser user2 = new SlackUserImpl("TESTUSER2", "test user 2", "", "", "testSkype", "testPhone", "testTitle", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0), SlackPersona.SlackPresence.ACTIVE);
-                SlackUser user3 = new SlackUserImpl("TESTUSER3", "test user 3", "", "", "testSkype", "testPhone", "testTitle", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0), SlackPersona.SlackPresence.ACTIVE);
+
+                SlackUser user1 = SlackPersonaImpl.builder().id("TESTUSER1").userName("test user 1").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build();
+                SlackUser user2 = SlackPersonaImpl.builder().id("TESTUSER2").userName("test user 2").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build();
+                SlackUser user3 = SlackPersonaImpl.builder().id("TESTUSER3").userName("test user 3").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build();
 
                 users.put(user1.getId(), user1);
                 users.put(user2.getId(), user2);
@@ -97,7 +98,7 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackPersona.SlackPresence getPresence(SlackPersona persona) {
+            public SlackPresence getPresence(SlackPersona persona) {
                 return null;
             }
 

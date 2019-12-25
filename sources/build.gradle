@@ -169,7 +169,7 @@ dependencies {
     compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.13.1'
     compile 'javax.websocket:javax.websocket-api:1.1'
 
-    compileOnly 'org.projectlombok:lombok:1.16.16'
+    compileOnly 'org.projectlombok:lombok:1.18.10'
 
 
     testCompile 'org.jmockit:jmockit:1.12'
