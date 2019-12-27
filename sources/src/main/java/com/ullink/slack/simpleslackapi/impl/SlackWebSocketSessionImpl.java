@@ -186,6 +186,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, SlackPreparedMessage preparedMessage) {
+        return sendMessageToUser(findUserByUserName(userName), preparedMessage);
+    }
+
+    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
         SlackChannel iMChannel = getIMChannelForUser(user);
         return sendMessage(iMChannel, message, attachment, DEFAULT_CONFIGURATION);
@@ -613,6 +618,51 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
+    public SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, String channelId) {
+        return deleteMessage(timeStamp, findChannelById(channelId));
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+        return sendMessage(findChannelById(channelId), preparedMessage, chatConfiguration);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage) {
+        return sendMessage(findChannelById(channelId), preparedMessage);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
+        return sendMessage(findChannelById(channelId), message, attachment, chatConfiguration, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
+        return sendMessage(findChannelById(channelId), message, attachment, chatConfiguration);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, boolean unfurl) {
+        return sendMessage(findChannelById(channelId), message, attachment, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment) {
+        return sendMessage(findChannelById(channelId), message, attachment);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, boolean unfurl) {
+        return sendMessage(findChannelById(channelId), message, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message) {
+        return sendMessage(findChannelById(channelId), message);
+    }
+
+    @Override
     public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration)
     {
         SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
@@ -700,6 +750,56 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("initial_comment", initialComment);
         postSlackCommandWithFile(arguments, data, fileName,FILE_UPLOAD_COMMAND, handle, SlackMessageReply.class);
         return handle;
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String user, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+        return sendEphemeralMessage(findChannelById(channelId), findUserByUserName(user), preparedMessage, chatConfiguration);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String user, SlackPreparedMessage preparedMessage) {
+        return sendEphemeralMessage(findChannelById(channelId), findUserByUserName(user), preparedMessage);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String user, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
+        return sendEphemeralMessage(findChannelById(channelId), findUserByUserName(user), message, attachment, chatConfiguration, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String user, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
+        return sendEphemeralMessage(findChannelById(channelId), findUserByUserName(user), message, attachment, chatConfiguration);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String user, String message, SlackAttachment attachment, boolean unfurl) {
+        return sendEphemeralMessage(findChannelById(channelId), findUserByUserName(user), message, attachment, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String user, String message, SlackAttachment attachment) {
+        return sendEphemeralMessage(findChannelById(channelId), findUserByUserName(user), message, attachment);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String user, String message, boolean unfurl) {
+        return sendEphemeralMessage(findChannelById(channelId), findUserByUserName(user), message, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String user, String message) {
+        return sendEphemeralMessage(findChannelById(channelId), findUserByUserName(user), message);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName) {
+        return sendFile(findChannelById(channelId), data, fileName);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName, String title, String initialComment) {
+        return sendFile(findChannelById(channelId), data, fileName, title, initialComment);
     }
 
     @Override
@@ -828,6 +928,66 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("channel", channel.getId());
         postSlackCommand(arguments, CHANNELS_UNARCHIVE_COMMAND, handle, SlackReplyImpl.class);
         return handle;
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message) {
+        return updateMessage(timeStamp, findChannelById(channelId), message);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments) {
+        return updateMessage(timeStamp, findChannelById(channelId), message, attachments);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments, List<Block> blocks) {
+        return updateMessage(timeStamp, findChannelById(channelId), message, attachments, blocks);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(String channelId, String message) {
+        return sendMessageOverWebSocket(findChannelById(channelId), message);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> addReactionToMessage(String channelId, String messageTimeStamp, String emojiCode) {
+        return addReactionToMessage(findChannelById(channelId), messageTimeStamp, emojiCode);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> removeReactionFromMessage(String channelId, String messageTimeStamp, String emojiCode) {
+        return removeReactionFromMessage(findChannelById(channelId), messageTimeStamp, emojiCode);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackChannelReply> setChannelTopic(String channelId, String topic) {
+        return setChannelTopic(findChannelById(channelId), topic);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackChannelReply> leaveChannel(String channelId) {
+        return leaveChannel(findChannelById(channelId));
+    }
+
+    @Override
+    public SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, SlackUser user) {
+        return inviteToChannel(findChannelById(channelId), user);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, String userName) {
+        return inviteToChannel(findChannelById(channelId), findUserByUserName(userName));
+    }
+
+    @Override
+    public SlackMessageHandle<ParsedSlackReply> archiveChannel(String channelId) {
+        return archiveChannel(findChannelById(channelId));
+    }
+
+    @Override
+    public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(String channelId) {
+        return unarchiveChannel(findChannelById(channelId));
     }
 
     @Override
@@ -1028,6 +1188,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             e.printStackTrace();
         }
         return handle;
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendTyping(String channelId) {
+        return sendTyping(channelId);
     }
 
     @Override

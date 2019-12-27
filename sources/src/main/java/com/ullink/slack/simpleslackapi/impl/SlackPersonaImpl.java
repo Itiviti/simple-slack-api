@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-class SlackPersonaImpl implements SlackPersona, SlackUser {
+public class SlackPersonaImpl implements SlackPersona, SlackUser {
 
     private String  id;
     @SerializedName("name")

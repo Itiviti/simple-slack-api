@@ -100,6 +100,11 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle<SlackMessageReply> sendTyping(String channelId) {
+                return null;
+            }
+
+            @Override
             public SlackPresence getPresence(SlackPersona persona) {
                 return null;
             }
@@ -112,6 +117,51 @@ public class TestSlackJSONMessageParser {
             @Override
             public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
                 throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, String channelId) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, boolean unfurl) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, boolean unfurl) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message) {
+                return null;
             }
 
             @Override
@@ -132,6 +182,56 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, SlackPreparedMessage preparedMessage) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, boolean unfurl) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, boolean unfurl) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName, String title, String initialComment) {
+                return null;
+            }
+
+            @Override
             public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte[] data, String fileName)
             {
                 return null;
@@ -145,6 +245,11 @@ public class TestSlackJSONMessageParser {
 
             @Override
             public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, SlackPreparedMessage preparedMessage) {
                 return null;
             }
 
@@ -225,6 +330,16 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, String userName) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackChannelReply> leaveChannel(String channelId) {
+                return null;
+            }
+
+            @Override
             public SlackMessageHandle sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
@@ -248,6 +363,56 @@ public class TestSlackJSONMessageParser {
 
             @Override public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel)
             {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments, List<Block> blocks) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(String channelId, String message) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> addReactionToMessage(String channelId, String messageTimeStamp, String emojiCode) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> removeReactionFromMessage(String channelId, String messageTimeStamp, String emojiCode) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackChannelReply> setChannelTopic(String channelId, String topic) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, SlackUser user) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<ParsedSlackReply> archiveChannel(String channelId) {
+                return null;
+            }
+
+            @Override
+            public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(String channelId) {
                 return null;
             }
 

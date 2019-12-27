@@ -1,10 +1,5 @@
 package com.ullink.slack.simpleslackapi;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import com.ullink.slack.simpleslackapi.blocks.Block;
 import com.ullink.slack.simpleslackapi.listeners.PinAddedListener;
 import com.ullink.slack.simpleslackapi.listeners.PinRemovedListener;
@@ -27,7 +22,16 @@ import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackTeamJoinListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
 import com.ullink.slack.simpleslackapi.listeners.UserTypingListener;
-import com.ullink.slack.simpleslackapi.replies.*;
+import com.ullink.slack.simpleslackapi.replies.EmojiSlackReply;
+import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
+import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
+import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class SlackSessionWrapper implements SlackSession
 {
@@ -173,6 +177,51 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.sendMessage(channel, message);
     }
 
+    @Override
+    public SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, String channelId) {
+        return delegate.deleteMessage(timeStamp, channelId);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+        return delegate.sendMessage(channelId, preparedMessage, chatConfiguration);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage) {
+        return delegate.sendMessage(channelId, preparedMessage);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
+        return delegate.sendMessage(channelId, message, attachment, chatConfiguration, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
+        return delegate.sendMessage(channelId, message, attachment, chatConfiguration);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, boolean unfurl) {
+        return delegate.sendMessage(channelId, message, attachment, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment) {
+        return delegate.sendMessage(channelId, message, attachment);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, boolean unfurl) {
+        return delegate.sendMessage(channelId, message, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message) {
+        return sendMessage(channelId, message);
+    }
+
     @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration)
     {
         return delegate.sendEphemeralMessage(channel, user, preparedMessage, chatConfiguration);
@@ -224,6 +273,56 @@ public class SlackSessionWrapper implements SlackSession
     }
 
     @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+        return delegate.sendEphemeralMessage(channelId, userName, preparedMessage, chatConfiguration);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, SlackPreparedMessage preparedMessage) {
+        return delegate.sendEphemeralMessage(channelId, userName, preparedMessage);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
+        return delegate.sendEphemeralMessage(channelId, userName, message, attachment, chatConfiguration, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
+        return delegate.sendEphemeralMessage(channelId, userName, message, attachment, chatConfiguration);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, boolean unfurl) {
+        return delegate.sendEphemeralMessage(channelId, userName, message, attachment, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment) {
+        return delegate.sendEphemeralMessage(channelId, userName, message, attachment);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, boolean unfurl) {
+        return delegate.sendEphemeralMessage(channelId, userName, message, unfurl);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message) {
+        return delegate.sendEphemeralMessage(channelId, userName, message);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName) {
+        return delegate.sendFile(channelId, data, fileName);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName, String title, String initialComment) {
+        return delegate.sendFile(channelId, data, fileName, title, initialComment);
+    }
+
+    @Override
     public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte[] data, String fileName)
     {
         return delegate.sendFileToUser(user, data, fileName);
@@ -238,6 +337,11 @@ public class SlackSessionWrapper implements SlackSession
     @Override public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage)
     {
         return delegate.sendMessageToUser(user, preparedMessage);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, SlackPreparedMessage preparedMessage) {
+        return delegate.sendMessageToUser(userName, preparedMessage);
     }
 
     @Override public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment)
@@ -300,6 +404,16 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.inviteToChannel(channel, user);
     }
 
+    @Override
+    public SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, String userName) {
+        return delegate.inviteToChannel(channelId, userName);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackChannelReply> leaveChannel(String channelId) {
+        return delegate.leaveChannel(channelId);
+    }
+
     @Override public SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel)
     {
         return delegate.archiveChannel(channel);
@@ -308,6 +422,56 @@ public class SlackSessionWrapper implements SlackSession
     @Override public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel)
     {
         return delegate.unarchiveChannel(channel);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message) {
+        return delegate.updateMessage(timeStamp, channelId, message);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments) {
+        return delegate.updateMessage(timeStamp, channelId, message, attachments);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments, List<Block> blocks) {
+        return delegate.updateMessage(timeStamp, channelId, message, attachments, blocks);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(String channelId, String message) {
+        return delegate.sendMessageOverWebSocket(channelId, message);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> addReactionToMessage(String channelId, String messageTimeStamp, String emojiCode) {
+        return delegate.addReactionToMessage(channelId, messageTimeStamp, emojiCode);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> removeReactionFromMessage(String channelId, String messageTimeStamp, String emojiCode) {
+        return delegate.removeReactionFromMessage(channelId, messageTimeStamp, emojiCode);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackChannelReply> setChannelTopic(String channelId, String topic) {
+        return delegate.setChannelTopic(channelId, topic);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, SlackUser user) {
+        return delegate.inviteToChannel(channelId, user);
+    }
+
+    @Override
+    public SlackMessageHandle<ParsedSlackReply> archiveChannel(String channelId) {
+        return delegate.archiveChannel(channelId);
+    }
+
+    @Override
+    public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(String channelId) {
+        return delegate.unarchiveChannel(channelId);
     }
 
     @Override public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
@@ -323,6 +487,11 @@ public class SlackSessionWrapper implements SlackSession
     @Override public SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel)
     {
         return delegate.sendTyping(channel);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendTyping(String channelId) {
+        return delegate.sendTyping(channelId);
     }
 
     @Override public SlackPresence getPresence(SlackPersona persona)
