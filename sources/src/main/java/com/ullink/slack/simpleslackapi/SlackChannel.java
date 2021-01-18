@@ -1,22 +1,28 @@
 package com.ullink.slack.simpleslackapi;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Singular;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.ullink.slack.simpleslackapi.SlackUser;
-
-//TODO: a domain object
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@Getter
 public class SlackChannel {
-    private final boolean direct;
     private String         id;
     private String         name;
-    private Set<SlackUser> members = new HashSet<>();
     private String         topic;
     private String         purpose;
+    private boolean        direct;
     private boolean        isMember;
     private boolean        isArchived;
+    @Singular
+    private transient Set<SlackUser> members;
 
     public SlackChannel(String id, String name, String topic, String purpose, boolean direct, boolean isMember, boolean isArchived)
     {
@@ -27,6 +33,11 @@ public class SlackChannel {
         this.direct = direct;
         this.isMember = isMember;
         this.isArchived = isArchived;
+        this.members = new HashSet<>();
+    }
+
+    public SlackChannel() {
+        this.members = new HashSet<>();
     }
 
     public void addUser(SlackUser user)

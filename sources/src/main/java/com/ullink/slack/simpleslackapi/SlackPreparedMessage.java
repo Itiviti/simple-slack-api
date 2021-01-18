@@ -1,21 +1,37 @@
 package com.ullink.slack.simpleslackapi;
 
 
+import com.google.gson.annotations.SerializedName;
+import com.ullink.slack.simpleslackapi.blocks.Block;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Singular;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@Builder
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode
 public class SlackPreparedMessage {
 
+    @SerializedName("text")
     private String message;
     private boolean unfurl;
     private boolean linkNames;
+    @Singular
     private List<SlackAttachment> attachments;
+    @Singular
+    private List<Block> blocks;
     private String threadTimestamp;
     private boolean replyBroadcast;
 
-
+    @Deprecated
     private SlackPreparedMessage(String message, boolean unfurl, boolean linkNames, SlackAttachment[] attachments, String threadTimestamp, boolean replyBroadcast) {
         this.message = message;
         this.unfurl = unfurl;
@@ -23,36 +39,30 @@ public class SlackPreparedMessage {
         this.attachments = Arrays.asList(attachments);
         this.threadTimestamp = threadTimestamp;
         this.replyBroadcast = replyBroadcast;
+        this.blocks = new ArrayList<>();
     }
 
     public SlackPreparedMessage(){
-
+        this.attachments = new ArrayList<>();
+        this.blocks = new ArrayList<>();
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public boolean isUnfurl() {
-        return unfurl;
-    }
-
-    public boolean isLinkNames() {
-        return linkNames;
-    }
-
+    @Deprecated
     public SlackAttachment[] getAttachments() {
         return attachments.toArray(new SlackAttachment[]{});
     }
 
-    public String getThreadTimestamp() {
-        return threadTimestamp;
+    @Override
+    public String toString() {
+        return "SlackPreparedMessage{" +
+                "message='" + message + '\'' +
+                ", unfurl=" + unfurl +
+                ", attachments=" + attachments +
+                ", blocks=" + blocks +
+                '}';
     }
 
-    public boolean isReplyBroadcast() {
-        return replyBroadcast;
-    }
-
+    @Deprecated
     public static class Builder {
         String message;
         boolean unfurl;
@@ -113,42 +123,13 @@ public class SlackPreparedMessage {
 
         public SlackPreparedMessage build() {
             return new SlackPreparedMessage(
-                    message,
-                    unfurl,
-                    linkNames,
-                    attachments.toArray(new SlackAttachment[]{}),
-                    threadTimestamp,
-                    replyBroadcast);
+                message,
+                unfurl,
+                linkNames,
+                attachments.toArray(new SlackAttachment[]{}),
+                threadTimestamp,
+                replyBroadcast);
         }
     }
 
-    @Override
-    public String toString() {
-        return "SlackPreparedMessage{" +
-                "message='" + message + '\'' +
-                ", unfurl=" + unfurl +
-                ", attachments=" + attachments +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SlackPreparedMessage that = (SlackPreparedMessage) o;
-        return isUnfurl() == that.isUnfurl() &&
-                isLinkNames() == that.isLinkNames() &&
-                isReplyBroadcast() == that.isReplyBroadcast() &&
-                Objects.equals(getMessage(), that.getMessage()) &&
-                Arrays.equals(getAttachments(), that.getAttachments()) &&
-                Objects.equals(getThreadTimestamp(), that.getThreadTimestamp());
-    }
-
-    @Override
-    public int hashCode() {
-
-        int result = Objects.hash(getMessage(), isUnfurl(), isLinkNames(), getThreadTimestamp(), isReplyBroadcast());
-        result = 31 * result + Arrays.hashCode(getAttachments());
-        return result;
-    }
 }

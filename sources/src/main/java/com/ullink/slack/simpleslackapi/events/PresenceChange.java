@@ -1,14 +1,12 @@
 package com.ullink.slack.simpleslackapi.events;
 
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.events.SlackEvent;
-import com.ullink.slack.simpleslackapi.events.SlackEventType;
+import com.ullink.slack.simpleslackapi.SlackPresence;
 import lombok.Data;
 
 @Data
 public class PresenceChange implements SlackEvent {
     private final String userId;
-    private final SlackPersona.SlackPresence presence;
+    private final SlackPresence presence;
 
     @Override
     public SlackEventType getEventType() {

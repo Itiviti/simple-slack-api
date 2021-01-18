@@ -1,10 +1,12 @@
 package com.ullink.slack.simpleslackapi;
 
+import com.ullink.slack.simpleslackapi.blocks.Block;
 import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.*;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public interface SlackSession {
@@ -65,6 +67,24 @@ public interface SlackSession {
 
     SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message);
 
+    SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, String channelId);
+
+    SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration);
+
+    SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage);
+
+    SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl);
+
+    SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration);
+
+    SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, boolean unfurl);
+
+    SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment);
+
+    SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, boolean unfurl);
+
+    SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message);
+
     SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration);
 
     SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage);
@@ -85,19 +105,43 @@ public interface SlackSession {
 
     SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte [] data, String fileName, String title, String initialComment);
 
+    SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration);
+
+    SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, SlackPreparedMessage preparedMessage);
+
+    SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl);
+
+    SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration);
+
+    SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, boolean unfurl);
+
+    SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment);
+
+    SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, boolean unfurl);
+
+    SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message);
+
+    SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte [] data, String fileName);
+
+    SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte [] data, String fileName, String title, String initialComment);
+
     SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte [] data, String fileName);
 
     SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte [] data, String fileName);
 
     SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage);
 
+    SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, SlackPreparedMessage preparedMessage);
+
     SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment);
     
     SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, String message, SlackAttachment attachment);
-    
+
     SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message);
 
     SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments);
+
+    SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments, List<Block> blocks);
 
     SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message);
 
@@ -112,20 +156,45 @@ public interface SlackSession {
     SlackMessageHandle<SlackChannelReply> leaveChannel(SlackChannel channel);
     
     SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user);
-    
+
+    SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, String userName);
+
+    SlackMessageHandle<SlackChannelReply> leaveChannel(String channelId);
+
     SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel);
 
     SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel);
 
+    SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message);
+
+    SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments);
+
+    SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments, List<Block> blocks);
+
+    SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(String channelId, String message);
+
+    SlackMessageHandle<SlackMessageReply> addReactionToMessage(String channelId, String messageTimeStamp, String emojiCode);
+
+    SlackMessageHandle<SlackMessageReply> removeReactionFromMessage(String channelId, String messageTimeStamp, String emojiCode);
+
+    SlackMessageHandle<SlackChannelReply> setChannelTopic(String channelId, String topic);
+
+    SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, SlackUser user);
+
+    SlackMessageHandle<ParsedSlackReply> archiveChannel(String channelId);
+
+    SlackMessageHandle<ParsedSlackReply> unarchiveChannel(String channelId);
     SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user);
 
     SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users);
 
     SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel);
 
-    SlackPersona.SlackPresence getPresence(SlackPersona persona);
+    SlackMessageHandle<SlackMessageReply> sendTyping(String channelId);
 
-    void setPresence(SlackPersona.SlackPresence presence);
+    SlackPresence getPresence(SlackPersona persona);
+
+    void setPresence(SlackPresence presence);
 
     SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(Map<String, String> params, String command);
 

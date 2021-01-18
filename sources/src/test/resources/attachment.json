@@ -1,0 +1,1 @@
+{"title":"test","fallback":"fallback","text":"text","pretext":"pretext","fields":[{"title":"field 1","value":"value 1","short":false},{"title":"field 2","value":"value 2","short":true}],"actions":[{"name":"action 1","text":"type","type":"value","value":"text 1"}]}

@@ -1,14 +1,21 @@
 package com.ullink.slack.simpleslackapi;
 
+import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Singular;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Builder
+@AllArgsConstructor
 public class SlackAttachment {
 
     private String              title;
-    private String              titleLink;
+    private String              title_link;
     private String              fallback;
     private String              callback_id;
     private String              text;
@@ -22,25 +29,31 @@ public class SlackAttachment {
     private String              image_url;
 
     private String              color;
+    @SerializedName("ts")
     private String                timestamp;
 
-    private Map<String, String> miscRootFields;
+    private transient Map<String, String> miscRootFields;
 
-    private List<SlackField>    fields = new ArrayList<>();
-
-    private List<SlackAction>   actions = new ArrayList<>();
+    @Singular
+    private List<SlackField>    fields;
+    @Singular
+    private List<SlackAction>   actions;
 
     private List<String>        markdown_in;
 
     public SlackAttachment() {
-
+        this.actions = new ArrayList<>();
+        this.fields = new ArrayList<>();
     }
 
+    @Deprecated
     public SlackAttachment(String title, String fallback, String text, String pretext) {
         this.title = title;
         this.fallback = fallback;
         this.text = text;
         this.pretext = pretext;
+        this.actions = new ArrayList<>();
+        this.fields = new ArrayList<>();
     }
 
     @Override
@@ -81,7 +94,7 @@ public class SlackAttachment {
 
     public void setTitleLink(String titleLink)
     {
-        this.titleLink = titleLink;
+        this.title_link = titleLink;
     }
 
     public void setFallback(String fallback)
@@ -131,7 +144,7 @@ public class SlackAttachment {
     }
 
     public String getTitleLink() {
-        return titleLink;
+        return title_link;
     }
 
     public String getFallback() {
