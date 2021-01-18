@@ -723,18 +723,18 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName) {
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, InputStream data, String fileName) {
         return sendFileToUser(findUserByUserName(userName), data, fileName);
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte[] data, String fileName) {
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, InputStream data, String fileName) {
         SlackChannel iMChannel = getIMChannelForUser(user);
         return sendFile(iMChannel, data, fileName);
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName) {
+    public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName) {
         SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
@@ -745,7 +745,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName, String title, String initialComment) {
+    public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName, String title, String initialComment) {
         SlackMessageHandle<SlackMessageReply> handle = new SlackMessageHandle<>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
@@ -1077,11 +1077,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
-    private <T extends SlackReply> void postSlackCommandWithFile(Map<String, String> params, byte[] fileContent, String fileName, String command, SlackMessageHandle handle, Class<T> replyType) {
+    private <T extends SlackReply> void postSlackCommandWithFile(Map<String, String> params, InputStream fileContent, String fileName, String command, SlackMessageHandle handle, Class<T> replyType) {
         try
         {
 	        URIBuilder uriBuilder = new URIBuilder(slackApiBase+command);
-	        
+
 	        for (Map.Entry<String, String> arg : params.entrySet())
 	        {
 	            uriBuilder.setParameter(arg.getKey(),arg.getValue());

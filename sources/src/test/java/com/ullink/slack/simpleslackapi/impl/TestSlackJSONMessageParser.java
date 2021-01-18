@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -170,13 +171,13 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName)
+            public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName)
             {
                 return null;
             }
 
             @Override
-            public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName, String title, String initialComment)
+            public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName, String title, String initialComment)
             {
                 return null;
             }
@@ -232,13 +233,13 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte[] data, String fileName)
+            public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, InputStream data, String fileName)
             {
                 return null;
             }
 
             @Override
-            public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName)
+            public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, InputStream data, String fileName)
             {
                 return null;
             }

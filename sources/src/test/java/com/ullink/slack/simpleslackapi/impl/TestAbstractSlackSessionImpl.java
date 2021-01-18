@@ -7,6 +7,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.replies.*;
 import org.junit.Test;
 
+import java.io.InputStream;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -127,13 +128,13 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName)
+        public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName)
         {
             return null;
         }
 
         @Override
-        public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName, String title, String initialComment)
+        public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName, String title, String initialComment)
         {
             return null;
         }
@@ -189,13 +190,13 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte[] data, String fileName)
+        public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, InputStream data, String fileName)
         {
             return null;
         }
 
         @Override
-        public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName)
+        public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, InputStream data, String fileName)
         {
             return null;
         }

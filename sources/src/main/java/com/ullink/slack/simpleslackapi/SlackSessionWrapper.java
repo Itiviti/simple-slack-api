@@ -29,9 +29,11 @@ import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 
 public class SlackSessionWrapper implements SlackSession
 {
@@ -262,12 +264,12 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.sendEphemeralMessage(channel, user, message);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName)
+    @Override public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName)
     {
         return delegate.sendFile(channel, data, fileName);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, byte[] data, String fileName, String title, String initialComment)
+    @Override public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName, String title, String initialComment)
     {
         return delegate.sendFile(channel, data, fileName, title, initialComment);
     }
@@ -313,23 +315,23 @@ public class SlackSessionWrapper implements SlackSession
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName) {
+    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, InputStream data, String fileName) {
         return delegate.sendFile(channelId, data, fileName);
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName, String title, String initialComment) {
+    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, InputStream data, String fileName, String title, String initialComment) {
         return delegate.sendFile(channelId, data, fileName, title, initialComment);
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, byte[] data, String fileName)
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, InputStream data, String fileName)
     {
         return delegate.sendFileToUser(user, data, fileName);
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, byte[] data, String fileName)
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, InputStream data, String fileName)
     {
         return delegate.sendFileToUser(userName, data, fileName);
     }
