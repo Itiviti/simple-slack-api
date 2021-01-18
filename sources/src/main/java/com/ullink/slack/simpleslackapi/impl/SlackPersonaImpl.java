@@ -1,153 +1,75 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.google.gson.annotations.SerializedName;
 import com.ullink.slack.simpleslackapi.SlackPersona;
+import com.ullink.slack.simpleslackapi.SlackPresence;
+import com.ullink.slack.simpleslackapi.SlackUser;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-class SlackPersonaImpl implements SlackPersona {
-    final String  id;
-    final String  userName;
-    final String  realName;
-    final String  userMail;
-    final String userSkype;
-    final String userPhone;
-    final String userTitle;
-    final boolean deleted;
-    final boolean admin;
-    final boolean owner;
-    final boolean primaryOwner;
-    final boolean restricted;
-    final boolean ultraRestricted;
-    final boolean bot;
-    final String timeZone;
-    final String timeZoneLabel;
-    final Integer timeZoneOffset;
-    final SlackPresence presence;
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+public class SlackPersonaImpl implements SlackPersona, SlackUser {
 
-    SlackPersonaImpl(String id, String userName, String realName, String userMail, String userSkype, String userPhone, String userTitle,
-                     boolean deleted, boolean admin, boolean owner, boolean primaryOwner, boolean restricted,
-                     boolean ultraRestricted, boolean bot, String timeZone, String timeZoneLabel, Integer timeZoneOffset,
-                     SlackPresence presence) {
-        this.id = id;
-        this.userName = userName;
-        this.realName = realName;
-        this.userMail = userMail;
-        this.userSkype = userSkype;
-        this.userPhone = userPhone;
-        this.userTitle = userTitle;
-        this.deleted = deleted;
-        this.admin = admin;
-        this.owner = owner;
-        this.primaryOwner = primaryOwner;
-        this.restricted = restricted;
-        this.ultraRestricted = ultraRestricted;
-        this.bot = bot;
-        this.timeZone = timeZone;
-        this.timeZoneLabel = timeZoneLabel;
-        this.timeZoneOffset = timeZoneOffset;
-        this.presence = presence;
+    private String  id;
+    @SerializedName("name")
+    private String  userName;
+    @SerializedName("skype")
+    private boolean deleted;
+    @SerializedName("is_admin")
+    private boolean admin;
+    @SerializedName("is_owner")
+    private boolean owner;
+    @SerializedName("is_primary_owner")
+    private boolean primaryOwner;
+    @SerializedName("is_restricted")
+    private boolean restricted;
+    @SerializedName("is_ultra_restricted")
+    private boolean ultraRestricted;
+    @SerializedName("is_bot")
+    private boolean bot;
+    @SerializedName("tz")
+    private String timeZone;
+    @SerializedName("tz_label")
+    private String timeZoneLabel;
+    @SerializedName("tz_offset")
+    private Integer timeZoneOffset;
+
+    private SlackProfileImpl profile;
+
+
+    @Override
+    public String getRealName() {
+        return profile.getRealName();
     }
 
     @Override
-    public String getId()
-    {
-        return id;
-    }
-
-    @Override
-    public String getUserName()
-    {
-        return userName;
-    }
-
-    @Override
-    public boolean isDeleted()
-    {
-        return deleted;
-    }
-
-    @Override
-    public boolean isAdmin()
-    {
-        return admin;
-    }
-
-    @Override
-    public boolean isOwner()
-    {
-        return owner;
-    }
-
-    @Override
-    public boolean isPrimaryOwner()
-    {
-        return primaryOwner;
-    }
-
-    @Override
-    public boolean isRestricted()
-    {
-        return restricted;
-    }
-
-    @Override
-    public boolean isUltraRestricted()
-    {
-        return ultraRestricted;
-    }
-
-    @Override
-    public boolean isBot()
-    {
-        return bot;
-    }
-
-    @Override
-    public String getUserMail()
-    {
-        return userMail;
+    public String getUserMail() {
+        return profile.getEmail();
     }
 
     @Override
     public String getUserSkype() {
-        return userSkype;
+        return profile.getSkype();
     }
 
     @Override
     public String getUserPhone() {
-        return userPhone;
+        return profile.getPhone();
     }
 
     @Override
     public String getUserTitle() {
-        return userTitle;
-    }
-
-    @Override
-    public String getRealName()
-    {
-        return realName;
-    }
-
-    @Override
-    public String getTimeZone()
-    {
-        return timeZone;
-    }
-
-    @Override
-    public String getTimeZoneLabel()
-    {
-        return timeZoneLabel;
-    }
-
-    @Override
-    public Integer getTimeZoneOffset()
-    {
-        return timeZoneOffset;
+        return profile.getTitle();
     }
 
     @Override
     public SlackPresence getPresence() {
-        return presence;
+        return profile.getPresence();
     }
 
 }

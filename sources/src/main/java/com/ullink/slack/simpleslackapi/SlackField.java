@@ -1,8 +1,11 @@
 package com.ullink.slack.simpleslackapi;
 
+import com.google.gson.annotations.SerializedName;
+
 public class SlackField {
     private String  title;
     private String  value;
+    @SerializedName("short")
     private boolean isShort;
 
     public SlackField() {

@@ -1,12 +1,14 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.blocks.Block;
 import com.ullink.slack.simpleslackapi.events.SlackConnected;
 import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.replies.*;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,7 +18,7 @@ public class TestAbstractSlackSessionImpl
     private class TestSlackSessionImpl extends AbstractSlackSessionImpl
     {
         @Override
-        public void setPresence(SlackPersona.SlackPresence presence) {
+        public void setPresence(SlackPresence presence) {
         }
         @Override
         public void connect()
@@ -27,15 +29,15 @@ public class TestAbstractSlackSessionImpl
             channels.put("channelid4",new SlackChannel("channelid4", "testchannel4", "topicchannel4", "topicchannel4", false, false, false));
             channels.put("channelid5",new SlackChannel("channelid5", "testchannel5", "topicchannel5", "topicchannel5", false, false, false));
 
-            users.put("userid1",new SlackUserImpl("userid1", "username1", "realname1","userid1@my.mail", "testSkype", "testPhone", "testTitle", false,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
-            users.put("userid2",new SlackUserImpl("userid2", "username2", "realname2","userid2@my.mail", "testSkype", "testPhone", "testTitle", false,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
-            users.put("userid3",new SlackUserImpl("userid3", "username3", "realname3","userid3@my.mail", "testSkype", "testPhone", "testTitle", true,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
-            users.put("userid4",new SlackUserImpl("userid4", "username4", "realname4","userid4@my.mail", "testSkype", "testPhone", "testTitle", false,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
-            users.put("userid5",new SlackUserImpl("userid5", "username5", "realname4","userid5@my.mail", "testSkype", "testPhone", "testTitle", true,false,false,false,false,false, false,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
+            users.put("userid1",SlackPersonaImpl.builder().id("userid1").userName("username1").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("userid2",SlackPersonaImpl.builder().id("userid2").userName("username2").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("userid3",SlackPersonaImpl.builder().id("userid3").userName("username3").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("userid4",SlackPersonaImpl.builder().id("userid4").userName("username4").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("userid5",SlackPersonaImpl.builder().id("userid5").userName("username5").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("botid1",SlackPersonaImpl.builder().bot(true).id("botid1").userName("botname1").profile(SlackProfileImpl.builder().realName("real bot name 1").presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("botid2",SlackPersonaImpl.builder().bot(true).id("botid2").userName("botname2").profile(SlackProfileImpl.builder().realName("real bot name 2").presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("botid3",SlackPersonaImpl.builder().bot(true).id("botid3").userName("botname3").profile(SlackProfileImpl.builder().realName("real bot name 3").presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
 
-            users.put("botid1",new SlackUserImpl("botid1", "botname1", "real bot name 1", null, "testSkype", "testPhone", "testTitle", false,false,false,false,false,false,true,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
-            users.put("botid2",new SlackUserImpl("botid2", "botname2", "real bot name 2", null, "testSkype", "testPhone", "testTitle", false,false,false,false,false,false,true,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
-            users.put("botid3",new SlackUserImpl("botid3", "botname3", "real bot name 3", null, "testSkype", "testPhone", "testTitle", true,false,false,false,false,false,true,"tz","tzLabel",new Integer(0), SlackPersona.SlackPresence.ACTIVE));
         }
 
         @Override
@@ -55,7 +57,12 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackPersona.SlackPresence getPresence(SlackPersona persona) {
+        public SlackMessageHandle<SlackMessageReply> sendTyping(String channelId) {
+            return null;
+        }
+
+        @Override
+        public SlackPresence getPresence(SlackPersona persona) {
             return null;
         }
 
@@ -67,6 +74,51 @@ public class TestAbstractSlackSessionImpl
 
         @Override
         public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, String channelId) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, boolean unfurl) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, boolean unfurl) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message) {
             return null;
         }
 
@@ -88,6 +140,56 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
+        public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, SlackPreparedMessage preparedMessage) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, boolean unfurl) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, boolean unfurl) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName, String title, String initialComment) {
+            return null;
+        }
+
+        @Override
         public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, InputStream data, String fileName)
         {
             return null;
@@ -105,6 +207,11 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, SlackPreparedMessage preparedMessage) {
+            return null;
+        }
+
+        @Override
         public SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message)
         {
             return null;
@@ -112,6 +219,12 @@ public class TestAbstractSlackSessionImpl
 
         @Override
         public SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments)
+        {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments, List<Block> blocks)
         {
             return null;
         }
@@ -187,6 +300,16 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
+        public SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, String userName) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackChannelReply> leaveChannel(String channelId) {
+            return null;
+        }
+
+        @Override
         public SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel)
         {
           return null;
@@ -194,6 +317,56 @@ public class TestAbstractSlackSessionImpl
 
         @Override public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel)
         {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments, List<Block> blocks) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(String channelId, String message) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> addReactionToMessage(String channelId, String messageTimeStamp, String emojiCode) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> removeReactionFromMessage(String channelId, String messageTimeStamp, String emojiCode) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackChannelReply> setChannelTopic(String channelId, String topic) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, SlackUser user) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<ParsedSlackReply> archiveChannel(String channelId) {
+            return null;
+        }
+
+        @Override
+        public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(String channelId) {
             return null;
         }
 

@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.WebSocketContainerProvider;
 import mockit.Mocked;
 import org.junit.Test;
@@ -13,8 +14,9 @@ public class TestSlackWebSocketSessionImpl {
   @Test(expected = IllegalArgumentException.class)
   public void testSendMessageWithNullChanel(@Mocked WebSocketContainerProvider provider) throws Exception{
     SlackWebSocketSessionImpl webSocketSession = new SlackWebSocketSessionImpl(provider, "", null, false, false, 42L, TimeUnit.MILLISECONDS);
+    SlackChannel channel = null;
     try {
-      webSocketSession.sendMessage(null, "");
+      webSocketSession.sendMessage(channel, "");
     } catch (NullPointerException e) {
       fail("NullPointerException unexpected here");
     }

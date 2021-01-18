@@ -19,6 +19,7 @@ public final class ReaderUtils
      * Reads everything from reader and returns as string.
      * @param reader the object read from
      * @return a string containing all the information
+     * @throws IOException if failed copy
      */
     public static String readAll(final Reader reader) throws IOException
     {
