@@ -798,12 +798,12 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName) {
+    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, InputStream data, String fileName) {
         return sendFile(findChannelById(channelId), data, fileName);
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName, String title, String initialComment) {
+    public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, InputStream data, String fileName, String title, String initialComment) {
         return sendFile(findChannelById(channelId), data, fileName, title, initialComment);
     }
 

@@ -180,12 +180,12 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName) {
+        public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, InputStream data, String fileName) {
             return null;
         }
 
         @Override
-        public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, byte[] data, String fileName, String title, String initialComment) {
+        public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, InputStream data, String fileName, String title, String initialComment) {
             return null;
         }
 
