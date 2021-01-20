@@ -5,7 +5,6 @@ import com.ullink.slack.simpleslackapi.WebSocketContainerProvider;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 
 import javax.websocket.ClientEndpointConfig;
-import javax.websocket.DeploymentException;
 import javax.websocket.Endpoint;
 import javax.websocket.Extension;
 import javax.websocket.Session;
@@ -28,91 +27,84 @@ public class SlackCustomConnection
                                                   .withProxy(Proxy.Type.HTTP, "my.proxy.address", 1234)
                                               .withAutoreconnectOnDisconnection(false)
                 .withConnectionHeartbeat(10, TimeUnit.SECONDS)
-                .withCustomWebSocketContainer(new WebSocketContainerProvider()
+                .withCustomWebSocketContainer(() -> new WebSocketContainer()
                 {
                     @Override
-                    public WebSocketContainer getWebSocketContainer()
+                    public long getDefaultAsyncSendTimeout()
                     {
-                        return new WebSocketContainer()
-                        {
-                            @Override
-                            public long getDefaultAsyncSendTimeout()
-                            {
-                                return 0;
-                            }
+                        return 0;
+                    }
 
-                            @Override
-                            public void setAsyncSendTimeout(long timeoutmillis)
-                            {
+                    @Override
+                    public void setAsyncSendTimeout(long timeoutmillis)
+                    {
 
-                            }
+                    }
 
-                            @Override
-                            public Session connectToServer(Object annotatedEndpointInstance, URI path)
-                            {
-                                return null;
-                            }
+                    @Override
+                    public Session connectToServer(Object annotatedEndpointInstance, URI path)
+                    {
+                        return null;
+                    }
 
-                            @Override
-                            public Session connectToServer(Class<?> annotatedEndpointClass, URI path)
-                            {
-                                return null;
-                            }
+                    @Override
+                    public Session connectToServer(Class<?> annotatedEndpointClass, URI path)
+                    {
+                        return null;
+                    }
 
-                            @Override
-                            public Session connectToServer(Endpoint endpointInstance, ClientEndpointConfig cec, URI path)
-                            {
-                                return null;
-                            }
+                    @Override
+                    public Session connectToServer(Endpoint endpointInstance, ClientEndpointConfig cec, URI path)
+                    {
+                        return null;
+                    }
 
-                            @Override
-                            public Session connectToServer(Class<? extends Endpoint> endpointClass, ClientEndpointConfig cec, URI path)
-                            {
-                                return null;
-                            }
+                    @Override
+                    public Session connectToServer(Class<? extends Endpoint> endpointClass, ClientEndpointConfig cec, URI path)
+                    {
+                        return null;
+                    }
 
-                            @Override
-                            public long getDefaultMaxSessionIdleTimeout()
-                            {
-                                return 0;
-                            }
+                    @Override
+                    public long getDefaultMaxSessionIdleTimeout()
+                    {
+                        return 0;
+                    }
 
-                            @Override
-                            public void setDefaultMaxSessionIdleTimeout(long timeout)
-                            {
+                    @Override
+                    public void setDefaultMaxSessionIdleTimeout(long timeout)
+                    {
 
-                            }
+                    }
 
-                            @Override
-                            public int getDefaultMaxBinaryMessageBufferSize()
-                            {
-                                return 0;
-                            }
+                    @Override
+                    public int getDefaultMaxBinaryMessageBufferSize()
+                    {
+                        return 0;
+                    }
 
-                            @Override
-                            public void setDefaultMaxBinaryMessageBufferSize(int max)
-                            {
+                    @Override
+                    public void setDefaultMaxBinaryMessageBufferSize(int max)
+                    {
 
-                            }
+                    }
 
-                            @Override
-                            public int getDefaultMaxTextMessageBufferSize()
-                            {
-                                return 0;
-                            }
+                    @Override
+                    public int getDefaultMaxTextMessageBufferSize()
+                    {
+                        return 0;
+                    }
 
-                            @Override
-                            public void setDefaultMaxTextMessageBufferSize(int max)
-                            {
+                    @Override
+                    public void setDefaultMaxTextMessageBufferSize(int max)
+                    {
 
-                            }
+                    }
 
-                            @Override
-                            public Set<Extension> getInstalledExtensions()
-                            {
-                                return null;
-                            }
-                        };
+                    @Override
+                    public Set<Extension> getInstalledExtensions()
+                    {
+                        return null;
                     }
                 })
                 .withRateLimitSupport(false) //opt-out from rate limit auto retry

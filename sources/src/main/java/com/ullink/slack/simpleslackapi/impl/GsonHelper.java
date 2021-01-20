@@ -45,6 +45,6 @@ class GsonHelper
 
     static Boolean ifNullFalse(JsonElement jsonElement)
     {
-        return jsonElement != null && !jsonElement.isJsonNull() ? jsonElement.getAsBoolean() : false;
+        return jsonElement != null && !jsonElement.isJsonNull() && jsonElement.getAsBoolean();
     }
 }

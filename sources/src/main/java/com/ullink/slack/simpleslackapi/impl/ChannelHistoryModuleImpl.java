@@ -161,7 +161,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
     public static class ChannelHistoryReactionAddedListener implements ReactionAddedListener {
 
-        List<SlackMessagePosted> messages = new ArrayList<>();
+        List<SlackMessagePosted> messages;
 
         public ChannelHistoryReactionAddedListener(List<SlackMessagePosted> initialMessages) {
             messages = initialMessages;
@@ -185,7 +185,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
     public static class ChannelHistoryReactionRemovedListener implements ReactionRemovedListener {
 
-        List<SlackMessagePosted> messages = new ArrayList<>();
+        List<SlackMessagePosted> messages;
 
         public ChannelHistoryReactionRemovedListener(List<SlackMessagePosted> initialMessages) {
             messages = initialMessages;
@@ -212,7 +212,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
     public static class ChannelHistoryMessagePostedListener implements SlackMessagePostedListener {
 
-        List<SlackMessagePosted> messages = new ArrayList<>();
+        List<SlackMessagePosted> messages;
 
         public ChannelHistoryMessagePostedListener(List<SlackMessagePosted> initialMessages) {
             messages = initialMessages;

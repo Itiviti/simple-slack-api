@@ -15,10 +15,10 @@ import javax.websocket.WebSocketContainer;
 public class DefaultWebSocketContainerProvider implements WebSocketContainerProvider
 {
 
-    private String proxyAddress;
-    private int proxyPort;
-    private String proxyUser;
-    private String proxyPassword;
+    private final String proxyAddress;
+    private final int    proxyPort;
+    private final String proxyUser;
+    private final String proxyPassword;
 
     DefaultWebSocketContainerProvider(String proxyAdress, int proxyPort, String proxyUser, String proxyPassword) {
         this.proxyAddress = proxyAdress;

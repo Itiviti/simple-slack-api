@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TestAbstractSlackSessionImpl
 {
 
-    private class TestSlackSessionImpl extends AbstractSlackSessionImpl
+    private static class TestSlackSessionImpl extends AbstractSlackSessionImpl
     {
         @Override
         public void setPresence(SlackPresence presence) {

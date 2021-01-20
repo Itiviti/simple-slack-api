@@ -8,10 +8,6 @@ public class SlackField {
     @SerializedName("short")
     private boolean isShort;
 
-    public SlackField() {
-
-    }
-
     public SlackField(String title, String value, boolean isShort) {
         this.title = title;
         this.value = value;

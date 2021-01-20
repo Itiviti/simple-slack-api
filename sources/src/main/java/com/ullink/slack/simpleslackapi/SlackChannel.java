@@ -21,8 +21,9 @@ public class SlackChannel {
     private boolean        direct;
     private boolean        isMember;
     private boolean        isArchived;
+
     @Singular
-    private transient Set<SlackUser> members;
+    private final transient Set<SlackUser> members;
 
     public SlackChannel(String id, String name, String topic, String purpose, boolean direct, boolean isMember, boolean isArchived)
     {

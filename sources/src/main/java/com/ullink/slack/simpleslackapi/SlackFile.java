@@ -26,10 +26,6 @@ public class SlackFile {
     private String permalink;
     private String permalinkPublic;
     private String comment;
-    
-    public SlackFile() {
-
-    }
 
     public String getId() {
         return id;

@@ -426,7 +426,8 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void testParsingNewMessage() throws Exception {
+    public void testParsingNewMessage()
+    {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(TEST_NEW_MESSAGE).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
@@ -439,7 +440,8 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void testParsingNewMessageFromIntegration() throws Exception {
+    public void testParsingNewMessageFromIntegration()
+    {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(TEST_NEW_MESSAGE_FROM_INTEGRATION).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
@@ -452,7 +454,8 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void testParsingMessageDeleted() throws Exception {
+    public void testParsingMessageDeleted()
+    {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(TEST_DELETED_MESSAGE).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
@@ -464,7 +467,8 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void testParsingMessageChanged() throws Exception {
+    public void testParsingMessageChanged()
+    {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(TEST_UPDATED_MESSAGE).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
@@ -477,7 +481,8 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void testChannelCreated() throws Exception {
+    public void testChannelCreated()
+    {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(TEST_CHANNEL_CREATED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
@@ -492,7 +497,8 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void testChannelDeleted() throws Exception {
+    public void testChannelDeleted()
+    {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(TEST_CHANNEL_DELETED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
@@ -502,7 +508,8 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void testChannelArchived() throws Exception {
+    public void testChannelArchived()
+    {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(TEST_CHANNEL_ARCHIVED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
@@ -513,7 +520,8 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void testChannelUnarchived() throws Exception {
+    public void testChannelUnarchived()
+    {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(TEST_CHANNEL_UNARCHIVED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
@@ -524,7 +532,8 @@ public class TestSlackJSONMessageParser {
     }
 
     @Test
-    public void testGroupJoined() throws Exception {
+    public void testGroupJoined()
+    {
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(TEST_GROUP_JOINED).getAsJsonObject();
         SlackEvent event = SlackJSONMessageParser.decode(session, object);
@@ -604,7 +613,7 @@ public class TestSlackJSONMessageParser {
         Assertions.assertThat(event).isInstanceOf(SlackMessagePosted.class);
         SlackMessagePosted slackMessage = (SlackMessagePosted) event;
         Assertions.assertThat(slackMessage.getAttachments()).isNotNull();
-        Assertions.assertThat(slackMessage.getAttachments().size() == 1);
+        Assertions.assertThat(slackMessage.getAttachments().size()).isEqualTo(1);
 
         SlackAttachment attachment = slackMessage.getAttachments().get(0);
 

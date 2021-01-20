@@ -26,7 +26,8 @@ public class TestUtils {
 
   private static Gson gson;
 
-  public static Gson gson() throws IOException {
+  public static Gson gson()
+  {
     if (gson == null) {
       GsonBuilder builder = new GsonBuilder();
       builder.registerTypeAdapter(SlackPresence.class, new SlackPresenceSerDes());

@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 class SlackJSONSessionStatusParser {
     private static final Logger             LOGGER       = LoggerFactory.getLogger(SlackJSONSessionStatusParser.class);
 
-    private Map<String, SlackChannel> channels           = new HashMap<>();
-    private Map<String, SlackUser>          users        = new HashMap<>();
-    private Map<String, SlackIntegration>   integrations = new HashMap<>();
+    private final Map<String, SlackChannel>     channels     = new HashMap<>();
+    private final Map<String, SlackUser>        users        = new HashMap<>();
+    private final Map<String, SlackIntegration> integrations = new HashMap<>();
 
     private SlackPersona sessionPersona;
 
@@ -25,7 +25,7 @@ class SlackJSONSessionStatusParser {
 
     private String                    webSocketURL;
 
-    private String                    toParse;
+    private final String toParse;
 
     private String                    error;
 
@@ -65,7 +65,7 @@ class SlackJSONSessionStatusParser {
         JsonObject jsonResponse = parser.parse(toParse).getAsJsonObject();
         Boolean ok = jsonResponse.get("ok").getAsBoolean();
         if (Boolean.FALSE.equals(ok)) {
-            error = (String)jsonResponse.get("error").getAsString();
+            error = jsonResponse.get("error").getAsString();
             return;
         }
         JsonArray usersJson = jsonResponse.get("users").getAsJsonArray();

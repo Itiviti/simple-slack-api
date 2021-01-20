@@ -10,9 +10,6 @@ public class SlackAction {
     private String value;
     private SlackConfirmation confirm;
 
-    public SlackAction() {
-    }
-
     public SlackAction(String name, String text, String type, String value) {
         this.name = name;
         this.text = text;
@@ -80,10 +77,6 @@ public class SlackAction {
             this.text = text;
             this.okText = okText;
             this.dismissText = dismissText;
-        }
-
-        public SlackConfirmation() {
-
         }
 
         public String getTitle() {

@@ -152,9 +152,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private  static final int                 DEFAULT_HEARTBEAT_IN_MILLIS = 30000;
 
-    private volatile Session                  websocketSession;
-    private String                            authToken;
-    private String                            slackApiBase               = DEFAULT_SLACK_API_HTTPS_ROOT;
+    private volatile Session websocketSession;
+    private final    String  authToken;
+    private          String  slackApiBase               = DEFAULT_SLACK_API_HTTPS_ROOT;
     private String                            proxyAddress;
     private int                               proxyPort                  = -1;
     HttpHost                                  proxyHost;
@@ -163,17 +163,17 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private volatile long                     lastPingSent;
     private volatile long                     lastPingAck;
 
-    private AtomicLong                        messageId = new AtomicLong();
+    private final AtomicLong messageId = new AtomicLong();
 
     private final boolean                     reconnectOnDisconnection;
     private final boolean                     isRateLimitSupported;
     private volatile boolean                  wantDisconnect;
 
-    private Thread                            connectionMonitoringThread; //TODO: replace this with a scheduled executor
-    private EventDispatcher                   dispatcher                 = new EventDispatcher();
-    private final long                        heartbeat;
-    private WebSocketContainerProvider        webSocketContainerProvider;
-    private volatile String                   webSocketConnectionURL;
+    private          Thread                     connectionMonitoringThread; //TODO: replace this with a scheduled executor
+    private final    EventDispatcher            dispatcher = new EventDispatcher();
+    private final    long                       heartbeat;
+    private final    WebSocketContainerProvider webSocketContainerProvider;
+    private volatile String                     webSocketConnectionURL;
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage message) {
@@ -736,7 +736,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("token", authToken);
         arguments.put("channels", channel.getId());
         arguments.put("filename", fileName);
-        postSlackCommandWithFile(arguments, data, fileName,FILE_UPLOAD_COMMAND, handle, SlackMessageReply.class);
+        postSlackCommandWithFile(arguments, data, fileName, handle);
         return handle;
     }
 
@@ -749,7 +749,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("filename", fileName);
         arguments.put("title", title);
         arguments.put("initial_comment", initialComment);
-        postSlackCommandWithFile(arguments, data, fileName,FILE_UPLOAD_COMMAND, handle, SlackMessageReply.class);
+        postSlackCommandWithFile(arguments, data, fileName, handle);
         return handle;
     }
 
@@ -840,7 +840,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("channel", channel.getId());
         arguments.put("text", message);
         arguments.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachments).toString());
-        arguments.put("blocks", SlackJSONBlockFormatter.encodeBlocks(blocks).toString());
+        arguments.put("blocks", SlackJSONBlockFormatter.encodeBlocks(blocks));
         postSlackCommand(arguments, CHAT.UPDATE_COMMAND, handle, SlackMessageReply.class);
         return handle;
     }
@@ -1073,10 +1073,10 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
-    private <T extends SlackReply> void postSlackCommandWithFile(Map<String, String> params, InputStream fileContent, String fileName, String command, SlackMessageHandle handle, Class<T> replyType) {
+    private <T extends SlackReply> void postSlackCommandWithFile(Map<String, String> params, InputStream fileContent, String fileName, SlackMessageHandle handle) {
         try
         {
-	        URIBuilder uriBuilder = new URIBuilder(slackApiBase+command);
+	        URIBuilder uriBuilder = new URIBuilder(slackApiBase+ SlackWebSocketSessionImpl.FILE_UPLOAD_COMMAND);
 
 	        for (Map.Entry<String, String> arg : params.entrySet())
 	        {
@@ -1087,7 +1087,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 	        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.addBinaryBody("file",fileContent, ContentType.DEFAULT_BINARY,fileName);
             request.setEntity(builder.build());
-            T reply = client.execute(request, new SlackResponseHandler<>(replyType));
+            T reply = client.execute(request, new SlackResponseHandler<>((Class<T>) SlackMessageReply.class));
             handle.setReply(reply);
         }
         catch (Exception e)

@@ -12,11 +12,6 @@ public class SlackChatConfiguration
     private String  userName;
     private String  avatarDescription;
 
-    private SlackChatConfiguration()
-    {
-
-    }
-
     public boolean isAsUser()
     {
         return asUser;

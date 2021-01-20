@@ -6,7 +6,7 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 
 class SlackIntegrationUser implements SlackIntegration, SlackUser
 {
-    private SlackIntegration integration;
+    private final SlackIntegration integration;
 
     SlackIntegrationUser(SlackIntegration integration) {
         this.integration = integration;
