@@ -1,10 +1,6 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.ullink.slack.simpleslackapi.SlackPresence;
-import com.ullink.slack.simpleslackapi.SlackPresenceSerDes;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;

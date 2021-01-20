@@ -264,8 +264,6 @@ class SlackJSONMessageParser {
         file.setTitle(GsonHelper.getStringOrNull(rawFile.get("title")));
         file.setMimetype(GsonHelper.getStringOrNull(rawFile.get("mimetype")));
         file.setFiletype(GsonHelper.getStringOrNull(rawFile.get("filetype")));
-        file.setUrl(GsonHelper.getStringOrNull(rawFile.get("url")));
-        file.setUrlDownload(GsonHelper.getStringOrNull(rawFile.get("url_download")));
         file.setUrlPrivate(GsonHelper.getStringOrNull(rawFile.get("url_private")));
         file.setUrlPrivateDownload(GsonHelper.getStringOrNull(rawFile.get("url_private_download")));
         file.setThumb64(GsonHelper.getStringOrNull(rawFile.get("thumb_64")));

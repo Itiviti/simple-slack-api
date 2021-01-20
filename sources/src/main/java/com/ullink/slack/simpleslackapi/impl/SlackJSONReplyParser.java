@@ -33,11 +33,6 @@ class SlackJSONReplyParser
             String timestamp = GsonHelper.getStringOrNull(obj.get("cache_ts"));
             return new EmojiSlackReply(ok, error, SlackJSONMessageParser.extractEmojisFromMessageJSON(obj.get("emoji").getAsJsonObject()), timestamp);
         }
-
-        if (ok == null) {
-            //smelly reply
-            ok = Boolean.FALSE;
-        }
         return new SlackReplyImpl(ok,error);
     }
 

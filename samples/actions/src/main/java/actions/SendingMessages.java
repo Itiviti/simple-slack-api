@@ -84,11 +84,11 @@ public class SendingMessages
         SlackChannel channel = session.findChannelByName("achannel");
 
         //build a message object
-        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
-                .withMessage("Hey, this is a message")
-                .withUnfurl(false)
-                .addAttachment(new SlackAttachment())
-                .addAttachment(new SlackAttachment())
+        SlackPreparedMessage preparedMessage = SlackPreparedMessage.builder()
+                .message("Hey, this is a message")
+                .unfurl(false)
+                .attachment(new SlackAttachment())
+                .attachment(new SlackAttachment())
                 .build();
 
         session.sendMessage(channel, preparedMessage);

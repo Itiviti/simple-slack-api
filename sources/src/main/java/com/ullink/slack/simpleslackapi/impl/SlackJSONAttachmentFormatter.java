@@ -7,6 +7,7 @@ import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackField;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,85 +15,98 @@ class SlackJSONAttachmentFormatter
 {
     public static List<JsonObject> encodeAttachments(SlackAttachment... attachments)
     {
+        return encodeAttachments(Arrays.asList(attachments));
+    }
+    public static List<JsonObject> encodeAttachments(List<SlackAttachment> attachments)
+    {
         List<JsonObject> toReturn = new ArrayList<>();
-        for (int i = 0; i < attachments.length; i++)
+        for (SlackAttachment attachment : attachments)
         {
             JsonObject attachmentJSON = new JsonObject();
             toReturn.add(attachmentJSON);
-            if (attachments[i].getTitle() != null)
+            if (attachment.getTitle() != null)
             {
-                attachmentJSON.addProperty("title", attachments[i].getTitle());
+                attachmentJSON.addProperty("title", attachment.getTitle());
             }
-            if (attachments[i].getThumbUrl() != null)
+            if (attachment.getThumbUrl() != null)
             {
-                attachmentJSON.addProperty("thumb_url", attachments[i].getThumbUrl());
+                attachmentJSON.addProperty("thumb_url", attachment.getThumbUrl());
             }
-            if (attachments[i].getTitleLink() != null)
+            if (attachment.getTitleLink() != null)
             {
-                attachmentJSON.addProperty("title_link", attachments[i].getTitleLink());
+                attachmentJSON.addProperty("title_link", attachment.getTitleLink());
             }
-            if (attachments[i].getText() != null)
+            if (attachment.getText() != null)
             {
-                attachmentJSON.addProperty("text", attachments[i].getText());
+                attachmentJSON.addProperty("text", attachment.getText());
             }
-            if (attachments[i].getColor() != null)
+            if (attachment.getColor() != null)
             {
-                attachmentJSON.addProperty("color", attachments[i].getColor());
+                attachmentJSON.addProperty("color", attachment.getColor());
             }
-            if (attachments[i].getPretext() != null)
+            if (attachment.getPretext() != null)
             {
-                attachmentJSON.addProperty("pretext", attachments[i].getPretext());
+                attachmentJSON.addProperty("pretext", attachment.getPretext());
             }
-            if (attachments[i].getFallback() != null)
+            if (attachment.getFallback() != null)
             {
-                attachmentJSON.addProperty("fallback", attachments[i].getFallback());
+                attachmentJSON.addProperty("fallback", attachment.getFallback());
             }
-            if (attachments[i].getCallbackId() != null) {
-                attachmentJSON.addProperty("callback_id", attachments[i].getCallbackId());
-            }
-            if (attachments[i].getAuthorName() != null) {
-                attachmentJSON.addProperty("author_name", attachments[i].getAuthorName());
-            }
-            if (attachments[i].getAuthorLink() != null) {
-                attachmentJSON.addProperty("author_link", attachments[i].getAuthorLink());
-            }
-            if (attachments[i].getAuthorIcon() != null) {
-                attachmentJSON.addProperty("author_icon", attachments[i].getAuthorIcon());
-            }
-            if (attachments[i].getImageUrl() != null) {
-                attachmentJSON.addProperty("image_url", attachments[i].getImageUrl());
-            }
-            if (attachments[i].getFooter() != null) {
-                attachmentJSON.addProperty("footer", attachments[i].getFooter());
-            }
-            if (attachments[i].getFooterIcon() != null) {
-                attachmentJSON.addProperty("footer_icon", attachments[i].getFooterIcon());
-            }
-            if (attachments[i].getTimestamp() != null) {
-                attachmentJSON.addProperty("ts", attachments[i].getTimestamp());
-            }
-            if (attachments[i].getMiscRootFields() != null)
+            if (attachment.getCallbackId() != null)
             {
-                for (Map.Entry<String, String> entry : attachments[i].getMiscRootFields().entrySet())
+                attachmentJSON.addProperty("callback_id", attachment.getCallbackId());
+            }
+            if (attachment.getAuthorName() != null)
+            {
+                attachmentJSON.addProperty("author_name", attachment.getAuthorName());
+            }
+            if (attachment.getAuthorLink() != null)
+            {
+                attachmentJSON.addProperty("author_link", attachment.getAuthorLink());
+            }
+            if (attachment.getAuthorIcon() != null)
+            {
+                attachmentJSON.addProperty("author_icon", attachment.getAuthorIcon());
+            }
+            if (attachment.getImageUrl() != null)
+            {
+                attachmentJSON.addProperty("image_url", attachment.getImageUrl());
+            }
+            if (attachment.getFooter() != null)
+            {
+                attachmentJSON.addProperty("footer", attachment.getFooter());
+            }
+            if (attachment.getFooterIcon() != null)
+            {
+                attachmentJSON.addProperty("footer_icon", attachment.getFooterIcon());
+            }
+            if (attachment.getTimestamp() != null)
+            {
+                attachmentJSON.addProperty("ts", attachment.getTimestamp());
+            }
+            if (attachment.getMiscRootFields() != null)
+            {
+                for (Map.Entry<String, String> entry : attachment.getMiscRootFields().entrySet())
                 {
                     attachmentJSON.addProperty(entry.getKey(), entry.getValue());
                 }
             }
-            if (attachments[i].getMarkdown_in() != null && !attachments[i].getMarkdown_in().isEmpty())
+            if (attachment.getMarkdown_in() != null && !attachment.getMarkdown_in().isEmpty())
             {
                 JsonArray array = new JsonArray();
-                for (String markdown : attachments[i].getMarkdown_in()) {
+                for (String markdown : attachment.getMarkdown_in())
+                {
                     array.add(markdown);
                 }
                 attachmentJSON.add("mrkdwn_in", array);
             }
-            if (attachments[i].getFields() != null && !attachments[i].getFields().isEmpty())
+            if (attachment.getFields() != null && !attachment.getFields().isEmpty())
             {
-                attachmentJSON.add("fields", encodeAttachmentFields(attachments[i].getFields()));
+                attachmentJSON.add("fields", encodeAttachmentFields(attachment.getFields()));
             }
-            if (attachments[i].getActions() != null && !attachments[i].getActions().isEmpty())
+            if (attachment.getActions() != null && !attachment.getActions().isEmpty())
             {
-                attachmentJSON.add("actions", encodeAttachmentActions(attachments[i].getActions()));
+                attachmentJSON.add("actions", encodeAttachmentActions(attachment.getActions()));
             }
         }
         return toReturn;

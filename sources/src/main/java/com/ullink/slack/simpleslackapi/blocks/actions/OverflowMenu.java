@@ -26,7 +26,7 @@ public class OverflowMenu extends AbstractAction implements SectionElement, Acti
   private List<Option> options;
 
   public void option(Option option) {
-    if (options == null) options = new ArrayList<Option>();
+    if (options == null) options = new ArrayList<>();
     if (options.size() > MAX) throw new IllegalArgumentException("n more than 5 items allowed");
     options.add(option);
   }

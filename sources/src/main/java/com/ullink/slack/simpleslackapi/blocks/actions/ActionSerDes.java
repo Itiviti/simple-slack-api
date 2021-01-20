@@ -51,25 +51,5 @@ public class ActionSerDes implements JsonSerializer<Action>, JsonDeserializer<Ac
   @Override
   public JsonElement serialize(Action src, Type typeOfSrc, JsonSerializationContext context) {
     return gson.toJsonTree(src);
-//    ActionType actionType = ActionType.valueOf(src.getType().toUpperCase());
-//    switch (actionType) {
-//      case BUTTON: return gson.toJsonTree(src);
-//      case DATEPICKER: return gson.toJsonTree(src);
-//      case IMAGE: return gson.toJsonTree(src);
-//      case OVERFLOW: return gson.toJsonTree(src);
-//      case RADIO_BUTTONS: return gson.toJsonTree(src);
-//      case PLAIN_TEXT_INPUT: return gson.toJsonTree(src);
-//      case MULTI_STATIC_SELECT: return gson.toJsonTree(src);
-//      case MULTI_USERS_SELECT: return gson.toJsonTree(src);
-//      case MULTI_EXTERNAL_SELECT: return gson.toJsonTree(src);
-//      case MULTI_CONVERSATIONS_SELECT: return gson.toJsonTree(src);
-//      case MULTI_CHANNELS_SELECT: return gson.toJsonTree(src);
-//      case STATIC_SELECT: return gson.toJsonTree(src);
-//      case USERS_SELECT: return gson.toJsonTree(src);
-//      case EXTERNAL_SELECT: return gson.toJsonTree(src);
-//      case CONVERSATIONS_SELECT: return gson.toJsonTree(src);
-//      case CHANNELS_SELECT: return gson.toJsonTree(src);
-//      default: throw new IllegalArgumentException(src.getType());
-//    }
   }
 }

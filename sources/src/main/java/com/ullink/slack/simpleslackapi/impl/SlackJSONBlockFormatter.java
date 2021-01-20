@@ -2,7 +2,6 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.ullink.slack.simpleslackapi.blocks.Block;
 
 import java.util.List;

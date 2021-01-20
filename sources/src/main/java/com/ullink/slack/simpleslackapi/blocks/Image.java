@@ -2,7 +2,6 @@ package com.ullink.slack.simpleslackapi.blocks;
 
 import com.google.gson.annotations.SerializedName;
 import com.ullink.slack.simpleslackapi.blocks.compositions.PlainText;
-import com.ullink.slack.simpleslackapi.blocks.compositions.Text;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

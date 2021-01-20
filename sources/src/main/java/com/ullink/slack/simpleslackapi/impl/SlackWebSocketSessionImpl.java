@@ -1,5 +1,46 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.ConnectException;
+import java.net.Proxy;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.websocket.DeploymentException;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
+import javax.websocket.MessageHandler;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -57,50 +98,6 @@ import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import com.ullink.slack.simpleslackapi.replies.SlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackReplyImpl;
 import com.ullink.slack.simpleslackapi.replies.SlackUserPresenceReply;
-import com.ullink.slack.simpleslackapi.utils.ReaderUtils;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
-import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.ConnectException;
-import java.net.Proxy;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String> {
     private static final String DEFAULT_SLACK_API_SCHEME = "https";
@@ -111,46 +108,45 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private static final String DEFAULT_SLACK_API_HTTPS_ROOT      = DEFAULT_SLACK_API_SCHEME + "://" + DEFAULT_SLACK_API_HOST + DEFAULT_SLACK_API_PATH + "/";
 
-    private static final String DIRECT_MESSAGE_OPEN_CHANNEL_COMMAND = "im.open";
+    private interface CONVERSATION
+    {
+        String OPEN_COMMAND      = "conversations.open";
+        String LEAVE_COMMAND     = "conversations.leave";
+        String JOIN_COMMAND      = "conversations.join";
+        String SET_TOPIC_COMMAND = "conversations.setTopic";
+        String INVITE_COMMAND    = "conversations.invite";
+        String ARCHIVE_COMMAND   = "conversations.archive";
+        String UNARCHIVE_COMMAND = "conversations.unarchive";
+    }
+
+    private interface CHAT
+    {
+        String POST_MESSAGE_COMMAND   = "chat.postMessage";
+        String POST_EPHEMERAL_COMMAND = "chat.postEphemeral";
+        String DELETE_COMMAND         = "chat.delete";
+        String UPDATE_COMMAND         = "chat.update";
+    }
+
+    private interface USERS
+    {
+        String SET_PRESENCE_COMMAND = "users.setPresence";
+        String GET_PRESENCE_COMMAND = "users.getPresence";
+        String LIST_COMMAND         = "users.list";
+    }
+
+    private interface REACTIONS
+    {
+        String ADD_COMMAND    = "reactions.add";
+        String REMOVE_COMMAND = "reactions.remove";
+    }
 
     private static final String MULTIPARTY_DIRECT_MESSAGE_OPEN_CHANNEL_COMMAND = "mpim.open";
 
-    private static final String CHANNELS_LEAVE_COMMAND    = "channels.leave";
-
-    private static final String CHANNELS_JOIN_COMMAND     = "channels.join";
-
-    private static final String CHANNELS_SET_TOPIC_COMMAND     = "channels.setTopic";
-    
-    private static final String CHANNELS_INVITE_COMMAND     = "channels.invite";
-    
-    private static final String CHANNELS_ARCHIVE_COMMAND     = "channels.archive";
-
-    private static final String CHANNELS_UNARCHIVE_COMMAND     = "channels.unarchive";
-
-    private static final String CHAT_POST_MESSAGE_COMMAND = "chat.postMessage";
-
-    private static final String CHAT_POST_EPHEMERAL_COMMAND = "chat.postEphemeral";
-
     private static final String FILE_UPLOAD_COMMAND       = "files.upload";
-
-    private static final String CHAT_DELETE_COMMAND       = "chat.delete";
-
-    private static final String CHAT_UPDATE_COMMAND       = "chat.update";
-
-    private static final String REACTIONS_ADD_COMMAND     = "reactions.add";
-
-    private static final String REACTIONS_REMOVE_COMMAND     = "reactions.remove";
 
     private static final String INVITE_USER_COMMAND     = "users.admin.invite";
 
-    private static final String SET_PERSONA_ACTIVE = "users.setPresence";
-    
-    private static final String GET_PERSONA_ACTIVE = "users.getPresence";
-
     private static final String LIST_EMOJI_COMMAND = "emoji.list";
-
-    private static final String LIST_USERS = "users.list";
-
 
     private static final Logger               LOGGER                     = LoggerFactory.getLogger(SlackWebSocketSessionImpl.class);
 
@@ -592,7 +588,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             arguments.put("username", chatConfiguration.getUserName());
         }
-        if (preparedMessage.getAttachments() != null && preparedMessage.getAttachments().length > 0)
+        if (preparedMessage.getAttachments() != null && preparedMessage.getAttachments().size() > 0)
         {
             arguments.put("attachments", SlackJSONAttachmentFormatter
                 .encodeAttachments(preparedMessage.getAttachments()).toString());
@@ -618,7 +614,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             }
         }
 
-        postSlackCommand(arguments, CHAT_POST_MESSAGE_COMMAND, handle, SlackMessageReply.class);
+        postSlackCommand(arguments, CHAT.POST_MESSAGE_COMMAND, handle, SlackMessageReply.class);
         return handle;
     }
 
@@ -692,7 +688,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             arguments.put("username", chatConfiguration.getUserName());
         }
-        if (preparedMessage.getAttachments() != null && preparedMessage.getAttachments().length > 0)
+        if (preparedMessage.getAttachments() != null && preparedMessage.getAttachments().size() > 0)
         {
             arguments.put("attachments", SlackJSONAttachmentFormatter
                     .encodeAttachments(preparedMessage.getAttachments()).toString());
@@ -718,7 +714,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             }
         }
 
-        postSlackCommand(arguments, CHAT_POST_EPHEMERAL_COMMAND, handle, SlackMessageReply.class);
+        postSlackCommand(arguments, CHAT.POST_EPHEMERAL_COMMAND, handle, SlackMessageReply.class);
         return handle;
     }
 
@@ -814,7 +810,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("token", authToken);
         arguments.put("channel", channel.getId());
         arguments.put("ts", timeStamp);
-        postSlackCommand(arguments, CHAT_DELETE_COMMAND, handle, SlackMessageReply.class);
+        postSlackCommand(arguments, CHAT.DELETE_COMMAND, handle, SlackMessageReply.class);
         return handle;
     }
 
@@ -826,7 +822,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("ts", timeStamp);
         arguments.put("channel", channel.getId());
         arguments.put("text", message);
-        postSlackCommand(arguments, CHAT_UPDATE_COMMAND, handle, SlackMessageReply.class);
+        postSlackCommand(arguments, CHAT.UPDATE_COMMAND, handle, SlackMessageReply.class);
         return handle;
     }
 
@@ -845,7 +841,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("text", message);
         arguments.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachments).toString());
         arguments.put("blocks", SlackJSONBlockFormatter.encodeBlocks(blocks).toString());
-        postSlackCommand(arguments, CHAT_UPDATE_COMMAND, handle, SlackMessageReply.class);
+        postSlackCommand(arguments, CHAT.UPDATE_COMMAND, handle, SlackMessageReply.class);
         return handle;
     }
 
@@ -857,7 +853,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("channel", channel.getId());
         arguments.put("timestamp", messageTimeStamp);
         arguments.put("name", emojiCode);
-        postSlackCommand(arguments, REACTIONS_ADD_COMMAND, handle, SlackMessageReply.class);
+        postSlackCommand(arguments, REACTIONS.ADD_COMMAND, handle, SlackMessageReply.class);
         return handle;
     }
 
@@ -869,7 +865,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("channel", channel.getId());
         arguments.put("timestamp", messageTimeStamp);
         arguments.put("name", emojiCode);
-        postSlackCommand(arguments, REACTIONS_REMOVE_COMMAND, handle, SlackMessageReply.class);
+        postSlackCommand(arguments, REACTIONS.REMOVE_COMMAND, handle, SlackMessageReply.class);
         return handle;
     }
 
@@ -879,7 +875,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("name", channelName);
-        postSlackCommand(arguments, CHANNELS_JOIN_COMMAND, handle, SlackChannelReply.class);
+        postSlackCommand(arguments, CONVERSATION.JOIN_COMMAND, handle, SlackChannelReply.class);
         return handle;
     }
 
@@ -890,7 +886,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("token", authToken);
         arguments.put("channel", channel.getId());
         arguments.put("topic", topic);
-        postSlackCommand(arguments, CHANNELS_SET_TOPIC_COMMAND, handle, SlackChannelReply.class);
+        postSlackCommand(arguments, CONVERSATION.SET_TOPIC_COMMAND, handle, SlackChannelReply.class);
         return handle;
     }
 
@@ -900,7 +896,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("channel", channel.getId());
-        postSlackCommand(arguments, CHANNELS_LEAVE_COMMAND, handle, SlackChannelReply.class);
+        postSlackCommand(arguments, CONVERSATION.LEAVE_COMMAND, handle, SlackChannelReply.class);
         return handle;
     }
 
@@ -911,7 +907,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
       arguments.put("token", authToken);
       arguments.put("channel", channel.getId());
       arguments.put("user", user.getId());
-      postSlackCommand(arguments, CHANNELS_INVITE_COMMAND, handle, SlackChannelReply.class);
+      postSlackCommand(arguments, CONVERSATION.INVITE_COMMAND, handle, SlackChannelReply.class);
       return handle;
     }
     
@@ -921,7 +917,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
       Map<String, String> arguments = new HashMap<>();
       arguments.put("token", authToken);
       arguments.put("channel", channel.getId());
-      postSlackCommand(arguments, CHANNELS_ARCHIVE_COMMAND, handle, SlackReplyImpl.class);
+      postSlackCommand(arguments, CONVERSATION.ARCHIVE_COMMAND, handle, SlackReplyImpl.class);
       return handle;
     }
 
@@ -931,7 +927,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("channel", channel.getId());
-        postSlackCommand(arguments, CHANNELS_UNARCHIVE_COMMAND, handle, SlackReplyImpl.class);
+        postSlackCommand(arguments, CONVERSATION.UNARCHIVE_COMMAND, handle, SlackReplyImpl.class);
         return handle;
     }
 
@@ -1001,7 +997,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
         arguments.put("user", user.getId());
-        postSlackCommand(arguments, DIRECT_MESSAGE_OPEN_CHANNEL_COMMAND, handle, SlackChannelReply.class);
+        postSlackCommand(arguments, CONVERSATION.OPEN_COMMAND, handle, SlackChannelReply.class);
         return handle;
     }
 
@@ -1038,7 +1034,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     public void refetchUsers() {
         Map<String, String> params = new HashMap<>();
         params.put("presence", "1");
-        SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, LIST_USERS);
+        SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, USERS.LIST_COMMAND);
         GenericSlackReply replyEv = handle.getReply();
         String answer = replyEv.getPlainAnswer();
         JsonParser parser = new JsonParser();
@@ -1203,7 +1199,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     @Override
     public SlackPresence getPresence(SlackPersona persona) {
         HttpClient client = getHttpClient();
-        HttpPost request = new HttpPost(slackApiBase+GET_PERSONA_ACTIVE);
+        HttpPost request = new HttpPost(slackApiBase+ USERS.GET_PRESENCE_COMMAND);
         List<NameValuePair> nameValuePairList = new ArrayList<>();
         nameValuePairList.add(new BasicNameValuePair("token", authToken));
         nameValuePairList.add(new BasicNameValuePair("user", persona.getId()));
@@ -1244,7 +1240,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             throw new IllegalArgumentException("Presence must be either AWAY or AUTO");
         }
         HttpClient client = getHttpClient();
-        HttpPost request = new HttpPost(slackApiBase + SET_PERSONA_ACTIVE);
+        HttpPost request = new HttpPost(slackApiBase + USERS.SET_PRESENCE_COMMAND);
         List<NameValuePair> nameValuePairList = new ArrayList<>();
         nameValuePairList.add(new BasicNameValuePair("token", authToken));
         nameValuePairList.add(new BasicNameValuePair("presence", presence.toString().toLowerCase()));

@@ -1,8 +1,5 @@
 package com.ullink.slack.simpleslackapi;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;

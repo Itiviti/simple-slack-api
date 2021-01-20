@@ -52,16 +52,5 @@ public class BlockSerDes implements JsonDeserializer<Block>, JsonSerializer<Bloc
   @Override
   public JsonElement serialize(Block src, Type typeOfSrc, JsonSerializationContext context) {
     return gson.toJsonTree(src);
-//    BlockType blockType = BlockType.valueOf(src.getType().toUpperCase());
-//    switch (blockType) {
-//      case CONTEXT: return gson.toJsonTree(src, Context.class);
-//      case IMAGE: return gson.toJsonTree(src, Image.class);
-//      case FILE: return gson.toJsonTree(src, File.class);
-//      case DIVIDER: return gson.toJsonTree(src, Divider.class);
-//      case INPUT: return gson.toJsonTree(src, Input.class);
-//      case SECTION: return gson.toJsonTree(src, Section.class);
-//      case ACTIONS: return gson.toJsonTree(src, Actions.class);
-//    }
-//    throw new IllegalArgumentException(src.getType());
   }
 }

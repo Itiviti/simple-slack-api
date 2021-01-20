@@ -7,7 +7,6 @@ import com.ullink.slack.simpleslackapi.SlackPresenceSerDes;
 import com.ullink.slack.simpleslackapi.blocks.Block;
 import com.ullink.slack.simpleslackapi.blocks.BlockSerDes;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 
 import java.io.IOException;

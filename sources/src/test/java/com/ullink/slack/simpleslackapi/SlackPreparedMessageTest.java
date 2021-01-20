@@ -5,11 +5,9 @@ import com.ullink.slack.simpleslackapi.blocks.BlockType;
 import com.ullink.slack.simpleslackapi.blocks.Context;
 import com.ullink.slack.simpleslackapi.blocks.Divider;
 import com.ullink.slack.simpleslackapi.blocks.Image;
-import com.ullink.slack.simpleslackapi.blocks.Input;
 import com.ullink.slack.simpleslackapi.blocks.Section;
 import com.ullink.slack.simpleslackapi.blocks.actions.Button;
 import com.ullink.slack.simpleslackapi.blocks.actions.DatePicker;
-import com.ullink.slack.simpleslackapi.blocks.actions.PlaintextInput;
 import com.ullink.slack.simpleslackapi.blocks.compositions.ConfirmationDialog;
 import com.ullink.slack.simpleslackapi.blocks.compositions.Markdown;
 import com.ullink.slack.simpleslackapi.blocks.compositions.PlainText;
@@ -60,9 +58,9 @@ public class SlackPreparedMessageTest {
     assertNotNull(message.getBlocks());
     assertEquals(8, message.getBlocks().size());
     assertEquals(BlockType.CONTEXT.getType(), message.getBlocks().get(0).getType());
-    assertEquals(1, message.getAttachments().length);
-    assertEquals("test attachment", message.getAttachments()[0].getText());
-    assertEquals("attachment action", message.getAttachments()[0].getActions().get(0).getName());
+    assertEquals(1, message.getAttachments().size());
+    assertEquals("test attachment", message.getAttachments().get(0).getText());
+    assertEquals("attachment action", message.getAttachments().get(0).getActions().get(0).getName());
 
 
   }

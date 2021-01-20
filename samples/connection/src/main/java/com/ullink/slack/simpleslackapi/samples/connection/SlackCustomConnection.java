@@ -48,25 +48,25 @@ public class SlackCustomConnection
                             }
 
                             @Override
-                            public Session connectToServer(Object annotatedEndpointInstance, URI path) throws DeploymentException, IOException
+                            public Session connectToServer(Object annotatedEndpointInstance, URI path)
                             {
                                 return null;
                             }
 
                             @Override
-                            public Session connectToServer(Class<?> annotatedEndpointClass, URI path) throws DeploymentException, IOException
+                            public Session connectToServer(Class<?> annotatedEndpointClass, URI path)
                             {
                                 return null;
                             }
 
                             @Override
-                            public Session connectToServer(Endpoint endpointInstance, ClientEndpointConfig cec, URI path) throws DeploymentException, IOException
+                            public Session connectToServer(Endpoint endpointInstance, ClientEndpointConfig cec, URI path)
                             {
                                 return null;
                             }
 
                             @Override
-                            public Session connectToServer(Class<? extends Endpoint> endpointClass, ClientEndpointConfig cec, URI path) throws DeploymentException, IOException
+                            public Session connectToServer(Class<? extends Endpoint> endpointClass, ClientEndpointConfig cec, URI path)
                             {
                                 return null;
                             }

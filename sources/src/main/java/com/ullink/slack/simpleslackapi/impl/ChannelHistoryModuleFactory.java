@@ -7,6 +7,6 @@ public class ChannelHistoryModuleFactory {
     
     public static ChannelHistoryModule createChannelHistoryModule(SlackSession session){
         return new ChannelHistoryModuleImpl(session);
-    };
+    }
     
 }

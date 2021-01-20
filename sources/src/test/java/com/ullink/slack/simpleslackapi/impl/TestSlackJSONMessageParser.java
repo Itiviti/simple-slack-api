@@ -59,7 +59,7 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public void setPresence(SlackPresence presence) {};
+            public void setPresence(SlackPresence presence) {}
 
             @Override
             public void connect() {

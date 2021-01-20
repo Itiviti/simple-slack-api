@@ -174,10 +174,10 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, boolean unfurl)
     {
-        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
-                .withMessage(message)
-                .withUnfurl(unfurl)
-                .build();
+        SlackPreparedMessage preparedMessage = SlackPreparedMessage.builder()
+            .message(message)
+            .unfurl(unfurl)
+            .build();
         return sendMessage(channel, preparedMessage, DEFAULT_CONFIGURATION);
     }
 
@@ -201,10 +201,10 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
     {
-        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
-                .withMessage(message)
-                .withUnfurl(unfurl)
-                .addAttachment(attachment)
+        SlackPreparedMessage preparedMessage = SlackPreparedMessage.builder()
+                .message(message)
+                .unfurl(unfurl)
+                .attachment(attachment)
                 .build();
 
         return sendMessage(channel, preparedMessage, chatConfiguration);
@@ -219,10 +219,10 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
     {
-        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
-                .withMessage(message)
-                .withUnfurl(unfurl)
-                .addAttachment(attachment)
+        SlackPreparedMessage preparedMessage = SlackPreparedMessage.builder()
+                .message(message)
+                .unfurl(unfurl)
+                .attachment(attachment)
                 .build();
 
         return sendEphemeralMessage(channel, user, preparedMessage, chatConfiguration);
@@ -249,9 +249,9 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, boolean unfurl)
     {
-        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
-                .withMessage(message)
-                .withUnfurl(unfurl)
+        SlackPreparedMessage preparedMessage = SlackPreparedMessage.builder()
+                .message(message)
+                .unfurl(unfurl)
                 .build();
         return sendEphemeralMessage(channel, user, preparedMessage, DEFAULT_CONFIGURATION);
     }

@@ -3,7 +3,6 @@ package com.ullink.slack.simpleslackapi.blocks.compositions;
 
 import com.google.gson.annotations.SerializedName;
 import com.ullink.slack.simpleslackapi.blocks.ContextElement;
-import com.ullink.slack.simpleslackapi.blocks.actions.AbstractAction;
 import com.ullink.slack.simpleslackapi.blocks.actions.ActionType;
 import com.ullink.slack.simpleslackapi.blocks.actions.SectionElement;
 import lombok.AccessLevel;

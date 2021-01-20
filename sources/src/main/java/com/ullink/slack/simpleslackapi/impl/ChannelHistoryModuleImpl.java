@@ -58,7 +58,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
                 retrievedList = fetchHistoryOfChannel(params,FETCH_CHANNEL_HISTORY_COMMAND, MessageSubTypeFilter.USERS_AND_INTERNAL_MESSAGES.getRetainedSubtypes());
                 break;
         }
-        if (retrievedList != null && retrievedList.size()>0) {
+        if (retrievedList.size() > 0) {
             return retrievedList.get(0);
         }
         return null;
@@ -181,7 +181,7 @@ public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
                 message.getReactions().put(emojiName, 1);
             }
         }
-    };
+    }
 
     public static class ChannelHistoryReactionRemovedListener implements ReactionRemovedListener {
 

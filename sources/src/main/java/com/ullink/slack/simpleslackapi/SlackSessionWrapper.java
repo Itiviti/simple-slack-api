@@ -221,7 +221,7 @@ public class SlackSessionWrapper implements SlackSession
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message) {
-        return sendMessage(channelId, message);
+        return delegate.sendMessage(channelId, message);
     }
 
     @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration)
