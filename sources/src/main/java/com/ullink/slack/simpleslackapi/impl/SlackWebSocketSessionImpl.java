@@ -874,7 +874,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         SlackMessageHandle<SlackChannelReply> handle = new SlackMessageHandle<>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
-        arguments.put("name", channelName);
+        arguments.put("channel", channelName);
         postSlackCommand(arguments, CONVERSATION.JOIN_COMMAND, handle, SlackChannelReply.class);
         return handle;
     }
