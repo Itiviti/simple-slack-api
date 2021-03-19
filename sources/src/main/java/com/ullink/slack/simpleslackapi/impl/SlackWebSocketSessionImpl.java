@@ -30,7 +30,6 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
@@ -381,7 +380,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     {
         LOGGER.info("connecting to slack");
         HttpClient httpClient = getHttpClient();
-        HttpGet request = new HttpGet(slackApiBase + "rtm.start?token=" + authToken);
+        HttpPost request = new HttpPost(slackApiBase + "rtm.start");
+        request.addHeader("Authorization", "Bearer " + authToken);
         HttpResponse response = httpClient.execute(request);
         LOGGER.debug(response.getStatusLine().toString());
         String jsonResponse = consumeToString(response.getEntity().getContent());
