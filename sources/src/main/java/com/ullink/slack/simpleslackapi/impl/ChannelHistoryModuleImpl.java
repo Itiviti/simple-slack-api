@@ -29,9 +29,9 @@ import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
     private final SlackSession session;
-    private static final String FETCH_CHANNEL_HISTORY_COMMAND = "channels.history";
-    private static final String FETCH_GROUP_HISTORY_COMMAND = "groups.history";
-    private static final String FETCH_IM_HISTORY_COMMAND = "im.history";
+    private static final String FETCH_CHANNEL_HISTORY_COMMAND = "conversations.history";
+    private static final String FETCH_GROUP_HISTORY_COMMAND = "conversations.history";
+    private static final String FETCH_IM_HISTORY_COMMAND = "conversations.history";
     private static final int DEFAULT_HISTORY_FETCH_SIZE = 1000;
 
     public ChannelHistoryModuleImpl(SlackSession session) {
