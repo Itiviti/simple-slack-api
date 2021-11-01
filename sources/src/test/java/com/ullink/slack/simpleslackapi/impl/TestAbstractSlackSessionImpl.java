@@ -29,15 +29,14 @@ public class TestAbstractSlackSessionImpl
             channels.put("channelid4",new SlackChannel("channelid4", "testchannel4", "topicchannel4", "topicchannel4", false, false, false));
             channels.put("channelid5",new SlackChannel("channelid5", "testchannel5", "topicchannel5", "topicchannel5", false, false, false));
 
-            users.put("userid1",SlackPersonaImpl.builder().id("userid1").userName("username1").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
-            users.put("userid2",SlackPersonaImpl.builder().id("userid2").userName("username2").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
-            users.put("userid3",SlackPersonaImpl.builder().id("userid3").userName("username3").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
-            users.put("userid4",SlackPersonaImpl.builder().id("userid4").userName("username4").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
-            users.put("userid5",SlackPersonaImpl.builder().id("userid5").userName("username5").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("userid1",SlackPersonaImpl.builder().id("userid1").userName("username1").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").email("username1@gmail.com").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("userid2",SlackPersonaImpl.builder().id("userid2").userName("username2").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").email("username2@gmail.com").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("userid3",SlackPersonaImpl.builder().id("userid3").userName("username3").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").email("username3@gmail.com").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("userid4",SlackPersonaImpl.builder().id("userid4").userName("username4").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").email("username4@gmail.com").build()).timeZone("tz").timeZoneLabel("txLabel").build());
+            users.put("userid5",SlackPersonaImpl.builder().id("userid5").userName("username5").profile(SlackProfileImpl.builder().presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").email("username5@gmail.com").build()).timeZone("tz").timeZoneLabel("txLabel").build());
             users.put("botid1",SlackPersonaImpl.builder().bot(true).id("botid1").userName("botname1").profile(SlackProfileImpl.builder().realName("real bot name 1").presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
             users.put("botid2",SlackPersonaImpl.builder().bot(true).id("botid2").userName("botname2").profile(SlackProfileImpl.builder().realName("real bot name 2").presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
             users.put("botid3",SlackPersonaImpl.builder().bot(true).id("botid3").userName("botname3").profile(SlackProfileImpl.builder().realName("real bot name 3").presence(SlackPresence.ACTIVE).skype("testSkype").phone("testPhone").title("testTitle").build()).timeZone("tz").timeZoneLabel("txLabel").build());
-
         }
 
         @Override
@@ -278,7 +277,7 @@ public class TestAbstractSlackSessionImpl
         public void refetchUsers() {}
 
         @Override
-        public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
+        public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive)
         {
             return null;
         }
@@ -495,6 +494,34 @@ public class TestAbstractSlackSessionImpl
         slackSession.connect();
 
         assertThat(slackSession.findUserByUserName("unknownuser")).isNull();
+    }
+
+    @Test
+    public void testFindUserByEmail_ExistingBot()
+    {
+        TestSlackSessionImpl slackSession = new TestSlackSessionImpl();
+
+        slackSession.connect();
+
+        // case-sensitive
+        SlackUser slackUser = slackSession.findUserByEmail("username1@gmail.com");
+        assertThat(slackUser).isNotNull();
+        assertThat(slackUser.getId()).isEqualTo("userid1");
+
+        // case-insensitive
+        slackUser = slackSession.findUserByEmail("UsernaMe1@gmail.com");
+        assertThat(slackUser).isNotNull();
+        assertThat(slackUser.getId()).isEqualTo("userid1");
+    }
+
+    @Test
+    public void testFindUserByEmail_MissingBot()
+    {
+        TestSlackSessionImpl slackSession = new TestSlackSessionImpl();
+
+        slackSession.connect();
+
+        assertThat(slackSession.findUserByEmail("unknownuser@gmail.com")).isNull();
     }
 
     @Test
