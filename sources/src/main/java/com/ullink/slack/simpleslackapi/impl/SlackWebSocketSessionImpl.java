@@ -1118,11 +1118,22 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private <T extends SlackReply> void postSlackCommand(Map<String, String> params, String command, SlackMessageHandle handle, Class<T> replyType) {
         HttpClient client = getHttpClient();
         HttpPost request = new HttpPost(slackApiBase + command);
+        request.setHeader(HttpHeaders.CONTENT_TYPE,"application/x-www-form-urlencoded");
         List<NameValuePair> nameValuePairList = new ArrayList<>();
         for (Map.Entry<String, String> arg : params.entrySet())
         {
-            nameValuePairList.add(new BasicNameValuePair(arg.getKey(), arg.getValue()));
+            if (!"token".equals(arg.getKey())) {
+                nameValuePairList.add(new BasicNameValuePair(arg.getKey(), arg.getValue()));
+            }
         }
+
+        if (command.contains(APP_LEVEL_API_PREFIX)) {
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + appLevelToken);
+        }
+        else {
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken);
+        }
+
         try
         {
             request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
@@ -1139,15 +1150,19 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private <T extends SlackReply> void postSlackCommandWithFile(Map<String, String> params, InputStream fileContent, String fileName, SlackMessageHandle handle) {
         try
         {
-	        URIBuilder uriBuilder = new URIBuilder(slackApiBase+ SlackWebSocketSessionImpl.FILE_UPLOAD_COMMAND);
+            URIBuilder uriBuilder = new URIBuilder(slackApiBase+ SlackWebSocketSessionImpl.FILE_UPLOAD_COMMAND);
 
-	        for (Map.Entry<String, String> arg : params.entrySet())
-	        {
-	            uriBuilder.setParameter(arg.getKey(),arg.getValue());
-	        }
-	        HttpPost request = new HttpPost(uriBuilder.toString());
-	        HttpClient client = getHttpClient();
-	        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            for (Map.Entry<String, String> arg : params.entrySet())
+            {
+                if (!"token".equals(arg.getKey())) {
+                    uriBuilder.setParameter(arg.getKey(),arg.getValue());
+                }
+            }
+            HttpPost request = new HttpPost(uriBuilder.toString());
+            request.setHeader(HttpHeaders.CONTENT_TYPE,"application/x-www-form-urlencoded");
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken);
+            HttpClient client = getHttpClient();
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.addBinaryBody("file",fileContent, ContentType.DEFAULT_BINARY,fileName);
             request.setEntity(builder.build());
             T reply = client.execute(request, new SlackResponseHandler<>((Class<T>) SlackMessageReply.class));
@@ -1270,8 +1285,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     public SlackPresence getPresence(SlackPersona persona) {
         HttpClient client = getHttpClient();
         HttpPost request = new HttpPost(slackApiBase+ USERS.GET_PRESENCE_COMMAND);
+        request.setHeader(HttpHeaders.CONTENT_TYPE,"application/x-www-form-urlencoded");
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken);
         List<NameValuePair> nameValuePairList = new ArrayList<>();
-        nameValuePairList.add(new BasicNameValuePair("token", authToken));
         nameValuePairList.add(new BasicNameValuePair("user", persona.getId()));
         try
         {
@@ -1311,8 +1327,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
         HttpClient client = getHttpClient();
         HttpPost request = new HttpPost(slackApiBase + USERS.SET_PRESENCE_COMMAND);
+        request.setHeader(HttpHeaders.CONTENT_TYPE,"application/x-www-form-urlencoded");
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken);
         List<NameValuePair> nameValuePairList = new ArrayList<>();
-        nameValuePairList.add(new BasicNameValuePair("token", authToken));
         nameValuePairList.add(new BasicNameValuePair("presence", presence.toString().toLowerCase()));
         try {
             request.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
