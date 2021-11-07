@@ -39,6 +39,8 @@ class SlackJSONParsingUtils {
         String title = "";
         String phone = "";
         String presence = "";
+        String statusText = "";
+        String statusEmoji = "";
         if (profileJSON !=null && !profileJSON.isJsonNull())
         {
             email = GsonHelper.getStringOrNull(profileJSON.get("email"));
@@ -46,6 +48,8 @@ class SlackJSONParsingUtils {
             title = GsonHelper.getStringOrNull(profileJSON.get("title"));
             phone = GsonHelper.getStringOrNull(profileJSON.get("phone"));
             presence = GsonHelper.getStringOrNull(profileJSON.get("presence"));
+            statusText = GsonHelper.getStringOrNull(profileJSON.get("status_text"));
+            statusEmoji = GsonHelper.getStringOrNull(profileJSON.get("status_emoji"));
         }
         SlackPresence slackPresence = SlackPresence.UNKNOWN;
         if ("active".equals(presence))
@@ -63,6 +67,8 @@ class SlackJSONParsingUtils {
             .phone(phone)
             .skype(skype)
             .title(title)
+            .statusText(statusText)
+            .statusEmoji(statusEmoji)
             .build();
 
         return SlackPersonaImpl.builder()

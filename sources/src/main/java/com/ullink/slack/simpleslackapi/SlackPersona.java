@@ -11,6 +11,8 @@ public interface SlackPersona {
     String getUserSkype();
     String getUserPhone();
     String getUserTitle();
+    String getStatusText();
+    String getStatusEmoji();
     boolean isDeleted();
     boolean isAdmin();
     boolean isOwner();
