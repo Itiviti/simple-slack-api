@@ -725,6 +725,16 @@ public class SlackSessionWrapper implements SlackSession
     {
         delegate.removePinRemovedListener(listener);
     }
+    
+    @Override
+    public void addSlackMemberJoinedListener(SlackMemberJoinedListener listener) {
+        this.delegate.addSlackMemberJoinedListener(listener);
+    }
+    
+    @Override
+    public void removeSlackMemberJoinedListener(SlackMemberJoinedListener listener) {
+        this.delegate.removeSlackMemberJoinedListener(listener);
+    }
 
     @Override public long getHeartbeat()
     {
