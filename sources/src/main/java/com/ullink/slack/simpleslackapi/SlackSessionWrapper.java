@@ -10,6 +10,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelJoinedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackMemberJoinedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelLeftListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
