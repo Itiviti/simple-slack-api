@@ -1,10 +1,14 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package com.ullink.slack.simpleslackapi.events;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum EventType
-{
+public enum EventType {
     MESSAGE("message"),
     CHANNEL_CREATED("channel_created"),
     CHANNEL_DELETED("channel_deleted"),
@@ -22,38 +26,33 @@ public enum EventType
     PIN_ADDED("pin_added"),
     PIN_REMOVED("pin_removed"),
     USER_TYPING("user_typing"),
+    MEMBER_JOINED_CHANNEL("member_joined_channel"),
     OTHER("-");
 
-    private static final Map<String, EventType> CODE_MAP = new HashMap<>();
+    private static final Map<String, EventType> CODE_MAP = new HashMap();
+    private String code;
 
-    static
-    {
-        for (EventType enumValue : EventType.values())
-        {
-            CODE_MAP.put(enumValue.getCode(), enumValue);
-        }
+    public static EventType getByCode(String code) {
+        EventType toReturn = (EventType)CODE_MAP.get(code);
+        return toReturn == null ? OTHER : toReturn;
     }
 
-    private String                              code;
-
-    public static EventType getByCode(String code)
-    {
-        EventType toReturn = CODE_MAP.get(code);
-        if (toReturn == null)
-        {
-            return OTHER;
-        }
-        return toReturn;
-    }
-
-    EventType(String code)
-    {
+    private EventType(String code) {
         this.code = code;
     }
 
-    public String getCode()
-    {
-        return code;
+    public String getCode() {
+        return this.code;
     }
 
+    static {
+        EventType[] var0 = values();
+        int var1 = var0.length;
+
+        for(int var2 = 0; var2 < var1; ++var2) {
+            EventType enumValue = var0[var2];
+            CODE_MAP.put(enumValue.getCode(), enumValue);
+        }
+
+    }
 }

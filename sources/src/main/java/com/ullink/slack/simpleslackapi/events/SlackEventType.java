@@ -1,3 +1,8 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package com.ullink.slack.simpleslackapi.events;
 
 public enum SlackEventType {
@@ -23,5 +28,9 @@ public enum SlackEventType {
     PIN_REMOVED,
     USER_TYPING,
     UNKNOWN,
-    SLACK_DISCONNECTED
+    SLACK_DISCONNECTED,
+    SLACK_MEMBER_JOINED;
+
+    private SlackEventType() {
+    }
 }
