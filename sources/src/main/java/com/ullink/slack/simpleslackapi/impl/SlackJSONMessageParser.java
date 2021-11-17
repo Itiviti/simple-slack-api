@@ -96,9 +96,20 @@ class SlackJSONMessageParser {
                 return extractPinRemovedEvent(slackSession, obj);
             case USER_TYPING:
                 return extractUserTypingEvent(slackSession, obj);
+	    case MEMBER_JOINED_CHANNEL:
+                return extractMemberJoinedChannelEvent(slackSession, obj);
             default:
                 return new UnknownEvent(obj.toString());
         }
+    }
+	
+    private static SlackMemberJoined extractMemberJoinedChannelEvent(SlackSession slackSession, JsonObject obj) {
+        String channelId = GsonHelper.getStringOrNull(obj.get("channel"));
+        SlackChannel slackChannel = slackSession.findChannelById(channelId);
+        String userId = GsonHelper.getStringOrNull(obj.get("user"));
+        SlackUser user = slackSession.findUserById(userId);
+        System.out.println("channelId" + channelId+"user"+user);
+        return new SlackMemberJoined(user, slackChannel);
     }
 
     private static SlackChannelJoined extractChannelJoinedEvent(SlackSession slackSession, JsonObject obj)
