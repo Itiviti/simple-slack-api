@@ -298,6 +298,10 @@ public interface SlackSession {
     void addPinRemovedListener(PinRemovedListener listener);
   
     void removePinRemovedListener(PinRemovedListener listener);
+    
+    void addSlackMemberJoinedListener(SlackMemberJoinedListener var1);
+
+    void removeSlackMemberJoinedListener(SlackMemberJoinedListener var1);
 
     long getHeartbeat();
 }
