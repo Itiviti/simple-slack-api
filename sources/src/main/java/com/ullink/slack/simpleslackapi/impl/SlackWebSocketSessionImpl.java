@@ -286,6 +286,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 case USER_TYPING:
                     dispatchImpl((UserTyping) event, userTypingListener);
                     break;
+		case SLACK_MEMBER_JOINED:
+                    this.dispatchImpl((SlackMemberJoined)event, SlackWebSocketSessionImpl.this.slackMemberJoinedListener);
+                    break;
                 default:
 		    //sloppy fix for ClassCastException from ? to UnknownEvent Error.
 		    if (event instanceof UnknownEvent) {
