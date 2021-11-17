@@ -1,733 +1,584 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package com.ullink.slack.simpleslackapi;
 
 import com.ullink.slack.simpleslackapi.blocks.Block;
-import com.ullink.slack.simpleslackapi.listeners.PinAddedListener;
-import com.ullink.slack.simpleslackapi.listeners.PinRemovedListener;
-import com.ullink.slack.simpleslackapi.listeners.PresenceChangeListener;
-import com.ullink.slack.simpleslackapi.listeners.ReactionAddedListener;
-import com.ullink.slack.simpleslackapi.listeners.ReactionRemovedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelJoinedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelLeftListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackDisconnectedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackTeamJoinListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
-import com.ullink.slack.simpleslackapi.listeners.UserTypingListener;
+import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.EmojiSlackReply;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-
-public class SlackSessionWrapper implements SlackSession
-{
+public class SlackSessionWrapper implements SlackSession {
     protected final SlackSession delegate;
 
-    public SlackSessionWrapper(SlackSession delegate)
-    {
+    public SlackSessionWrapper(SlackSession delegate) {
         this.delegate = delegate;
     }
 
-    @Override public SlackTeam getTeam()
-    {
-        return delegate.getTeam();
+    public SlackTeam getTeam() {
+        return this.delegate.getTeam();
     }
 
-    @Override public Collection<SlackChannel> getChannels()
-    {
-        return delegate.getChannels();
+    public Collection<SlackChannel> getChannels() {
+        return this.delegate.getChannels();
     }
 
-    @Override public Collection<SlackUser> getUsers()
-    {
-        return delegate.getUsers();
+    public Collection<SlackUser> getUsers() {
+        return this.delegate.getUsers();
     }
 
-    @Override public Collection<SlackBot> getBots()
-    {
-        return delegate.getBots();
+    public Collection<SlackBot> getBots() {
+        return this.delegate.getBots();
     }
 
-    @Override public Collection<SlackIntegration> getIntegrations()
-    {
-        return delegate.getIntegrations();
+    public Collection<SlackIntegration> getIntegrations() {
+        return this.delegate.getIntegrations();
     }
 
-    @Override public SlackChannel findChannelByName(String channelName)
-    {
-        return delegate.findChannelByName(channelName);
+    public SlackChannel findChannelByName(String channelName) {
+        return this.delegate.findChannelByName(channelName);
     }
 
-    @Override public SlackChannel findChannelById(String channelId)
-    {
-        return delegate.findChannelById(channelId);
+    public SlackChannel findChannelById(String channelId) {
+        return this.delegate.findChannelById(channelId);
     }
 
-    @Override public SlackIntegration findIntegrationById(String integrationId)
-    {
-        return delegate.findIntegrationById(integrationId);
+    public SlackIntegration findIntegrationById(String integrationId) {
+        return this.delegate.findIntegrationById(integrationId);
     }
 
-    @Override public SlackUser findUserById(String userId)
-    {
-        return delegate.findUserById(userId);
+    public SlackUser findUserById(String userId) {
+        return this.delegate.findUserById(userId);
     }
 
-    @Override public SlackUser findUserByUserName(String userName)
-    {
-        return delegate.findUserByUserName(userName);
+    public SlackUser findUserByUserName(String userName) {
+        return this.delegate.findUserByUserName(userName);
     }
 
-    @Override public SlackUser findUserByEmail(String userMail)
-    {
-        return delegate.findUserByEmail(userMail);
+    public SlackUser findUserByEmail(String userMail) {
+        return this.delegate.findUserByEmail(userMail);
     }
 
-    @Override public SlackPersona sessionPersona()
-    {
-        return delegate.sessionPersona();
+    public SlackPersona sessionPersona() {
+        return this.delegate.sessionPersona();
     }
 
-    @Override public SlackMessageHandle<EmojiSlackReply> listEmoji()
-    {
-        return delegate.listEmoji();
+    public SlackMessageHandle<EmojiSlackReply> listEmoji() {
+        return this.delegate.listEmoji();
     }
 
-    @Override public void refetchUsers()
-    {
-        delegate.refetchUsers();
+    public void refetchUsers() {
+        this.delegate.refetchUsers();
     }
 
-    @Override public SlackBot findBotById(String botId)
-    {
-        return delegate.findBotById(botId);
+    public SlackBot findBotById(String botId) {
+        return this.delegate.findBotById(botId);
     }
 
-    @Override public SlackMessageHandle<ParsedSlackReply> inviteUser(String email, String firstName, boolean setActive)
-    {
-        return delegate.inviteUser(email, firstName, setActive);
+    public SlackMessageHandle<ParsedSlackReply> inviteUser(String email, String firstName, boolean setActive) {
+        return this.delegate.inviteUser(email, firstName, setActive);
     }
 
-    @Override public void connect() throws IOException
-    {
-        delegate.connect();
+    public void connect() throws IOException {
+        this.delegate.connect();
     }
 
-    @Override public void disconnect() throws IOException
-    {
-        delegate.disconnect();
+    public void disconnect() throws IOException {
+        this.delegate.disconnect();
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, SlackChannel channel)
-    {
-        return delegate.deleteMessage(timeStamp, channel);
+    public SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, SlackChannel channel) {
+        return this.delegate.deleteMessage(timeStamp, channel);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration)
-    {
-        return delegate.sendMessage(channel, preparedMessage, chatConfiguration);
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+        return this.delegate.sendMessage(channel, preparedMessage, chatConfiguration);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage)
-    {
-        return delegate.sendMessage(channel, preparedMessage);
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage) {
+        return this.delegate.sendMessage(channel, preparedMessage);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
-    {
-        return delegate.sendMessage(channel, message, attachment, chatConfiguration, unfurl);
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
+        return this.delegate.sendMessage(channel, message, attachment, chatConfiguration, unfurl);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
-    {
-        return delegate.sendMessage(channel, message, attachment, chatConfiguration);
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
+        return this.delegate.sendMessage(channel, message, attachment, chatConfiguration);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, boolean unfurl)
-    {
-        return delegate.sendMessage(channel, message, attachment, unfurl);
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, boolean unfurl) {
+        return this.delegate.sendMessage(channel, message, attachment, unfurl);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment)
-    {
-        return delegate.sendMessage(channel, message, attachment);
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment) {
+        return this.delegate.sendMessage(channel, message, attachment);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, boolean unfurl)
-    {
-        return delegate.sendMessage(channel, message, unfurl);
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, boolean unfurl) {
+        return this.delegate.sendMessage(channel, message, unfurl);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message)
-    {
-        return delegate.sendMessage(channel, message);
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message) {
+        return this.delegate.sendMessage(channel, message);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> deleteMessage(String timeStamp, String channelId) {
-        return delegate.deleteMessage(timeStamp, channelId);
+        return this.delegate.deleteMessage(timeStamp, channelId);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
-        return delegate.sendMessage(channelId, preparedMessage, chatConfiguration);
+        return this.delegate.sendMessage(channelId, preparedMessage, chatConfiguration);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, SlackPreparedMessage preparedMessage) {
-        return delegate.sendMessage(channelId, preparedMessage);
+        return this.delegate.sendMessage(channelId, preparedMessage);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
-        return delegate.sendMessage(channelId, message, attachment, chatConfiguration, unfurl);
+        return this.delegate.sendMessage(channelId, message, attachment, chatConfiguration, unfurl);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
-        return delegate.sendMessage(channelId, message, attachment, chatConfiguration);
+        return this.delegate.sendMessage(channelId, message, attachment, chatConfiguration);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment, boolean unfurl) {
-        return delegate.sendMessage(channelId, message, attachment, unfurl);
+        return this.delegate.sendMessage(channelId, message, attachment, unfurl);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, SlackAttachment attachment) {
-        return delegate.sendMessage(channelId, message, attachment);
+        return this.delegate.sendMessage(channelId, message, attachment);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message, boolean unfurl) {
-        return delegate.sendMessage(channelId, message, unfurl);
+        return this.delegate.sendMessage(channelId, message, unfurl);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(String channelId, String message) {
-        return delegate.sendMessage(channelId, message);
+        return this.delegate.sendMessage(channelId, message);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration)
-    {
-        return delegate.sendEphemeralMessage(channel, user, preparedMessage, chatConfiguration);
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+        return this.delegate.sendEphemeralMessage(channel, user, preparedMessage, chatConfiguration);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage)
-    {
-        return delegate.sendEphemeralMessage(channel, user, preparedMessage);
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, SlackPreparedMessage preparedMessage) {
+        return this.delegate.sendEphemeralMessage(channel, user, preparedMessage);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
-    {
-        return delegate.sendEphemeralMessage(channel, user, message, attachment, chatConfiguration, unfurl);
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
+        return this.delegate.sendEphemeralMessage(channel, user, message, attachment, chatConfiguration, unfurl);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
-    {
-        return delegate.sendEphemeralMessage(channel, user, message, attachment, chatConfiguration);
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
+        return this.delegate.sendEphemeralMessage(channel, user, message, attachment, chatConfiguration);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, boolean unfurl)
-    {
-        return delegate.sendEphemeralMessage(channel, user, message, attachment, unfurl);
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment, boolean unfurl) {
+        return this.delegate.sendEphemeralMessage(channel, user, message, attachment, unfurl);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment)
-    {
-        return delegate.sendEphemeralMessage(channel, user, message, attachment);
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, SlackAttachment attachment) {
+        return this.delegate.sendEphemeralMessage(channel, user, message, attachment);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, boolean unfurl)
-    {
-        return delegate.sendEphemeralMessage(channel, user, message, unfurl);
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message, boolean unfurl) {
+        return this.delegate.sendEphemeralMessage(channel, user, message, unfurl);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message)
-    {
-        return delegate.sendEphemeralMessage(channel, user, message);
+    public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(SlackChannel channel, SlackUser user, String message) {
+        return this.delegate.sendEphemeralMessage(channel, user, message);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName)
-    {
-        return delegate.sendFile(channel, data, fileName);
+    public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName) {
+        return this.delegate.sendFile(channel, data, fileName);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName, String title, String initialComment)
-    {
-        return delegate.sendFile(channel, data, fileName, title, initialComment);
+    public SlackMessageHandle<SlackMessageReply> sendFile(SlackChannel channel, InputStream data, String fileName, String title, String initialComment) {
+        return this.delegate.sendFile(channel, data, fileName, title, initialComment);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
-        return delegate.sendEphemeralMessage(channelId, userName, preparedMessage, chatConfiguration);
+        return this.delegate.sendEphemeralMessage(channelId, userName, preparedMessage, chatConfiguration);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, SlackPreparedMessage preparedMessage) {
-        return delegate.sendEphemeralMessage(channelId, userName, preparedMessage);
+        return this.delegate.sendEphemeralMessage(channelId, userName, preparedMessage);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
-        return delegate.sendEphemeralMessage(channelId, userName, message, attachment, chatConfiguration, unfurl);
+        return this.delegate.sendEphemeralMessage(channelId, userName, message, attachment, chatConfiguration, unfurl);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration) {
-        return delegate.sendEphemeralMessage(channelId, userName, message, attachment, chatConfiguration);
+        return this.delegate.sendEphemeralMessage(channelId, userName, message, attachment, chatConfiguration);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment, boolean unfurl) {
-        return delegate.sendEphemeralMessage(channelId, userName, message, attachment, unfurl);
+        return this.delegate.sendEphemeralMessage(channelId, userName, message, attachment, unfurl);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, SlackAttachment attachment) {
-        return delegate.sendEphemeralMessage(channelId, userName, message, attachment);
+        return this.delegate.sendEphemeralMessage(channelId, userName, message, attachment);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message, boolean unfurl) {
-        return delegate.sendEphemeralMessage(channelId, userName, message, unfurl);
+        return this.delegate.sendEphemeralMessage(channelId, userName, message, unfurl);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendEphemeralMessage(String channelId, String userName, String message) {
-        return delegate.sendEphemeralMessage(channelId, userName, message);
+        return this.delegate.sendEphemeralMessage(channelId, userName, message);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, InputStream data, String fileName) {
-        return delegate.sendFile(channelId, data, fileName);
+        return this.delegate.sendFile(channelId, data, fileName);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendFile(String channelId, InputStream data, String fileName, String title, String initialComment) {
-        return delegate.sendFile(channelId, data, fileName, title, initialComment);
+        return this.delegate.sendFile(channelId, data, fileName, title, initialComment);
     }
 
-    @Override
-    public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, InputStream data, String fileName)
-    {
-        return delegate.sendFileToUser(user, data, fileName);
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(SlackUser user, InputStream data, String fileName) {
+        return this.delegate.sendFileToUser(user, data, fileName);
     }
 
-    @Override
-    public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, InputStream data, String fileName)
-    {
-        return delegate.sendFileToUser(userName, data, fileName);
+    public SlackMessageHandle<SlackMessageReply> sendFileToUser(String userName, InputStream data, String fileName) {
+        return this.delegate.sendFileToUser(userName, data, fileName);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage)
-    {
-        return delegate.sendMessageToUser(user, preparedMessage);
+    public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage preparedMessage) {
+        return this.delegate.sendMessageToUser(user, preparedMessage);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, SlackPreparedMessage preparedMessage) {
-        return delegate.sendMessageToUser(userName, preparedMessage);
+        return this.delegate.sendMessageToUser(userName, preparedMessage);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment)
-    {
-        return delegate.sendMessageToUser(user, message, attachment);
+    public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
+        return this.delegate.sendMessageToUser(user, message, attachment);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, String message, SlackAttachment attachment)
-    {
-        return delegate.sendMessageToUser(userName, message, attachment);
+    public SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, String message, SlackAttachment attachment) {
+        return this.delegate.sendMessageToUser(userName, message, attachment);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message)
-    {
-        return delegate.updateMessage(timeStamp, channel, message);
+    public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message) {
+        return this.delegate.updateMessage(timeStamp, channel, message);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments)
-    {
-        return delegate.updateMessage(timeStamp, channel, message, attachments);
+    public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments) {
+        return this.delegate.updateMessage(timeStamp, channel, message, attachments);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments, List<Block> blocks)
-    {
-        return delegate.updateMessage(timeStamp, channel, message, attachments, blocks);
+    public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message, SlackAttachment[] attachments, List<Block> blocks) {
+        return this.delegate.updateMessage(timeStamp, channel, message, attachments, blocks);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message)
-    {
-        return delegate.sendMessageOverWebSocket(channel, message);
+    public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message) {
+        return this.delegate.sendMessageOverWebSocket(channel, message);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode)
-    {
-        return delegate.addReactionToMessage(channel, messageTimeStamp, emojiCode);
+    public SlackMessageHandle<SlackMessageReply> addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode) {
+        return this.delegate.addReactionToMessage(channel, messageTimeStamp, emojiCode);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> removeReactionFromMessage(SlackChannel channel, String messageTimeStamp, String emojiCode)
-    {
-        return delegate.removeReactionFromMessage(channel, messageTimeStamp, emojiCode);
+    public SlackMessageHandle<SlackMessageReply> removeReactionFromMessage(SlackChannel channel, String messageTimeStamp, String emojiCode) {
+        return this.delegate.removeReactionFromMessage(channel, messageTimeStamp, emojiCode);
     }
 
-    @Override public SlackMessageHandle<SlackChannelReply> setChannelTopic(SlackChannel channel, String topic)
-    {
-        return delegate.setChannelTopic(channel, topic);
+    public SlackMessageHandle<SlackChannelReply> setChannelTopic(SlackChannel channel, String topic) {
+        return this.delegate.setChannelTopic(channel, topic);
     }
 
-    @Override public SlackMessageHandle<SlackChannelReply> joinChannel(String channelName)
-    {
-        return delegate.joinChannel(channelName);
+    public SlackMessageHandle<SlackChannelReply> joinChannel(String channelName) {
+        return this.delegate.joinChannel(channelName);
     }
 
-    @Override public SlackMessageHandle<SlackChannelReply> leaveChannel(SlackChannel channel)
-    {
-        return delegate.leaveChannel(channel);
+    public SlackMessageHandle<SlackChannelReply> leaveChannel(SlackChannel channel) {
+        return this.delegate.leaveChannel(channel);
     }
 
-    @Override public SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user)
-    {
-        return delegate.inviteToChannel(channel, user);
+    public SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user) {
+        return this.delegate.inviteToChannel(channel, user);
     }
 
-    @Override
     public SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, String userName) {
-        return delegate.inviteToChannel(channelId, userName);
+        return this.delegate.inviteToChannel(channelId, userName);
     }
 
-    @Override
     public SlackMessageHandle<SlackChannelReply> leaveChannel(String channelId) {
-        return delegate.leaveChannel(channelId);
+        return this.delegate.leaveChannel(channelId);
     }
 
-    @Override public SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel)
-    {
-        return delegate.archiveChannel(channel);
+    public SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel) {
+        return this.delegate.archiveChannel(channel);
     }
 
-    @Override public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel)
-    {
-        return delegate.unarchiveChannel(channel);
+    public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(SlackChannel channel) {
+        return this.delegate.unarchiveChannel(channel);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message) {
-        return delegate.updateMessage(timeStamp, channelId, message);
+        return this.delegate.updateMessage(timeStamp, channelId, message);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments) {
-        return delegate.updateMessage(timeStamp, channelId, message, attachments);
+        return this.delegate.updateMessage(timeStamp, channelId, message, attachments);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, String message, SlackAttachment[] attachments, List<Block> blocks) {
-        return delegate.updateMessage(timeStamp, channelId, message, attachments, blocks);
+        return this.delegate.updateMessage(timeStamp, channelId, message, attachments, blocks);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(String channelId, String message) {
-        return delegate.sendMessageOverWebSocket(channelId, message);
+        return this.delegate.sendMessageOverWebSocket(channelId, message);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> addReactionToMessage(String channelId, String messageTimeStamp, String emojiCode) {
-        return delegate.addReactionToMessage(channelId, messageTimeStamp, emojiCode);
+        return this.delegate.addReactionToMessage(channelId, messageTimeStamp, emojiCode);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> removeReactionFromMessage(String channelId, String messageTimeStamp, String emojiCode) {
-        return delegate.removeReactionFromMessage(channelId, messageTimeStamp, emojiCode);
+        return this.delegate.removeReactionFromMessage(channelId, messageTimeStamp, emojiCode);
     }
 
-    @Override
     public SlackMessageHandle<SlackChannelReply> setChannelTopic(String channelId, String topic) {
-        return delegate.setChannelTopic(channelId, topic);
+        return this.delegate.setChannelTopic(channelId, topic);
     }
 
-    @Override
     public SlackMessageHandle<SlackChannelReply> inviteToChannel(String channelId, SlackUser user) {
-        return delegate.inviteToChannel(channelId, user);
+        return this.delegate.inviteToChannel(channelId, user);
     }
 
-    @Override
     public SlackMessageHandle<ParsedSlackReply> archiveChannel(String channelId) {
-        return delegate.archiveChannel(channelId);
+        return this.delegate.archiveChannel(channelId);
     }
 
-    @Override
     public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(String channelId) {
-        return delegate.unarchiveChannel(channelId);
+        return this.delegate.unarchiveChannel(channelId);
     }
 
-    @Override public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
-    {
-        return delegate.openDirectMessageChannel(user);
+    public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user) {
+        return this.delegate.openDirectMessageChannel(user);
     }
 
-    @Override public SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users)
-    {
-        return delegate.openMultipartyDirectMessageChannel(users);
+    public SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users) {
+        return this.delegate.openMultipartyDirectMessageChannel(users);
     }
 
-    @Override public SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel)
-    {
-        return delegate.sendTyping(channel);
+    public SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel) {
+        return this.delegate.sendTyping(channel);
     }
 
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendTyping(String channelId) {
-        return delegate.sendTyping(channelId);
+        return this.delegate.sendTyping(channelId);
     }
 
-    @Override public SlackPresence getPresence(SlackPersona persona)
-    {
-        return delegate.getPresence(persona);
+    public SlackPresence getPresence(SlackPersona persona) {
+        return this.delegate.getPresence(persona);
     }
 
-    @Override public void setPresence(SlackPresence presence)
-    {
-        delegate.setPresence(presence);
+    public void setPresence(SlackPresence presence) {
+        this.delegate.setPresence(presence);
     }
 
-    @Override public SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(Map<String, String> params, String command)
-    {
-        return delegate.postGenericSlackCommand(params, command);
+    public SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(Map<String, String> params, String command) {
+        return this.delegate.postGenericSlackCommand(params, command);
     }
 
-    @Override public void addChannelArchivedListener(SlackChannelArchivedListener listener)
-    {
-        delegate.addChannelArchivedListener(listener);
+    public void addChannelArchivedListener(SlackChannelArchivedListener listener) {
+        this.delegate.addChannelArchivedListener(listener);
     }
 
-    @Override public void removeChannelArchivedListener(SlackChannelArchivedListener listener)
-    {
-        delegate.removeChannelArchivedListener(listener);
+    public void removeChannelArchivedListener(SlackChannelArchivedListener listener) {
+        this.delegate.removeChannelArchivedListener(listener);
     }
 
-    @Override public void addChannelCreatedListener(SlackChannelCreatedListener listener)
-    {
-        delegate.addChannelCreatedListener(listener);
+    public void addChannelCreatedListener(SlackChannelCreatedListener listener) {
+        this.delegate.addChannelCreatedListener(listener);
     }
 
-    @Override public void removeChannelCreatedListener(SlackChannelCreatedListener listener)
-    {
-        delegate.removeChannelCreatedListener(listener);
+    public void removeChannelCreatedListener(SlackChannelCreatedListener listener) {
+        this.delegate.removeChannelCreatedListener(listener);
     }
 
-    @Override public void addChannelDeletedListener(SlackChannelDeletedListener listener)
-    {
-        delegate.addChannelDeletedListener(listener);
+    public void addChannelDeletedListener(SlackChannelDeletedListener listener) {
+        this.delegate.addChannelDeletedListener(listener);
     }
 
-    @Override public void removeChannelDeletedListener(SlackChannelDeletedListener listener)
-    {
-        delegate.removeChannelDeletedListener(listener);
+    public void removeChannelDeletedListener(SlackChannelDeletedListener listener) {
+        this.delegate.removeChannelDeletedListener(listener);
     }
 
-    @Override public void addChannelRenamedListener(SlackChannelRenamedListener listener)
-    {
-        delegate.addChannelRenamedListener(listener);
+    public void addChannelRenamedListener(SlackChannelRenamedListener listener) {
+        this.delegate.addChannelRenamedListener(listener);
     }
 
-    @Override public void removeChannelRenamedListener(SlackChannelRenamedListener listener)
-    {
-        delegate.removeChannelRenamedListener(listener);
+    public void removeChannelRenamedListener(SlackChannelRenamedListener listener) {
+        this.delegate.removeChannelRenamedListener(listener);
     }
 
-    @Override public void addChannelUnarchivedListener(SlackChannelUnarchivedListener listener)
-    {
-        delegate.addChannelUnarchivedListener(listener);
+    public void addChannelUnarchivedListener(SlackChannelUnarchivedListener listener) {
+        this.delegate.addChannelUnarchivedListener(listener);
     }
 
-    @Override public void removeChannelUnarchivedListener(SlackChannelUnarchivedListener listener)
-    {
-        delegate.removeChannelUnarchivedListener(listener);
+    public void removeChannelUnarchivedListener(SlackChannelUnarchivedListener listener) {
+        this.delegate.removeChannelUnarchivedListener(listener);
     }
 
-    @Override public void addMessageDeletedListener(SlackMessageDeletedListener listener)
-    {
-        delegate.addMessageDeletedListener(listener);
+    public void addMessageDeletedListener(SlackMessageDeletedListener listener) {
+        this.delegate.addMessageDeletedListener(listener);
     }
 
-    @Override public void removeMessageDeletedListener(SlackMessageDeletedListener listener)
-    {
-        delegate.removeMessageDeletedListener(listener);
+    public void removeMessageDeletedListener(SlackMessageDeletedListener listener) {
+        this.delegate.removeMessageDeletedListener(listener);
     }
 
-    @Override public void addMessagePostedListener(SlackMessagePostedListener listener)
-    {
-        delegate.addMessagePostedListener(listener);
+    public void addMessagePostedListener(SlackMessagePostedListener listener) {
+        this.delegate.addMessagePostedListener(listener);
     }
 
-    @Override public void removeMessagePostedListener(SlackMessagePostedListener listener)
-    {
-        delegate.removeMessagePostedListener(listener);
+    public void removeMessagePostedListener(SlackMessagePostedListener listener) {
+        this.delegate.removeMessagePostedListener(listener);
     }
 
-    @Override public void addMessageUpdatedListener(SlackMessageUpdatedListener listener)
-    {
-        delegate.addMessageUpdatedListener(listener);
+    public void addMessageUpdatedListener(SlackMessageUpdatedListener listener) {
+        this.delegate.addMessageUpdatedListener(listener);
     }
 
-    @Override public void removeMessageUpdatedListener(SlackMessageUpdatedListener listener)
-    {
-        delegate.removeMessageUpdatedListener(listener);
+    public void removeMessageUpdatedListener(SlackMessageUpdatedListener listener) {
+        this.delegate.removeMessageUpdatedListener(listener);
     }
 
-    @Override public void addChannelJoinedListener(SlackChannelJoinedListener listener)
-    {
-        delegate.addChannelJoinedListener(listener);
+    public void addChannelJoinedListener(SlackChannelJoinedListener listener) {
+        this.delegate.addChannelJoinedListener(listener);
     }
 
-    @Override public void removeChannelJoinedListener(SlackChannelJoinedListener listener)
-    {
-        delegate.removeChannelJoinedListener(listener);
+    public void removeChannelJoinedListener(SlackChannelJoinedListener listener) {
+        this.delegate.removeChannelJoinedListener(listener);
     }
 
-    @Override public void addChannelLeftListener(SlackChannelLeftListener listener)
-    {
-        delegate.addChannelLeftListener(listener);
+    public void addChannelLeftListener(SlackChannelLeftListener listener) {
+        this.delegate.addChannelLeftListener(listener);
     }
 
-    @Override public void removeChannelLeftListener(SlackChannelLeftListener listener)
-    {
-        delegate.removeChannelLeftListener(listener);
+    public void removeChannelLeftListener(SlackChannelLeftListener listener) {
+        this.delegate.removeChannelLeftListener(listener);
     }
 
-    @Override public void addGroupJoinedListener(SlackGroupJoinedListener listener)
-    {
-        delegate.addGroupJoinedListener(listener);
+    public void addGroupJoinedListener(SlackGroupJoinedListener listener) {
+        this.delegate.addGroupJoinedListener(listener);
     }
 
-    @Override public void removeGroupJoinedListener(SlackGroupJoinedListener listener)
-    {
-        delegate.removeGroupJoinedListener(listener);
+    public void removeGroupJoinedListener(SlackGroupJoinedListener listener) {
+        this.delegate.removeGroupJoinedListener(listener);
     }
 
-    @Override public void addUserTypingListener(UserTypingListener listener)
-    {
-        delegate.addUserTypingListener(listener);
+    public void addUserTypingListener(UserTypingListener listener) {
+        this.delegate.addUserTypingListener(listener);
     }
 
-    @Override public void removeUserTypingListener(UserTypingListener listener)
-    {
-        delegate.removeUserTypingListener(listener);
+    public void removeUserTypingListener(UserTypingListener listener) {
+        this.delegate.removeUserTypingListener(listener);
     }
 
-    @Override public void addSlackConnectedListener(SlackConnectedListener listener)
-    {
-        delegate.addSlackConnectedListener(listener);
+    public void addSlackConnectedListener(SlackConnectedListener listener) {
+        this.delegate.addSlackConnectedListener(listener);
     }
 
-    @Override public void removeSlackConnectedListener(SlackConnectedListener listener)
-    {
-        delegate.removeSlackConnectedListener(listener);
+    public void removeSlackConnectedListener(SlackConnectedListener listener) {
+        this.delegate.removeSlackConnectedListener(listener);
     }
 
-    @Override public void addSlackDisconnectedListener(SlackDisconnectedListener listener)
-    {
-        delegate.addSlackDisconnectedListener(listener);
+    public void addSlackDisconnectedListener(SlackDisconnectedListener listener) {
+        this.delegate.addSlackDisconnectedListener(listener);
     }
 
-    @Override public void removeSlackDisconnectedListener(SlackDisconnectedListener listener)
-    {
-        delegate.removeSlackDisconnectedListener(listener);
+    public void removeSlackDisconnectedListener(SlackDisconnectedListener listener) {
+        this.delegate.removeSlackDisconnectedListener(listener);
     }
 
-    @Override public boolean isConnected()
-    {
-        return delegate.isConnected();
+    public boolean isConnected() {
+        return this.delegate.isConnected();
     }
 
-    @Override public void addReactionAddedListener(ReactionAddedListener listener)
-    {
-        delegate.addReactionAddedListener(listener);
+    public void addReactionAddedListener(ReactionAddedListener listener) {
+        this.delegate.addReactionAddedListener(listener);
     }
 
-    @Override public void removeReactionAddedListener(ReactionAddedListener listener)
-    {
-        delegate.removeReactionAddedListener(listener);
+    public void removeReactionAddedListener(ReactionAddedListener listener) {
+        this.delegate.removeReactionAddedListener(listener);
     }
 
-    @Override public void addReactionRemovedListener(ReactionRemovedListener listener)
-    {
-        delegate.addReactionRemovedListener(listener);
+    public void addReactionRemovedListener(ReactionRemovedListener listener) {
+        this.delegate.addReactionRemovedListener(listener);
     }
 
-    @Override public void removeReactionRemovedListener(ReactionRemovedListener listener)
-    {
-        delegate.removeReactionRemovedListener(listener);
+    public void removeReactionRemovedListener(ReactionRemovedListener listener) {
+        this.delegate.removeReactionRemovedListener(listener);
     }
 
-    @Override public void addSlackUserChangeListener(SlackUserChangeListener listener)
-    {
-        delegate.addSlackUserChangeListener(listener);
+    public void addSlackUserChangeListener(SlackUserChangeListener listener) {
+        this.delegate.addSlackUserChangeListener(listener);
     }
 
-    @Override public void removeSlackUserChangeListener(SlackUserChangeListener listener)
-    {
-        delegate.removeSlackUserChangeListener(listener);
+    public void removeSlackUserChangeListener(SlackUserChangeListener listener) {
+        this.delegate.removeSlackUserChangeListener(listener);
     }
 
-    @Override public void addSlackTeamJoinListener(SlackTeamJoinListener listener)
-    {
-        delegate.addSlackTeamJoinListener(listener);
+    public void addSlackTeamJoinListener(SlackTeamJoinListener listener) {
+        this.delegate.addSlackTeamJoinListener(listener);
     }
 
-    @Override public void removeSlackTeamJoinListener(SlackTeamJoinListener listener)
-    {
-        delegate.removeSlackTeamJoinListener(listener);
+    public void removeSlackTeamJoinListener(SlackTeamJoinListener listener) {
+        this.delegate.removeSlackTeamJoinListener(listener);
     }
 
-    @Override public void addPinAddedListener(PinAddedListener listener)
-    {
-        delegate.addPinAddedListener(listener);
+    public void addPinAddedListener(PinAddedListener listener) {
+        this.delegate.addPinAddedListener(listener);
     }
 
-    @Override public void removePinAddedListener(PinAddedListener listener)
-    {
-        delegate.removePinAddedListener(listener);
+    public void removePinAddedListener(PinAddedListener listener) {
+        this.delegate.removePinAddedListener(listener);
     }
 
-    @Override public void addPresenceChangeListener(PresenceChangeListener listener)
-    {
-        delegate.addPresenceChangeListener(listener);
+    public void addPresenceChangeListener(PresenceChangeListener listener) {
+        this.delegate.addPresenceChangeListener(listener);
     }
 
-    @Override public void removePresenceChangeListener(PresenceChangeListener listener)
-    {
-        delegate.removePresenceChangeListener(listener);
+    public void removePresenceChangeListener(PresenceChangeListener listener) {
+        this.delegate.removePresenceChangeListener(listener);
     }
 
-    @Override public void addPinRemovedListener(PinRemovedListener listener)
-    {
-        delegate.addPinRemovedListener(listener);
+    public void addPinRemovedListener(PinRemovedListener listener) {
+        this.delegate.addPinRemovedListener(listener);
     }
 
-    @Override public void removePinRemovedListener(PinRemovedListener listener)
-    {
-        delegate.removePinRemovedListener(listener);
+    public void removePinRemovedListener(PinRemovedListener listener) {
+        this.delegate.removePinRemovedListener(listener);
     }
 
-    @Override public long getHeartbeat()
-    {
-        return delegate.getHeartbeat();
+    public void addSlackMemberJoinedListener(SlackMemberJoinedListener listener) {
+        this.delegate.addSlackMemberJoinedListener(listener);
+    }
+
+    public void removeSlackMemberJoinedListener(SlackMemberJoinedListener listener) {
+        this.delegate.removeSlackMemberJoinedListener(listener);
+    }
+
+
+    public long getHeartbeat() {
+        return this.delegate.getHeartbeat();
     }
 }
