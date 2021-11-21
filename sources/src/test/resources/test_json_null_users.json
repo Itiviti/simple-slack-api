@@ -1,0 +1,312 @@
+{
+  "ok": true,
+  "self" : {
+    "id": "SELF",
+    "name": "myself"
+  },
+  "team": {
+    "id": "TEAM",
+    "name": "Example Team",
+    "domain": "example"
+  },
+  "channels": [
+    {
+      "id": "CHANNELID1",
+      "name": "testchannel1",
+      "is_channel": true,
+      "created": 1396880110,
+      "creator": "USERID1",
+      "is_archived": false,
+      "is_general": false,
+      "is_member": true,
+      "last_read": "1412243282.000018",
+      "latest": {
+        "type": "message",
+        "user": "USERID2",
+        "text": "test text",
+        "ts": "1412243282.000018"
+      },
+      "unread_count": 0,
+      "members": [
+        "USERID1",
+        "USERID2",
+        "USERID3"
+      ],
+      "topic": {
+        "value": "testchannel1 topic",
+        "creator": "USERID1",
+        "last_set": "1410860672"
+      },
+      "purpose": {
+        "value": "testchannel1 purpose",
+        "creator": "USERID1",
+        "last_set": "1396880111"
+      }
+    },
+    {
+      "id": "CHANNELID2",
+      "name": "testchannel2",
+      "is_channel": true,
+      "created": 1396536030,
+      "creator": "USERID2",
+      "is_archived": false,
+      "is_general": false,
+      "is_member": false,
+      "members": [
+        "USERID2",
+        "USERID3"
+      ]
+    },
+    {
+      "id": "CHANNELID3",
+      "name": "testchannel3",
+      "is_channel": true,
+      "created": 1410428380,
+      "creator": "USERID3",
+      "is_archived": false,
+      "is_general": false,
+      "is_member": false
+    }
+  ],
+  "groups": [
+    {
+      "id": "GROUPID1",
+      "name": "testgroup1",
+      "is_group": true,
+      "created": 1405080344,
+      "creator": "USERID4",
+      "is_archived": false,
+      "is_open": true,
+      "last_read": "1412321014.000021",
+      "latest": {
+        "type": "message",
+        "user": "USERID4",
+        "text": "test text group id 1",
+        "ts": "1412321014.000021"
+      },
+      "unread_count": 0,
+      "members": [
+        "USERID1",
+        "USERID4"
+      ],
+      "topic": {
+        "value": "",
+        "creator": "",
+        "last_set": "0"
+      },
+      "purpose": {
+        "value": "test group 1 purpose",
+        "creator": "USERID4",
+        "last_set": "1405080345"
+      }
+    }
+  ],
+  "ims": [
+    {
+      "id": "DIM01",
+      "is_im": true,
+      "created": 1405080346,
+      "user": "USERID4",
+      "is_user_deleted": false
+    }
+  ],
+  "users": [
+    {
+      "id": "USERID1",
+      "name": "testuser1",
+      "deleted": false,
+      "status": null,
+      "color": "a72f79",
+      "profile" : {
+        "email": "userid1@my.email"
+      },
+      "real_name": "Test User 1",
+      "skype": null,
+      "phone": null,
+      "tz": "Europe\/Amsterdam",
+      "tz_label": "Central European Summer Time",
+      "tz_offset": 7200,
+      "is_admin": false,
+      "is_owner": false,
+      "is_primary_owner": false,
+      "is_restricted": false,
+      "is_ultra_restricted": false,
+      "is_bot": false,
+      "has_files": false,
+      "presence": "away"
+    },
+    {
+      "id": null,
+      "name": null,
+      "deleted": false,
+      "status": null,
+      "color": "a72f79",
+      "profile" : {
+        "email": "useridnone@my.email"
+      },
+      "real_name": null,
+      "skype": null,
+      "phone": null,
+      "tz": "Europe\/Amsterdam",
+      "tz_label": "Central European Summer Time",
+      "tz_offset": 7200,
+      "is_admin": false,
+      "is_owner": false,
+      "is_primary_owner": false,
+      "is_restricted": false,
+      "is_ultra_restricted": false,
+      "is_bot": false,
+      "has_files": false,
+      "presence": "away"
+    },
+    {
+      "id": "USERID2",
+      "name": "testuser2",
+      "deleted": false,
+      "status": null,
+      "color": "a72f79",
+      "profile" : {
+        "email": "userid2@my.email"
+      },
+      "real_name": "Test User 2",
+      "skype": null,
+      "phone": null,
+      "tz": "Europe\/Amsterdam",
+      "tz_label": "Central European Summer Time",
+      "tz_offset": 7200,
+      "is_admin": false,
+      "is_owner": false,
+      "is_primary_owner": false,
+      "is_restricted": false,
+      "is_ultra_restricted": false,
+      "is_bot": false,
+      "has_files": false,
+      "presence": "away"
+    },
+    {
+      "id": "USERID3",
+      "name": "testuser3",
+      "deleted": false,
+      "status": null,
+      "color": "a72f79",
+      "profile" : {
+        "email": "userid3@my.email"
+      },
+      "real_name": "Test User 3",
+      "skype": null,
+      "phone": null,
+      "tz": "Europe\/Amsterdam",
+      "tz_label": "Central European Summer Time",
+      "tz_offset": 7200,
+      "is_admin": false,
+      "is_owner": false,
+      "is_primary_owner": false,
+      "is_restricted": false,
+      "is_ultra_restricted": false,
+      "is_bot": false,
+      "has_files": false,
+      "presence": "away"
+    },
+    {
+      "id": "USERID4",
+      "name": "testuser4",
+      "deleted": false,
+      "status": null,
+      "color": "a72f79",
+      "profile" : {
+        "email": "userid4@my.email"
+      },
+      "real_name": "Test User 4",
+      "skype": null,
+      "phone": null,
+      "tz": "Europe\/Amsterdam",
+      "tz_label": "Central European Summer Time",
+      "tz_offset": 7200,
+      "is_admin": false,
+      "is_owner": false,
+      "is_primary_owner": false,
+      "is_restricted": false,
+      "is_ultra_restricted": false,
+      "is_bot": false,
+      "has_files": false,
+      "presence": "away"
+    },
+    {
+      "id": "BOTID1",
+      "name": "botid1",
+      "deleted": false,
+      "status": null,
+      "color": "a72f79",
+      "profile" : {
+        "email": "userid4@my.email"
+      },
+      "real_name": "Test User 4",
+      "skype": null,
+      "phone": null,
+      "tz": "Europe\/Amsterdam",
+      "tz_label": "Central European Summer Time",
+      "tz_offset": 7200,
+      "is_admin": false,
+      "is_owner": false,
+      "is_primary_owner": false,
+      "is_restricted": false,
+      "is_ultra_restricted": false,
+      "is_bot": true,
+      "has_files": false,
+      "presence": "away"
+    },
+    {
+      "id": "BOTID2",
+      "name": "botid2",
+      "deleted": false,
+      "status": null,
+      "color": "a72f79",
+      "profile" : {
+        "email": "userid4@my.email"
+      },
+      "real_name": "Test User 4",
+      "skype": null,
+      "phone": null,
+      "tz": "Europe\/Amsterdam",
+      "tz_label": "Central European Summer Time",
+      "tz_offset": 7200,
+      "is_admin": false,
+      "is_owner": false,
+      "is_primary_owner": false,
+      "is_restricted": false,
+      "is_ultra_restricted": false,
+      "is_bot": true,
+      "has_files": false,
+      "presence": "away"
+    }
+  ],
+  "svn_rev": "26838",
+  "min_svn_rev": 26789,
+  "commands": {
+    "\/testcommand1": {
+      "usage": "test command 1 usage",
+      "desc": "test command 1 desc",
+      "name": "\/testcommand1name",
+      "type": "service"
+    },
+    "\/testcommand2": {
+      "usage": "test command 2 usage",
+      "desc": "test command 2 desc",
+      "name": "\/testcommand2name",
+      "type": "service"
+    }
+  },
+  "bots": [
+    {
+      "id": "INTEGRATION1",
+      "deleted": false,
+      "name": "bot1"
+    },
+    {
+      "id": "INTEGRATION2",
+      "deleted": true,
+      "name": "bot2"
+    }
+  ],
+  "url": "wss:\/\/mywebsocketurl"
+}
