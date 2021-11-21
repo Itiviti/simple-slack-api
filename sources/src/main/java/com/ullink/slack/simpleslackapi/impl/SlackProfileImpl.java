@@ -2,6 +2,7 @@ package com.ullink.slack.simpleslackapi.impl;
 
 import com.google.gson.annotations.SerializedName;
 import com.ullink.slack.simpleslackapi.SlackPresence;
+import com.ullink.slack.simpleslackapi.SlackStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,6 +49,8 @@ public class SlackProfileImpl {
   @SerializedName("image_512")
   private String image512;
   private String team;
+  @SerializedName("status")
+  private SlackStatus status;
 
   @Builder.Default
   private SlackPresence presence = SlackPresence.UNKNOWN;

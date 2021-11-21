@@ -15,6 +15,10 @@
     "status_expiration": 0.0,
     "phone": "1234",
     "display_name": "test test",
-    "email": "test@test.com"
+    "email": "test@test.com",
+    "status": {
+      "text": "test_status",
+      "emoji": "test_emoji"
+    }
   }
 }

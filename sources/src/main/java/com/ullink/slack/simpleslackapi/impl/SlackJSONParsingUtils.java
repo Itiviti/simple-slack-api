@@ -13,6 +13,13 @@ class SlackJSONParsingUtils {
         // Helper class
     }
 
+    /**
+     * buildSlackUser functions builds the properties for a slack user
+     *
+     * @return SlackUser
+     *
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/196
+     */
     static SlackUser buildSlackUser(JsonObject jsonUser)
     {
         String id = GsonHelper.getStringOrNull(jsonUser.get("id"));
@@ -39,6 +46,8 @@ class SlackJSONParsingUtils {
         String title = "";
         String phone = "";
         String presence = "";
+        String statusTxt = "";
+        String statusEmoji = "";
         if (profileJSON !=null && !profileJSON.isJsonNull())
         {
             email = GsonHelper.getStringOrNull(profileJSON.get("email"));
@@ -46,6 +55,8 @@ class SlackJSONParsingUtils {
             title = GsonHelper.getStringOrNull(profileJSON.get("title"));
             phone = GsonHelper.getStringOrNull(profileJSON.get("phone"));
             presence = GsonHelper.getStringOrNull(profileJSON.get("presence"));
+            statusTxt = GsonHelper.getStringOrNull(profileJSON.get("status_text"));
+            statusEmoji = GsonHelper.getStringOrNull(profileJSON.get("status_emoji"));
         }
         SlackPresence slackPresence = SlackPresence.UNKNOWN;
         if ("active".equals(presence))
@@ -56,14 +67,18 @@ class SlackJSONParsingUtils {
         {
             slackPresence = SlackPresence.AWAY;
         }
+        SlackStatus slackStatus = (new SlackStatus())
+                .setEmoji(statusEmoji)
+                .setText(statusTxt);
         SlackProfileImpl profile = SlackProfileImpl.builder()
             .presence(slackPresence)
             .realName(realName)
             .email(email)
             .phone(phone)
             .skype(skype)
+            .status(slackStatus)
             .title(title)
-            .build();
+           .build();
 
         return SlackPersonaImpl.builder()
             .profile(profile)
