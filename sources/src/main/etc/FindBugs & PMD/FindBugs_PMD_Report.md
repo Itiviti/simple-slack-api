@@ -16,3 +16,11 @@ Please note that my contributions affected only the following files:
   7. [SlackEventType.java](https://github.com/rajanpatel4578/simple-slack-api/blob/MemberJoinedListener/sources/src/main/java/com/ullink/slack/simpleslackapi/events/SlackEventType.java)
   8. [EventType.java](https://github.com/rajanpatel4578/simple-slack-api/blob/MemberJoinedListener/sources/src/main/java/com/ullink/slack/simpleslackapi/events/EventType.java)
   9. [SlackJSONMessageParser.java](https://github.com/rajanpatel4578/simple-slack-api/blob/MemberJoinedListener/sources/src/main/java/com/ullink/slack/simpleslackapi/impl/SlackJSONMessageParser.java)
+
+Bug Report After
+![image](https://user-images.githubusercontent.com/33018692/142755370-044c059d-578f-42fb-8d48-9bbb2f25a29e.png)
+
+
+
+Bug Report Before
+![image](https://user-images.githubusercontent.com/33018692/142755413-9ab61508-d726-4ef5-a79f-bbbd224eb3b4.png)
