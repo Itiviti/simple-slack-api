@@ -63,7 +63,14 @@ public class SlackChannel {
 
     public Collection<SlackUser> getMembers()
     {
-        return new ArrayList<>(members);
+        Set<SlackUser> membersWithoutNulls = new HashSet<>();
+        for (SlackUser u : members) {
+            if (u.getRealName() != null) {
+                membersWithoutNulls.add(u);
+            }
+        }
+
+        return new ArrayList<>(membersWithoutNulls);
     }
 
     public String getTopic()

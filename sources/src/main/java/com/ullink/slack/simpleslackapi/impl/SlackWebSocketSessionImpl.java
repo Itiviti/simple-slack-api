@@ -1044,7 +1044,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         if (membersjson != null) {
             for (JsonElement member : membersjson) {
                 SlackUser user = SlackJSONParsingUtils.buildSlackUser(member.getAsJsonObject());
-                members.put(user.getId(), user);
+                if (user.getRealName() != null) {
+                    members.put(user.getId(), user);
+                }
             }
         }
 
