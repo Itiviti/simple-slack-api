@@ -496,6 +496,9 @@ public class TestAbstractSlackSessionImpl
         assertThat(slackSession.findUserByUserName("unknownuser")).isNull();
     }
 
+    /**
+     * Test the method findUserByEmail()
+     */
     @Test
     public void testFindUserByEmail_ExistingBot()
     {
