@@ -18,7 +18,8 @@ Please note that my contributions affected only the following files:
   9. [SlackJSONMessageParser.java](https://github.com/rajanpatel4578/simple-slack-api/blob/MemberJoinedListener/sources/src/main/java/com/ullink/slack/simpleslackapi/impl/SlackJSONMessageParser.java)
 
 Bug Report After
-![image](https://user-images.githubusercontent.com/33018692/142755370-044c059d-578f-42fb-8d48-9bbb2f25a29e.png)
+![image](https://user-images.githubusercontent.com/33018692/142755449-c67b42b4-ff7d-4bc5-beb7-09ae21475ac2.png)
+
 
 
 
