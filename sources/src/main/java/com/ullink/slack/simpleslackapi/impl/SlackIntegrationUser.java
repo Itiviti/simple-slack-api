@@ -3,6 +3,7 @@ package com.ullink.slack.simpleslackapi.impl;
 import com.ullink.slack.simpleslackapi.SlackIntegration;
 import com.ullink.slack.simpleslackapi.SlackPresence;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.SlackStatus;
 
 class SlackIntegrationUser implements SlackIntegration, SlackUser
 {
@@ -124,5 +125,11 @@ class SlackIntegrationUser implements SlackIntegration, SlackUser
     public SlackPresence getPresence()
     {
         return SlackPresence.UNKNOWN;
+    }
+
+    @Override
+    public SlackStatus getStatus()
+    {
+        return null;
     }
 }

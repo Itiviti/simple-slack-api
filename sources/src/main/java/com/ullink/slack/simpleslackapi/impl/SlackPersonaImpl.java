@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackPresence;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.SlackStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,6 +71,12 @@ public class SlackPersonaImpl implements SlackPersona, SlackUser {
     @Override
     public SlackPresence getPresence() {
         return profile.getPresence();
+    }
+
+    @Override
+    public SlackStatus getStatus()
+    {
+        return profile.getStatus();
     }
 
 }

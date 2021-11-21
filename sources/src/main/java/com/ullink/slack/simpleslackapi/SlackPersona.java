@@ -22,4 +22,5 @@ public interface SlackPersona {
     String getTimeZoneLabel();
     Integer getTimeZoneOffset();
     SlackPresence getPresence();
+    SlackStatus getStatus();
 }

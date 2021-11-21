@@ -1,6 +1,7 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import com.ullink.slack.simpleslackapi.SlackPresence;
+import com.ullink.slack.simpleslackapi.SlackStatus;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,6 +14,11 @@ public class SlackPersonaImplTest {
 
   @Test
   public void testJsonSerialize() throws IOException {
+    String statusText = "test_status";
+    String statusEmoji = "test_emoji";
+    SlackStatus testSlackStatus = (new SlackStatus())
+        .setEmoji(statusEmoji)
+        .setText(statusText);
     SlackPersonaImpl persona = SlackPersonaImpl.builder()
         .admin(false)
         .bot(true)
@@ -22,7 +28,7 @@ public class SlackPersonaImplTest {
         .timeZoneLabel("Central European Summer Test")
         .userName("test")
         .id("test123")
-        .profile(SlackProfileImpl.builder().displayName("test test").email("test@test.com").phone("1234").presence(SlackPresence.ACTIVE).build())
+        .profile(SlackProfileImpl.builder().displayName("test test").email("test@test.com").phone("1234").status(testSlackStatus).presence(SlackPresence.ACTIVE).build())
         .build();
     String json = gson().toJson(persona);
     assertNotNull(json);
@@ -39,6 +45,10 @@ public class SlackPersonaImplTest {
     assertNotNull(persona.getProfile());
     assertEquals("test@test.com", persona.getUserMail());
     assertEquals(SlackPresence.ACTIVE, persona.getPresence());
+
+    SlackStatus expectedSlackStatus = persona.getStatus();
+    assertEquals("test_status", expectedSlackStatus.getText());
+    assertEquals("test_emoji", expectedSlackStatus.getEmoji());
   }
 
   @Test
@@ -51,6 +61,10 @@ public class SlackPersonaImplTest {
     assertNotNull(persona.getProfile());
     assertEquals("test@test.com", persona.getUserMail());
     assertEquals(SlackPresence.UNKNOWN, persona.getPresence());
+
+    SlackStatus expectedSlackStatus = persona.getStatus();
+    assertEquals("test_status", expectedSlackStatus.getText());
+    assertEquals("test_emoji", expectedSlackStatus.getEmoji());
   }
 
   @Test
