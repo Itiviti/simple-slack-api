@@ -7,18 +7,28 @@ import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.WebSocketContainerProvider;
 
 public class SlackSessionFactory {
-    public static SlackSession createWebSocketSlackSession(String authToken)
+    /**
+     * Add a new variable because Slack Api change the way to be called. Now it requires auth token and app level token
+     * @param authToken
+     * @param appLevelToken
+     * @return
+     */
+    public static SlackSession createWebSocketSlackSession(String authToken, String appLevelToken)
     {
-    	return new SlackWebSocketSessionImpl(null, authToken, null, true, true, 0, null);
+    	return new SlackWebSocketSessionImpl(null, authToken, appLevelToken, null, true, true, 0, null);
     }
 
-    public static SlackSessionFactoryBuilder getSlackSessionBuilder(String authToken) {
-        return new SlackSessionFactoryBuilder(authToken);
+    public static SlackSessionFactoryBuilder getSlackSessionBuilder(String authToken, String appLevelToken) {
+        return new SlackSessionFactoryBuilder(authToken, appLevelToken);
     }
 
     public static class SlackSessionFactoryBuilder {
 
         private String authToken;
+        /**
+         * Add new variable -appLevelToken
+         */
+        private String appLevelToken;
         private String slackBaseApi;
         private Proxy.Type proxyType;
         private String proxyAddress;
@@ -31,8 +41,14 @@ public class SlackSessionFactory {
         private boolean autoreconnection;
         private boolean rateLimitSupport = true;
 
-        private SlackSessionFactoryBuilder(String authToken) {
+        /**
+         * Add new variable -appLevelToken
+         * @param authToken
+         * @param appLevelToken
+         */
+        private SlackSessionFactoryBuilder(String authToken, String appLevelToken) {
             this.authToken = authToken;
+            this.appLevelToken = appLevelToken;
         }
 
         public SlackSessionFactoryBuilder withBaseApiUrl(String slackBaseApi) {
@@ -78,7 +94,7 @@ public class SlackSessionFactory {
         }
 
         public SlackSession build() {
-            return new SlackWebSocketSessionImpl(provider, authToken, slackBaseApi, proxyType, proxyAddress, proxyPort, proxyUser, proxyPassword, autoreconnection, rateLimitSupport, heartbeat, unit);
+            return new SlackWebSocketSessionImpl(provider, authToken, appLevelToken, slackBaseApi, proxyType, proxyAddress, proxyPort, proxyUser, proxyPassword, autoreconnection, rateLimitSupport, heartbeat, unit);
         }
     }
 }

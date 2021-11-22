@@ -66,6 +66,25 @@ public class SlackPersonaImpl implements SlackPersona, SlackUser {
     public String getUserTitle() {
         return profile.getTitle();
     }
+    /**
+     * To get the user's status
+     * @return The status of users
+     */
+    @Override
+    public String getStatusText()
+    {
+        return profile.getStatusText();
+    }
+    /**
+     * To get the users statuses's emoji text
+     * @return The emoji text of users' statuses
+     */
+
+    @Override
+    public String getStatusEmoji()
+    {
+        return profile.getStatusEmoji();
+    }
 
     @Override
     public SlackPresence getPresence() {

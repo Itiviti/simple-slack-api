@@ -13,7 +13,7 @@ public class SlackDirectConnection
 {
     public static void main(String[] args) throws IOException
     {
-        SlackSession session = SlackSessionFactory.createWebSocketSlackSession("my-bot-auth-token");
+        SlackSession session = SlackSessionFactory.createWebSocketSlackSession("my-bot-auth-token", "my-bot-app-level-token");
         session.connect();
     }
 }
