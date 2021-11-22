@@ -476,7 +476,7 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.unarchiveChannel(channelId);
     }
 
-    @Override public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
+    @Override public SlackMessageHandle<GenericSlackReply> openDirectMessageChannel(SlackUser user)
     {
         return delegate.openDirectMessageChannel(user);
     }

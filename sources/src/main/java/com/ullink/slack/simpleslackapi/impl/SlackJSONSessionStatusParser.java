@@ -94,7 +94,7 @@ class SlackJSONSessionStatusParser {
         for (JsonElement jsonObject : channelsJson)
         {
             JsonObject jsonChannel = jsonObject.getAsJsonObject();
-            SlackChannel channel = SlackJSONParsingUtils.buildSlackChannel(jsonChannel, users);
+            SlackChannel channel = SlackJSONParsingUtils.buildSlackChannel(jsonChannel);
             LOGGER.debug("slack public channel found : " + channel.getId());
             channels.put(channel.getId(), channel);
         }
@@ -105,7 +105,7 @@ class SlackJSONSessionStatusParser {
             for (JsonElement jsonObject : groupsJson)
             {
                 JsonObject jsonChannel = jsonObject.getAsJsonObject();
-                SlackChannel channel = SlackJSONParsingUtils.buildSlackChannel(jsonChannel, users);
+                SlackChannel channel = SlackJSONParsingUtils.buildSlackChannel(jsonChannel);
                 LOGGER.debug("slack private group found : " + channel.getId());
                 channels.put(channel.getId(), channel);
             }

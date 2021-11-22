@@ -125,6 +125,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         String ARCHIVE_COMMAND   = "conversations.archive";
         String UNARCHIVE_COMMAND = "conversations.unarchive";
         String LIST_COMMAND      = "conversations.list";
+        String MEMBERS_COMMAND   = "conversations.members";
     }
 
     private interface CHAT
@@ -231,8 +232,12 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                 return channel;
             }
         }
-        SlackMessageHandle<SlackChannelReply> reply = openDirectMessageChannel(user);
-        return reply.getReply().getSlackChannel();
+        SlackMessageHandle<GenericSlackReply> reply = openDirectMessageChannel(user);
+        String channelAnswer = reply.getReply().getPlainAnswer();
+        JsonParser parser = new JsonParser();
+        String channelId = parser.parse(channelAnswer).getAsJsonObject().get("channel").getAsJsonObject().get("id").getAsString();
+        SlackChannel channel = findChannelById(channelId);
+        return channel;
     }
 
     public class EventDispatcher {
@@ -408,11 +413,23 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         JsonObject answerJson = parser.parse(channelsAnswer).getAsJsonObject();
         JsonArray channelsJson = answerJson.get("channels").getAsJsonArray();
 
-        for (JsonElement jsonObject : channelsJson)
-        {
+        for (JsonElement jsonObject : channelsJson) {
             JsonObject jsonChannel = jsonObject.getAsJsonObject();
-            SlackChannel channel = SlackJSONParsingUtils.buildSlackChannel(jsonChannel, users);
+            SlackChannel channel = SlackJSONParsingUtils.buildSlackChannel(jsonChannel);
             LOGGER.debug("slack public channel found : " + channel.getId());
+
+            String channelMembersAnswer = listChannelMembers(channel.getId()).getReply().getPlainAnswer();
+            JsonObject channelMembersJsonObject = parser.parse(channelMembersAnswer).getAsJsonObject();
+
+            JsonArray channelMembersJsonArray = channelMembersJsonObject.getAsJsonArray("members");
+
+            if(channelMembersJsonArray != null){
+                for (JsonElement memberJson : channelMembersJsonArray) {
+                    SlackUser user = users.get(memberJson.getAsString());
+                    channel.addUser(user);
+                }
+            }
+
             channels.put(channel.getId(), channel);
         }
 
@@ -944,6 +961,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
       arguments.put("token", authToken);
       arguments.put("channel", channel.getId());
       arguments.put("users", user.getId());
+
+      if(users.containsKey(user.getId())){
+          channel.addUser(user);
+      }
+
       postSlackCommand(arguments, CONVERSATION.INVITE_COMMAND, handle, SlackChannelReply.class);
       return handle;
     }
@@ -1029,12 +1051,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user) {
-        SlackMessageHandle<SlackChannelReply> handle = new SlackMessageHandle<>(getNextMessageId());
+    public SlackMessageHandle<GenericSlackReply> openDirectMessageChannel(SlackUser user) {
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
-        arguments.put("user", user.getId());
-        postSlackCommand(arguments, CONVERSATION.OPEN_COMMAND, handle, SlackChannelReply.class);
+        arguments.put("users", user.getId());
+        SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(arguments, CONVERSATION.OPEN_COMMAND);
         return handle;
     }
 
@@ -1071,6 +1092,14 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     {
         Map<String, String> params = new HashMap<>();
         SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, CONVERSATION.LIST_COMMAND);
+        return handle;
+    }
+
+    public SlackMessageHandle<GenericSlackReply> listChannelMembers(String channel_id)
+    {
+        Map<String, String> params = new HashMap<>();
+        params.put("channel", channel_id);
+        SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, CONVERSATION.MEMBERS_COMMAND);
         return handle;
     }
 

@@ -88,7 +88,7 @@ class SlackJSONParsingUtils {
             .build();
     }
 
-    static SlackChannel buildSlackChannel(JsonObject jsonChannel, Map<String, SlackUser> knownUsersById) {
+    static SlackChannel buildSlackChannel(JsonObject jsonChannel) {
         String id =  GsonHelper.getStringOrNull(jsonChannel.get("id"));
         String name = GsonHelper.getStringOrNull(jsonChannel.get("name"));
 
@@ -112,16 +112,7 @@ class SlackJSONParsingUtils {
             isArchived = jsonChannel.get("is_archived").getAsBoolean();
         }
 
-        SlackChannel toReturn = new SlackChannel(id, name, topic, purpose, false, isMember, isArchived);
-        JsonArray membersJson = GsonHelper.getJsonArrayOrNull(jsonChannel.get("members"));
-        if (membersJson != null) {
-            for (JsonElement jsonMembersObject : membersJson) {
-                String memberId = jsonMembersObject.getAsString();
-                SlackUser user = knownUsersById.get(memberId);
-                toReturn.addUser(user);
-            }
-        }
-        return toReturn;
+        return new SlackChannel(id, name, topic, purpose, false, isMember, isArchived);
     }
 
     static SlackChannel buildSlackImChannel(JsonObject jsonChannel, Map<String, SlackUser> knownUsersById)
