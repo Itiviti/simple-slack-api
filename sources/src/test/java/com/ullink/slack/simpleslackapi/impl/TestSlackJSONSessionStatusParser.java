@@ -47,6 +47,9 @@ public class TestSlackJSONSessionStatusParser
         assertThat(parser.getIntegrations().get("INTEGRATION2").isDeleted()).isEqualTo(true);
     }
 
+    /**
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/187
+     */
     @Test
     public void testNullUsersNotCounted() throws Exception
     {

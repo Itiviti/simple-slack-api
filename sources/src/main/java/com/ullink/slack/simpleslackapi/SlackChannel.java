@@ -61,6 +61,12 @@ public class SlackChannel {
         return name;
     }
 
+    /**
+     * getMembers function returns the collection of users in a channel
+     * @return Collection<SlackUser>
+     *
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/187
+     */
     public Collection<SlackUser> getMembers()
     {
         Set<SlackUser> membersWithoutNulls = new HashSet<>();
