@@ -66,6 +66,26 @@ public class SlackPersonaImpl implements SlackPersona, SlackUser {
     public String getUserTitle() {
         return profile.getTitle();
     }
+    /**
+     * To get the user's status
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * @return The status of users
+     */
+    @Override
+    public String getStatusText()
+    {
+        return profile.getStatusText();
+    }
+    /**
+     * To get the users status's emoji text
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * @return The emoji text of users' statuses
+     */
+    @Override
+    public String getStatusEmoji()
+    {
+        return profile.getStatusEmoji();
+    }
 
     @Override
     public String getStatusText()

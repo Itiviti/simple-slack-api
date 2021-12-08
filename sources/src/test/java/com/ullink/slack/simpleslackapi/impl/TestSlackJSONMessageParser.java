@@ -295,7 +295,7 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
+            public SlackMessageHandle<GenericSlackReply> openDirectMessageChannel(SlackUser user)
             {
                 return null;
             }

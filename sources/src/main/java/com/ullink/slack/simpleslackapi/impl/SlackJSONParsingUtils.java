@@ -13,6 +13,12 @@ class SlackJSONParsingUtils {
         // Helper class
     }
 
+    /**
+     * Add the status and emoji
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/196
+     * @param jsonUser
+     * @return
+     */
     static SlackUser buildSlackUser(JsonObject jsonUser)
     {
         String id = GsonHelper.getStringOrNull(jsonUser.get("id"));
@@ -88,7 +94,12 @@ class SlackJSONParsingUtils {
             .build();
     }
 
-    static SlackChannel buildSlackChannel(JsonObject jsonChannel, Map<String, SlackUser> knownUsersById) {
+    /**
+     * No need to add user to members, others are the same
+     * @param jsonChannel
+     * @return
+     */
+    static SlackChannel buildSlackChannel(JsonObject jsonChannel) {
         String id =  GsonHelper.getStringOrNull(jsonChannel.get("id"));
         String name = GsonHelper.getStringOrNull(jsonChannel.get("name"));
 
@@ -112,16 +123,7 @@ class SlackJSONParsingUtils {
             isArchived = jsonChannel.get("is_archived").getAsBoolean();
         }
 
-        SlackChannel toReturn = new SlackChannel(id, name, topic, purpose, false, isMember, isArchived);
-        JsonArray membersJson = GsonHelper.getJsonArrayOrNull(jsonChannel.get("members"));
-        if (membersJson != null) {
-            for (JsonElement jsonMembersObject : membersJson) {
-                String memberId = jsonMembersObject.getAsString();
-                SlackUser user = knownUsersById.get(memberId);
-                toReturn.addUser(user);
-            }
-        }
-        return toReturn;
+        return new SlackChannel(id, name, topic, purpose, false, isMember, isArchived);
     }
 
     static SlackChannel buildSlackImChannel(JsonObject jsonChannel, Map<String, SlackUser> knownUsersById)
