@@ -48,7 +48,7 @@ public class TestSlackJSONSessionStatusParser
     }
 
     /**
-     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/187
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/187
      */
     @Test
     public void testNullUsersNotCounted() throws Exception
