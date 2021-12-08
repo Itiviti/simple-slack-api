@@ -7,11 +7,23 @@ import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.WebSocketContainerProvider;
 
 public class SlackSessionFactory {
+    /**
+     * Add a new variable because Slack Api change the way to be called. Now it requires auth token and app level token
+     * @param authToken
+     * @param appLevelToken
+     * @return
+     */
     public static SlackSession createWebSocketSlackSession(String authToken, String appLevelToken)
     {
     	return new SlackWebSocketSessionImpl(null, authToken, appLevelToken, null, true, true, 0, null);
     }
-
+    /**
+     * Add a new variable because Slack Api change the way to be called. Now it requires auth token and app level token
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/283
+     * @param authToken
+     * @param appLevelToken
+     * @return
+     */
     public static SlackSessionFactoryBuilder getSlackSessionBuilder(String authToken, String appLevelToken) {
         return new SlackSessionFactoryBuilder(authToken, appLevelToken);
     }
@@ -19,6 +31,9 @@ public class SlackSessionFactory {
     public static class SlackSessionFactoryBuilder {
 
         private String authToken;
+        /**
+         * Add new variable -appLevelToken
+         */
         private String appLevelToken;
         private String slackBaseApi;
         private Proxy.Type proxyType;
@@ -32,6 +47,12 @@ public class SlackSessionFactory {
         private boolean autoreconnection;
         private boolean rateLimitSupport = true;
 
+        /**
+         * Add new variable -appLevelToken
+         * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/283
+         * @param authToken
+         * @param appLevelToken
+         */
         private SlackSessionFactoryBuilder(String authToken, String appLevelToken) {
             this.authToken = authToken;
             this.appLevelToken = appLevelToken;

@@ -185,6 +185,12 @@ public interface SlackSession {
     SlackMessageHandle<ParsedSlackReply> archiveChannel(String channelId);
 
     SlackMessageHandle<ParsedSlackReply> unarchiveChannel(String channelId);
+
+    /**
+     * SlackChannelReply type does not work for subsequent operations, change it to GenericSlackReply type
+     * @param user: current slack user
+     * @return the replies in current channel
+     */
     SlackMessageHandle<GenericSlackReply> openDirectMessageChannel(SlackUser user);
 
     SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users);

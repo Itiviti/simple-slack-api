@@ -475,7 +475,11 @@ public class SlackSessionWrapper implements SlackSession
     public SlackMessageHandle<ParsedSlackReply> unarchiveChannel(String channelId) {
         return delegate.unarchiveChannel(channelId);
     }
-
+    /**
+     * SlackChannelReply type does not work for subsequent operations, change it to GenericSlackReply type
+     * @param user: current slack user
+     * @return the replies in current channel
+     */
     @Override public SlackMessageHandle<GenericSlackReply> openDirectMessageChannel(SlackUser user)
     {
         return delegate.openDirectMessageChannel(user);

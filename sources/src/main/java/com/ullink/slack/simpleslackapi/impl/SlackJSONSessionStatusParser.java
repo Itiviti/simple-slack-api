@@ -90,7 +90,6 @@ class SlackJSONSessionStatusParser {
         }
 
         JsonArray channelsJson = jsonResponse.get("channels").getAsJsonArray();
-
         for (JsonElement jsonObject : channelsJson)
         {
             JsonObject jsonChannel = jsonObject.getAsJsonObject();

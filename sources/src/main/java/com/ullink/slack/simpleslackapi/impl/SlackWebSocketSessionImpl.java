@@ -100,6 +100,10 @@ import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import com.ullink.slack.simpleslackapi.replies.SlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackReplyImpl;
 import com.ullink.slack.simpleslackapi.replies.SlackUserPresenceReply;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -157,11 +161,17 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private static final String INVITE_USER_COMMAND     = "users.admin.invite";
 
     private static final String LIST_EMOJI_COMMAND = "emoji.list";
-    
+    /**
+     * newly added variables for subsequente uses
+     */
     private static final String AUTH_TEST_COMMAND = "auth.test";
-
+    /**
+     * newly added variables for subsequente uses
+     */
     private static final String APPS_CONNECTIONS_OPEN_COMMAND = "apps.connections.open";
-
+    /**
+     * newly added variables for subsequente uses
+     */
     private static final String APP_LEVEL_API_PREFIX = "apps";
 
     private static final Logger               LOGGER                     = LoggerFactory.getLogger(SlackWebSocketSessionImpl.class);
@@ -170,6 +180,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private volatile Session websocketSession;
     private final    String  authToken;
+    /**
+     * newly added variables for subsequente uses
+     */
     private final    String  appLevelToken;
     private          String  slackApiBase               = DEFAULT_SLACK_API_HTTPS_ROOT;
     private String                            proxyAddress;
@@ -328,12 +341,18 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
+    /**
+     * newly added variable
+     */
     SlackWebSocketSessionImpl(WebSocketContainerProvider webSocketContainerProvider, String authToken, String appLevelToken, String slackApiBase, boolean reconnectOnDisconnection, boolean isRateLimitSupported, long heartbeat, TimeUnit unit) {
     	this(webSocketContainerProvider, authToken, appLevelToken, slackApiBase, null, null, -1, null, null, reconnectOnDisconnection, isRateLimitSupported, heartbeat, unit);
     }
 
     SlackWebSocketSessionImpl(WebSocketContainerProvider webSocketContainerProvider, String authToken, String appLevelToken, String slackApiBase, Proxy.Type proxyType, String proxyAddress, int proxyPort, String proxyUser, String proxyPassword, boolean reconnectOnDisconnection, boolean isRateLimitSupported, long heartbeat, TimeUnit unit) {
         this.authToken = authToken;
+        /**
+         * newly added variable
+         */
         this.appLevelToken = appLevelToken;
         if (slackApiBase != null) {
         	this.slackApiBase = slackApiBase;
@@ -399,14 +418,23 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return websocketSession != null && websocketSession.isOpen();
     }
 
+    /**
+     * reconstruct the connect process
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/283
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/157
+     * @throws IOException
+     */
     private void connectImpl() throws IOException
     {
         LOGGER.info("connecting to slack");
-
-        // Populate users
+        /**
+         *  Populate users
+         */
         refetchUsers();
-
-        // Populate channels
+        /**
+         *  Populate channels
+         */
         String channelsAnswer = listChannels().getReply().getPlainAnswer();
         JsonParser parser = new JsonParser();
 
@@ -433,7 +461,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             channels.put(channel.getId(), channel);
         }
 
-        // Get auth test metadata
+        /**
+         * Get auth test metadata
+         */
         String authTestAnswer = authTest().getReply().getPlainAnswer();
         JsonObject authTestJson = parser.parse(authTestAnswer).getAsJsonObject();
         String user_id = authTestJson.get("user_id").getAsString();
@@ -442,12 +472,16 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         String domain = authTestJson.get("url").getAsString();
         team = new SlackTeam(team_id, team_name, domain);
 
-        // Get user info about self and build sessionPersona
+        /**
+         * Get user info about self and build sessionPersona
+         */
         String userInfoAnswer = getUserInfo(user_id).getReply().getPlainAnswer();
         JsonObject userInfoJson = parser.parse(userInfoAnswer).getAsJsonObject();
         sessionPersona = SlackJSONParsingUtils.buildSlackUser(userInfoJson);
 
-        // Get web socket URL
+        /**
+         * Get web socket URL
+         */
         String appsConnectionsOpenAnswer = appsConnectionsOpen().getReply().getPlainAnswer();
         JsonObject appsConnectionsOpenJson = parser.parse(appsConnectionsOpenAnswer).getAsJsonObject();
         webSocketConnectionURL = appsConnectionsOpenJson.get("url").getAsString();
@@ -954,6 +988,13 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return handle;
     }
 
+    /**
+     * Change the variable types to "users"
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/284
+     * @param channel
+     * @param user
+     * @return
+     */
     @Override
     public SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user) {
       SlackMessageHandle<SlackChannelReply> handle = new SlackMessageHandle<>(getNextMessageId());
@@ -1088,13 +1129,22 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return handle;
     }
 
+    /**
+     * Get the channel's conversation details
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * @return channel conversation details
+     */
     public SlackMessageHandle<GenericSlackReply> listChannels()
     {
         Map<String, String> params = new HashMap<>();
         SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, CONVERSATION.LIST_COMMAND);
         return handle;
     }
-
+    /**
+     * Get the channel members
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * @return channel members
+     */
     public SlackMessageHandle<GenericSlackReply> listChannelMembers(String channel_id)
     {
         Map<String, String> params = new HashMap<>();
@@ -1103,18 +1153,34 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return handle;
     }
 
+    /**
+     * Checks authentication & identity and get detailed information.
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * @return test result
+     */
     public SlackMessageHandle<GenericSlackReply> authTest() {
         Map<String, String> params = new HashMap<>();
         SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, AUTH_TEST_COMMAND);
         return handle;
     }
 
+    /**
+     * Generate a temporary Socket Mode WebSocket URL that your app can connect to in order to receive events and interactive payloads over,
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * @return a temporary Socket Mode WebSocket URL
+     */
     public SlackMessageHandle<GenericSlackReply> appsConnectionsOpen() {
         Map<String, String> params = new HashMap<>();
         SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, APPS_CONNECTIONS_OPEN_COMMAND);
         return handle;
     }
 
+    /**
+     * Get the user information
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * @param user_id
+     * @return current user information
+     */
     public SlackMessageHandle<GenericSlackReply> getUserInfo(String user_id) {
         Map<String, String> params = new HashMap<>();
         params.put("user", user_id);
@@ -1176,6 +1242,15 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
+    /**
+     * update the non-generic slack commands to use newer auth format
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/284
+     * @param params
+     * @param fileContent
+     * @param fileName
+     * @param handle
+     * @param <T>
+     */
     private <T extends SlackReply> void postSlackCommandWithFile(Map<String, String> params, InputStream fileContent, String fileName, SlackMessageHandle handle) {
         try
         {
@@ -1204,6 +1279,14 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
+    /**
+     * get the corresponding SlackMessageHandle object so we can retrieve the information corresponding
+     * specific commands
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * @param params
+     * @param command
+     * @return
+     */
     @Override
     public SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(Map<String, String> params, String command) {
         HttpClient client = getHttpClient();
@@ -1350,6 +1433,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return SlackPresence.UNKNOWN;
     }
 
+    /**
+     * update the non-generic slack commands to use newer auth format
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/284
+     * @param presence
+     */
     public void setPresence(SlackPresence presence) {
         if(presence == SlackPresence.UNKNOWN || presence == SlackPresence.ACTIVE) {
             throw new IllegalArgumentException("Presence must be either AWAY or AUTO");

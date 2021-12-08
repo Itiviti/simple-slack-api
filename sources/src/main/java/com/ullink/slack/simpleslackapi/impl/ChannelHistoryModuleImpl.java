@@ -29,6 +29,9 @@ import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 public class ChannelHistoryModuleImpl implements ChannelHistoryModule {
 
     private final SlackSession session;
+    /**
+     * Slack change its API call methods. Now the corresponding history is retrieved by conversation...
+     */
     private static final String FETCH_CHANNEL_HISTORY_COMMAND = "conversations.history";
     private static final String FETCH_GROUP_HISTORY_COMMAND = "conversations.history";
     private static final String FETCH_IM_HISTORY_COMMAND = "conversations.history";
