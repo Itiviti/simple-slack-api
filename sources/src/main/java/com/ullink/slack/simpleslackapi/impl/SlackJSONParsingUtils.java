@@ -13,6 +13,12 @@ class SlackJSONParsingUtils {
         // Helper class
     }
 
+    /**
+     * Add the status and emoji
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/196
+     * @param jsonUser
+     * @return
+     */
     static SlackUser buildSlackUser(JsonObject jsonUser)
     {
         String id = GsonHelper.getStringOrNull(jsonUser.get("id"));

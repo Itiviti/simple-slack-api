@@ -413,6 +413,13 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return websocketSession != null && websocketSession.isOpen();
     }
 
+    /**
+     * reconstruct the connect process
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/283
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/157
+     * @throws IOException
+     */
     private void connectImpl() throws IOException
     {
         LOGGER.info("connecting to slack");
@@ -976,6 +983,13 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return handle;
     }
 
+    /**
+     * Change the variable types to "users"
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/284
+     * @param channel
+     * @param user
+     * @return
+     */
     @Override
     public SlackMessageHandle<SlackChannelReply> inviteToChannel(SlackChannel channel, SlackUser user) {
       SlackMessageHandle<SlackChannelReply> handle = new SlackMessageHandle<>(getNextMessageId());
@@ -1111,7 +1125,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     /**
-     * Get the conversation details
+     * Get the channel's conversation details
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
      * @return channel conversation details
      */
     public SlackMessageHandle<GenericSlackReply> listChannels()
@@ -1122,6 +1137,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
     /**
      * Get the channel members
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
      * @return channel members
      */
     public SlackMessageHandle<GenericSlackReply> listChannelMembers(String channel_id)
@@ -1133,7 +1149,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     /**
-     * Checks authentication & identity.
+     * Checks authentication & identity and get detailed information.
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
      * @return test result
      */
     public SlackMessageHandle<GenericSlackReply> authTest() {
@@ -1144,7 +1161,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     /**
      * Generate a temporary Socket Mode WebSocket URL that your app can connect to in order to receive events and interactive payloads over,
-     * @return a temporary Socket Mode WebSocket URL 
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * @return a temporary Socket Mode WebSocket URL
      */
     public SlackMessageHandle<GenericSlackReply> appsConnectionsOpen() {
         Map<String, String> params = new HashMap<>();
@@ -1154,6 +1172,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     /**
      * Get the user information
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
      * @param user_id
      * @return current user information
      */
@@ -1218,6 +1237,15 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
+    /**
+     * update the non-generic slack commands to use newer auth format
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/284
+     * @param params
+     * @param fileContent
+     * @param fileName
+     * @param handle
+     * @param <T>
+     */
     private <T extends SlackReply> void postSlackCommandWithFile(Map<String, String> params, InputStream fileContent, String fileName, SlackMessageHandle handle) {
         try
         {
@@ -1246,6 +1274,14 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         }
     }
 
+    /**
+     * get the corresponding SlackMessageHandle object so we can retrieve the information corresponding
+     * specific commands
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/279
+     * @param params
+     * @param command
+     * @return
+     */
     @Override
     public SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(Map<String, String> params, String command) {
         HttpClient client = getHttpClient();
@@ -1392,6 +1428,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return SlackPresence.UNKNOWN;
     }
 
+    /**
+     * update the non-generic slack commands to use newer auth format
+     * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/284
+     * @param presence
+     */
     public void setPresence(SlackPresence presence) {
         if(presence == SlackPresence.UNKNOWN || presence == SlackPresence.ACTIVE) {
             throw new IllegalArgumentException("Presence must be either AWAY or AUTO");
