@@ -1033,7 +1033,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     /**
      * refetchUsers functions fetches the users from a channel
      *
-     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/187
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/187
      */
     @Override
     public void refetchUsers() {

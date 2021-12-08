@@ -18,7 +18,7 @@ class SlackJSONParsingUtils {
      *
      * @return SlackUser
      *
-     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/196
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/196
      */
     static SlackUser buildSlackUser(JsonObject jsonUser)
     {

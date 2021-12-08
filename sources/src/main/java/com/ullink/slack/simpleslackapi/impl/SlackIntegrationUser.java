@@ -131,7 +131,7 @@ class SlackIntegrationUser implements SlackIntegration, SlackUser
      * get slack status
      * @return null
      *
-     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/196
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/196
      */
     @Override
     public SlackStatus getStatus()
