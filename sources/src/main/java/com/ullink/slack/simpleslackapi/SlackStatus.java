@@ -22,7 +22,7 @@ public class SlackStatus {
      * @param txt is the text of the slack status
      * @return SlackStatus
      *
-     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/196
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/196
      */
     public SlackStatus setText(String txt)
     {
@@ -36,7 +36,7 @@ public class SlackStatus {
      * @param emoji is the emoji of the slack status
      * @return SlackStatus
      *
-     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/196
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/196
      */
     public SlackStatus setEmoji(String emoji)
     {
@@ -49,7 +49,7 @@ public class SlackStatus {
      *
      * @return void
      *
-     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/196
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/196
      */
     public String getText()
     {
@@ -61,7 +61,7 @@ public class SlackStatus {
      *
      * @return void
      *
-     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/196
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/196
      */
     public String getEmoji()
     {

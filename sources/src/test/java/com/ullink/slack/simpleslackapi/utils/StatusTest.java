@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public class StatusTest {
     /**
-     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api /issues/196
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/196
      */
     @Test
     public void testStatus() {
