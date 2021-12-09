@@ -20,6 +20,12 @@ public class TestAbstractSlackSessionImpl
         @Override
         public void setPresence(SlackPresence presence) {
         }
+
+        /**
+         * connect function creates the preconditions required for testing slack session functions
+         *
+         * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/264
+         */
         @Override
         public void connect()
         {
@@ -497,7 +503,9 @@ public class TestAbstractSlackSessionImpl
     }
 
     /**
-     * Test the method findUserByEmail()
+     * Test the method findUserByEmail() for an existing bot
+     *
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/264
      */
     @Test
     public void testFindUserByEmail_ExistingBot()
@@ -517,6 +525,11 @@ public class TestAbstractSlackSessionImpl
         assertThat(slackUser.getId()).isEqualTo("userid1");
     }
 
+    /**
+     * Test the method findUserByEmail() for a missing bot
+     *
+     * CS427 Issue link: https://github.com/Itiviti/simple-slack-api/issues/264
+     */
     @Test
     public void testFindUserByEmail_MissingBot()
     {
