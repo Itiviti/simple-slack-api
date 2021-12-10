@@ -9,8 +9,6 @@ public class SlackChannelReply extends SlackReplyImpl implements ParsedSlackRepl
     {
         super(ok,error);
         this.slackChannel = slackChannel;
-        System.out.println("CS428 In constructor");
-        System.out.println(slackChannel.getId());
     }
 
     public SlackChannel getSlackChannel()

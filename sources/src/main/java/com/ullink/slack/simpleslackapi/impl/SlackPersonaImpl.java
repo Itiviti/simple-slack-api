@@ -88,18 +88,6 @@ public class SlackPersonaImpl implements SlackPersona, SlackUser {
     }
 
     @Override
-    public String getStatusText()
-    {
-        return profile.getStatusText();
-    }
-
-    @Override
-    public String getStatusEmoji()
-    {
-        return profile.getStatusEmoji();
-    }
-
-    @Override
     public SlackPresence getPresence() {
         return profile.getPresence();
     }
