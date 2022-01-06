@@ -1,6 +1,8 @@
 package actions;
 
+import com.google.gson.JsonParser;
 import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 
 /**
@@ -45,10 +47,13 @@ public class SendingMessages
         SlackUser user = session.findUserByUserName("killroy");
 
         //get its direct message channel
-        SlackMessageHandle<SlackChannelReply> reply = session.openDirectMessageChannel(user);
+        SlackMessageHandle<GenericSlackReply> reply = session.openDirectMessageChannel(user);
+        String channelAnswer = reply.getReply().getPlainAnswer();
 
         //get the channel
-        SlackChannel channel = reply.getReply().getSlackChannel();
+        JsonParser parser = new JsonParser();
+        String channelId = parser.parse(channelAnswer).getAsJsonObject().get("channel").getAsJsonObject().get("id").getAsString();
+        SlackChannel channel = session.findChannelById(channelId);
 
         //send the message to this channel
         session.sendMessage(channel, "Hi, how are you", null);
