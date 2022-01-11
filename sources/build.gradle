@@ -118,8 +118,10 @@ publishing {
         mavenJava(MavenPublication) {
             artifactId = archivesBaseName
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
+            afterEvaluate {
+                artifact sourcesJar
+                artifact javadocJar
+            }
             pom.withXml {
                 asNode().appendNode('description', 'A simple API to build bot running on Slack')
                 asNode().children().last() + pomConfig
@@ -149,8 +151,9 @@ artifacts {
 }
 
 signing {
-    required false
+   // required false
     sign configurations.archives
+    sign publishing.publications.mavenJava
 }
 
 test {
@@ -170,6 +173,7 @@ dependencies {
     compile 'javax.websocket:javax.websocket-api:1.1'
 
     compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
 
     testCompile 'org.jmockit:jmockit:1.12'

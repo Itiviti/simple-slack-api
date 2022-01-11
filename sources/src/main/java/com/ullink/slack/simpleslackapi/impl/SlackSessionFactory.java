@@ -17,6 +17,16 @@ public class SlackSessionFactory {
     {
     	return new SlackWebSocketSessionImpl(null, authToken, appLevelToken, null, true, true, 0, null);
     }
+
+    /**
+     * @deprecated use the authToken and appLevelToken method
+     * @param authToken
+     */
+    public static SlackSession createWebSocketSlackSession(String authToken)
+    {
+        return new SlackWebSocketSessionImpl(null, authToken, null, null, true, true, 0, null);
+    }
+
     /**
      * Add a new variable because Slack Api change the way to be called. Now it requires auth token and app level token
      * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/283
@@ -26,6 +36,14 @@ public class SlackSessionFactory {
      */
     public static SlackSessionFactoryBuilder getSlackSessionBuilder(String authToken, String appLevelToken) {
         return new SlackSessionFactoryBuilder(authToken, appLevelToken);
+    }
+
+    /**
+     * @deprecated use the authToken and appLevelToken method
+     * @param authToken
+     */
+    public static SlackSessionFactoryBuilder getSlackSessionBuilder(String authToken) {
+        return new SlackSessionFactoryBuilder(authToken);
     }
 
     public static class SlackSessionFactoryBuilder {
@@ -54,6 +72,15 @@ public class SlackSessionFactory {
          * @param appLevelToken
          */
         private SlackSessionFactoryBuilder(String authToken, String appLevelToken) {
+            this.authToken = authToken;
+            this.appLevelToken = appLevelToken;
+        }
+
+        /**
+         * @deprecated use the authToken and appLevelToken constructor
+         * @param authToken
+         */
+        private SlackSessionFactoryBuilder(String authToken) {
             this.authToken = authToken;
             this.appLevelToken = appLevelToken;
         }

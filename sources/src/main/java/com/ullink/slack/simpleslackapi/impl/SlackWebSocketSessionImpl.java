@@ -1,12 +1,13 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.ConnectException;
 import java.net.Proxy;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +32,6 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
@@ -100,15 +100,6 @@ import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import com.ullink.slack.simpleslackapi.replies.SlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackReplyImpl;
 import com.ullink.slack.simpleslackapi.replies.SlackUserPresenceReply;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements SlackSession, MessageHandler.Whole<String> {
     private static final String DEFAULT_SLACK_API_SCHEME = "https";
@@ -535,12 +526,14 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     private String consumeToString(InputStream content) throws IOException
     {
-        Reader reader = new InputStreamReader(content, StandardCharsets.UTF_8);
         StringBuilder buf = new StringBuilder();
-        char data[] = new char[16384];
-        int numread;
-        while (0 <= (numread = reader.read(data)))
-            buf.append(data, 0, numread);
+        try (Reader reader = new BufferedReader(new InputStreamReader
+            (content, Charset.forName(StandardCharsets.UTF_8.name())))) {
+            int c;
+            while ((c = reader.read()) != -1) {
+                buf.append((char) c);
+            }
+        }
         return buf.toString();
     }
 
@@ -1136,9 +1129,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
      */
     public SlackMessageHandle<GenericSlackReply> listChannels()
     {
-        Map<String, String> params = new HashMap<>();
-        SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, CONVERSATION.LIST_COMMAND);
-        return handle;
+        return postGenericSlackCommand(CONVERSATION.LIST_COMMAND);
     }
     /**
      * Get the channel members
@@ -1149,8 +1140,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     {
         Map<String, String> params = new HashMap<>();
         params.put("channel", channel_id);
-        SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, CONVERSATION.MEMBERS_COMMAND);
-        return handle;
+        return postGenericSlackCommand(params, CONVERSATION.MEMBERS_COMMAND);
     }
 
     /**
@@ -1159,9 +1149,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
      * @return test result
      */
     public SlackMessageHandle<GenericSlackReply> authTest() {
-        Map<String, String> params = new HashMap<>();
-        SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, AUTH_TEST_COMMAND);
-        return handle;
+        return postGenericSlackCommand(AUTH_TEST_COMMAND);
     }
 
     /**
@@ -1170,9 +1158,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
      * @return a temporary Socket Mode WebSocket URL
      */
     public SlackMessageHandle<GenericSlackReply> appsConnectionsOpen() {
-        Map<String, String> params = new HashMap<>();
-        SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, APPS_CONNECTIONS_OPEN_COMMAND);
-        return handle;
+        return postGenericSlackCommand(APPS_CONNECTIONS_OPEN_COMMAND);
     }
 
     /**
@@ -1184,8 +1170,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     public SlackMessageHandle<GenericSlackReply> getUserInfo(String user_id) {
         Map<String, String> params = new HashMap<>();
         params.put("user", user_id);
-        SlackMessageHandle<GenericSlackReply> handle = postGenericSlackCommand(params, USERS.INFO_COMMAND);
-        return handle;
+        return postGenericSlackCommand(params, USERS.INFO_COMMAND);
     }
 
     @Override
@@ -1293,10 +1278,13 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         HttpPost request = new HttpPost(slackApiBase + command);
         request.setHeader(HttpHeaders.CONTENT_TYPE,"application/x-www-form-urlencoded");
         List<NameValuePair> nameValuePairList = new ArrayList<>();
-        for (Map.Entry<String, String> arg : params.entrySet())
+        if (params != null)
         {
-            if (!"token".equals(arg.getKey())) {
-                nameValuePairList.add(new BasicNameValuePair(arg.getKey(), arg.getValue()));
+            for (Map.Entry<String, String> arg : params.entrySet())
+            {
+                if (!"token".equals(arg.getKey())) {
+                    nameValuePairList.add(new BasicNameValuePair(arg.getKey(), arg.getValue()));
+                }
             }
         }
         if (command.contains(APP_LEVEL_API_PREFIX)) {
@@ -1323,6 +1311,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(String command) {
+        return postGenericSlackCommand(null, command);
     }
 
     private HttpClient getHttpClient() {
@@ -1525,78 +1518,38 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         return TimeUnit.MILLISECONDS.toSeconds(heartbeat);
     }
 
-    private final PresenceChangeListener INTERNAL_PRESENCE_CHANGE_LISTENER = new PresenceChangeListener()
-    {
-        @Override public void onEvent(PresenceChange event, SlackSession session)
-        {
-            SlackUser user = users.get(event.getUserId());
-            SlackPersonaImpl persona = (SlackPersonaImpl) user;
-            SlackProfileImpl profile = persona.getProfile().toBuilder().presence(event.getPresence()).build();
-            SlackUser newUser = ((SlackPersonaImpl) user).toBuilder().profile(profile).build();
-            users.put(event.getUserId(), newUser    );
-        }
+    private final PresenceChangeListener INTERNAL_PRESENCE_CHANGE_LISTENER = (event, session) -> {
+        SlackUser user = users.get(event.getUserId());
+        SlackPersonaImpl persona = (SlackPersonaImpl) user;
+        SlackProfileImpl profile = persona.getProfile().toBuilder().presence(event.getPresence()).build();
+        SlackUser newUser = ((SlackPersonaImpl) user).toBuilder().profile(profile).build();
+        users.put(event.getUserId(), newUser    );
     };
 
-    private final SlackChannelArchivedListener INTERNAL_CHANNEL_ARCHIVE_LISTENER = new SlackChannelArchivedListener()
-    {
-        @Override public void onEvent(SlackChannelArchived event, SlackSession session)
-        {
-            SlackChannel channel = channels.get(event.getSlackChannel().getId());
-            SlackChannel newChannel = channel.toBuilder().isArchived(true).build();
-            channels.put(newChannel.getId(), newChannel);
-        }
+    private final SlackChannelArchivedListener INTERNAL_CHANNEL_ARCHIVE_LISTENER = (event, session) -> {
+        SlackChannel channel = channels.get(event.getSlackChannel().getId());
+        SlackChannel newChannel = channel.toBuilder().isArchived(true).build();
+        channels.put(newChannel.getId(), newChannel);
     };
 
-    private final SlackChannelCreatedListener INTERNAL_CHANNEL_CREATED_LISTENER = new SlackChannelCreatedListener()
-    {
-        @Override public void onEvent(SlackChannelCreated event, SlackSession session)
-        {
-            channels.put(event.getSlackChannel().getId(), event.getSlackChannel());
-        }
+    private final SlackChannelCreatedListener INTERNAL_CHANNEL_CREATED_LISTENER = (event, session) -> channels.put(event.getSlackChannel().getId(), event.getSlackChannel());
+
+    private final SlackChannelDeletedListener INTERNAL_CHANNEL_DELETED_LISTENER = (event, session) -> channels.remove(event.getSlackChannel().getId());
+
+    private final SlackChannelRenamedListener INTERNAL_CHANNEL_RENAMED_LISTENER = (event, session) -> {
+        SlackChannel channel = channels.get(event.getSlackChannel().getId());
+        SlackChannel newChannel = channel.toBuilder().name(event.getNewName()).build();
+        channels.put(newChannel.getId(), newChannel);
     };
 
-    private final SlackChannelDeletedListener INTERNAL_CHANNEL_DELETED_LISTENER = new SlackChannelDeletedListener()
-    {
-        @Override public void onEvent(SlackChannelDeleted event, SlackSession session)
-        {
-            channels.remove(event.getSlackChannel().getId());
-        }
+    private final SlackChannelUnarchivedListener INTERNAL_CHANNEL_UNARCHIVED_LISTENER = (event, session) -> {
+        SlackChannel channel = channels.get(event.getSlackChannel().getId());
+        SlackChannel newChannel = channel.toBuilder().isArchived(false).build();
+        channels.put(newChannel.getId(), newChannel);
     };
 
-    private final SlackChannelRenamedListener INTERNAL_CHANNEL_RENAMED_LISTENER = new SlackChannelRenamedListener()
-    {
-        @Override public void onEvent(SlackChannelRenamed event, SlackSession session)
-        {
-            SlackChannel channel = channels.get(event.getSlackChannel().getId());
-            SlackChannel newChannel = channel.toBuilder().name(event.getNewName()).build();
-            channels.put(newChannel.getId(), newChannel);
-        }
-    };
+    private final SlackTeamJoinListener INTERNAL_TEAM_JOIN_LISTENER = (event, session) -> users.put(event.getUser().getId(), event.getUser());
 
-    private final SlackChannelUnarchivedListener INTERNAL_CHANNEL_UNARCHIVED_LISTENER = new SlackChannelUnarchivedListener()
-    {
-        @Override public void onEvent(SlackChannelUnarchived event, SlackSession session)
-        {
-            SlackChannel channel = channels.get(event.getSlackChannel().getId());
-            SlackChannel newChannel = channel.toBuilder().isArchived(false).build();
-            channels.put(newChannel.getId(), newChannel);
-        }
-    };
-
-    private final SlackTeamJoinListener INTERNAL_TEAM_JOIN_LISTENER = new SlackTeamJoinListener()
-    {
-        @Override public void onEvent(SlackTeamJoin event, SlackSession session)
-        {
-            users.put(event.getUser().getId(), event.getUser());
-        }
-    };
-
-    private final SlackUserChangeListener INTERNAL_USER_CHANGE_LISTENER = new SlackUserChangeListener()
-    {
-        @Override public void onEvent(SlackUserChange event, SlackSession session)
-        {
-            users.put(event.getUser().getId(), event.getUser());
-        }
-    };
+    private final SlackUserChangeListener INTERNAL_USER_CHANGE_LISTENER = (event, session) -> users.put(event.getUser().getId(), event.getUser());
 
 }

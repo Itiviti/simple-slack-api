@@ -515,6 +515,11 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.postGenericSlackCommand(params, command);
     }
 
+    @Override public SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(String command)
+    {
+        return delegate.postGenericSlackCommand(command);
+    }
+
     @Override public void addChannelArchivedListener(SlackChannelArchivedListener listener)
     {
         delegate.addChannelArchivedListener(listener);

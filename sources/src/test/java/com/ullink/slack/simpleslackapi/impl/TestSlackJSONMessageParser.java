@@ -357,6 +357,12 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(String command)
+            {
+                return null;
+            }
+
+            @Override
             public SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel)
             {
                 return null;

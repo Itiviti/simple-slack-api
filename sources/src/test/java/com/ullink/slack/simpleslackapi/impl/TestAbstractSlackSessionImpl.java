@@ -376,6 +376,11 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
+        public SlackMessageHandle<GenericSlackReply> postGenericSlackCommand(String command) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
         public SlackMessageHandle sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
