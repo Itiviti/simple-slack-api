@@ -38,6 +38,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected final List<PresenceChangeListener>         presenceChangeListener    = new CopyOnWriteArrayList<>();
     protected final List<SlackDisconnectedListener>      slackDisconnectedListener = new CopyOnWriteArrayList<>();
     protected final List<UserTypingListener>             userTypingListener        = new CopyOnWriteArrayList<>();
+    protected final List<SlackMemberJoinedListener>      slackMemberJoinedListener = new CopyOnWriteArrayList();
 
     static final SlackChatConfiguration            DEFAULT_CONFIGURATION    = SlackChatConfiguration.getConfiguration().asUser();
     static final boolean                           DEFAULT_UNFURL           = true;
@@ -506,5 +507,15 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public void removeUserTypingListener(UserTypingListener listener) {
         userTypingListener.remove(listener);
+    }
+    
+    @Override
+    public void addSlackMemberJoinedListener(SlackMemberJoinedListener listener) {
+        this.slackMemberJoinedListener.add(listener);
+    }
+
+    @Override
+    public void removeSlackMemberJoinedListener(SlackMemberJoinedListener listener) {
+        this.slackMemberJoinedListener.remove(listener);
     }
 }

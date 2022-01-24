@@ -10,6 +10,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelJoinedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackMemberJoinedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelLeftListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
@@ -733,6 +734,16 @@ public class SlackSessionWrapper implements SlackSession
     @Override public void removePinRemovedListener(PinRemovedListener listener)
     {
         delegate.removePinRemovedListener(listener);
+    }
+    
+    @Override
+    public void addSlackMemberJoinedListener(SlackMemberJoinedListener listener) {
+        this.delegate.addSlackMemberJoinedListener(listener);
+    }
+    
+    @Override
+    public void removeSlackMemberJoinedListener(SlackMemberJoinedListener listener) {
+        this.delegate.removeSlackMemberJoinedListener(listener);
     }
 
     @Override public long getHeartbeat()
