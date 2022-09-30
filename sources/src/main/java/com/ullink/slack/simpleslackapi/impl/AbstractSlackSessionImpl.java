@@ -99,11 +99,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
         SlackChannel toReturn = channels.get(channelId);
         if (toReturn == null)
         {
-            // direct channel case
-            if (channelId != null && channelId.startsWith("D"))
-            {
-                toReturn = SlackChannel.builder().id(channelId).name("").topic("").name("").build();
-            }
+            toReturn = SlackChannel.builder().id(channelId).name("").topic("").name("").build();
         }
         return toReturn;
     }

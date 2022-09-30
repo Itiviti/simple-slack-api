@@ -15,16 +15,28 @@ public class SlackSessionFactory {
      */
     public static SlackSession createWebSocketSlackSession(String authToken, String appLevelToken)
     {
-    	return new SlackWebSocketSessionImpl(null, authToken, appLevelToken, null, true, true, 0, null);
+    	return new SlackWebSocketSessionImpl(null, authToken, appLevelToken, null, true, true, 0, null, true);
     }
 
     /**
-     * @deprecated use the authToken and appLevelToken method
+     * Add a new variable because Slack Api change the way to be called. Now it requires auth token and app level token
+     * @param authToken
+     * @param appLevelToken
+     * @param legacyMode set to false to use the appLevelToken connection
+     * @return
+     */
+    public static SlackSession createWebSocketSlackSession(String authToken, String appLevelToken, boolean legacyMode)
+    {
+        return new SlackWebSocketSessionImpl(null, authToken, appLevelToken, null, true, true, 0, null, legacyMode);
+    }
+
+
+    /**
      * @param authToken
      */
     public static SlackSession createWebSocketSlackSession(String authToken)
     {
-        return new SlackWebSocketSessionImpl(null, authToken, null, null, true, true, 0, null);
+        return new SlackWebSocketSessionImpl(null, authToken, null, null, true, true, 0, null, true);
     }
 
     /**
@@ -64,6 +76,7 @@ public class SlackSessionFactory {
         private WebSocketContainerProvider provider;
         private boolean autoreconnection;
         private boolean rateLimitSupport = true;
+        private boolean legacyMode;
 
         /**
          * Add new variable -appLevelToken
@@ -82,7 +95,6 @@ public class SlackSessionFactory {
          */
         private SlackSessionFactoryBuilder(String authToken) {
             this.authToken = authToken;
-            this.appLevelToken = appLevelToken;
         }
 
         public SlackSessionFactoryBuilder withBaseApiUrl(String slackBaseApi) {
@@ -127,8 +139,13 @@ public class SlackSessionFactory {
             return this;
         }
 
+        public SlackSessionFactoryBuilder withLegacyMode(boolean legacyMode) {
+            this.legacyMode = legacyMode;
+            return this;
+        }
+
         public SlackSession build() {
-            return new SlackWebSocketSessionImpl(provider, authToken, appLevelToken, slackBaseApi, proxyType, proxyAddress, proxyPort, proxyUser, proxyPassword, autoreconnection, rateLimitSupport, heartbeat, unit);
+            return new SlackWebSocketSessionImpl(provider, authToken, appLevelToken, slackBaseApi, proxyType, proxyAddress, proxyPort, proxyUser, proxyPassword, autoreconnection, rateLimitSupport, heartbeat, unit, legacyMode);
         }
     }
 }

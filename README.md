@@ -78,6 +78,10 @@ All these events can be listen provided your bot has the rights to (IE : the bot
 * reaction removed from message event (since v0.5.0)
 * team joined event
 
+# Attention
+
+From version 1.4.0 upward, channel members are not loaded in memory anymore in order for the api to start up faster. This should have no impact
+on the current behavior.
 
 # Thanks
 
@@ -97,6 +101,9 @@ Many thanks to everyone who has contributed to this library :
 * Rhys Kenwell
 * Aman Gupta
 * Miklos Sagi
+* Nathalie Mahe
+* Sebastien Lelouvier
+* Nicolas Haquet
 
 (Let me know if I forgot someone, I'll fix that ASAP ;) )
 
