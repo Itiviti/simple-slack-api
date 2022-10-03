@@ -76,7 +76,7 @@ public class SlackSessionFactory {
         private WebSocketContainerProvider provider;
         private boolean autoreconnection;
         private boolean rateLimitSupport = true;
-        private boolean legacyMode;
+        private boolean legacyMode = true;
 
         /**
          * Add new variable -appLevelToken
@@ -87,14 +87,36 @@ public class SlackSessionFactory {
         private SlackSessionFactoryBuilder(String authToken, String appLevelToken) {
             this.authToken = authToken;
             this.appLevelToken = appLevelToken;
+            this.legacyMode = false;
         }
 
         /**
-         * @deprecated use the authToken and appLevelToken constructor
+         * Add new variable -appLevelToken
+         * CS427 Issue Link: https://github.com/Itiviti/simple-slack-api/issues/283
+         * @param authToken
+         * @param appLevelToken
+         */
+        private SlackSessionFactoryBuilder(String authToken, String appLevelToken, boolean legacyMode) {
+            this.authToken = authToken;
+            this.appLevelToken = appLevelToken;
+            this.legacyMode = legacyMode;
+        }
+
+        /**
+         * use the authToken and legacy mode
          * @param authToken
          */
         private SlackSessionFactoryBuilder(String authToken) {
             this.authToken = authToken;
+        }
+
+        /**
+         * use the authToken and legacy mode
+         * @param authToken
+         */
+        private SlackSessionFactoryBuilder(String authToken, boolean legacyMode) {
+            this.authToken = authToken;
+            this.legacyMode = legacyMode;
         }
 
         public SlackSessionFactoryBuilder withBaseApiUrl(String slackBaseApi) {
