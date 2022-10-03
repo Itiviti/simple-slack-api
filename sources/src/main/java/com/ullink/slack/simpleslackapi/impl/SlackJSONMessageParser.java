@@ -1,5 +1,10 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -7,13 +12,6 @@ import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.*;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackTeamJoin;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChange;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class SlackJSONMessageParser {
     private static final Logger LOGGER                     = LoggerFactory.getLogger(SlackJSONMessageParser.class);
@@ -214,29 +212,39 @@ class SlackJSONMessageParser {
         return new SlackMessageDeleted(channel, deletedTs, ts);
     }
 
-    private static SlackMessagePosted parseMessagePublished(JsonObject obj, SlackChannel channel, String ts, SlackSession slackSession) {
+    private static SlackMessagePosted parseMessagePublished(JsonObject obj, SlackChannel channel, String ts, SlackSession slackSession)
+    {
         String text = GsonHelper.getStringOrNull(obj.get("text"));
         String subtype = GsonHelper.getStringOrNull(obj.get("subtype"));
         String userId;
         //sloppy fix for finding userId inside File_comment subtype.
-        if (subtype !=null && subtype.equals("file_comment")) {
+        if (subtype != null && subtype.equals("file_comment"))
+        {
             userId = GsonHelper.getStringOrNull(obj.get("comment").getAsJsonObject().get("user"));
-	} else {
+        }
+        else
+        {
             userId = GsonHelper.getStringOrNull(obj.get("user"));
-	}
-        if (userId == null) {
+        }
+        if (userId == null)
+        {
             userId = GsonHelper.getStringOrNull(obj.get("bot_id"));
         }
         SlackUser user = slackSession.findUserById(userId);
         String threadTimestamp = GsonHelper.getStringOrNull(obj.get("thread_ts"));
-        if (user == null) {
+        if (user == null)
+        {
 
             SlackIntegration integration = slackSession.findIntegrationById(userId);
-            if (integration == null) {
-                throw new IllegalStateException("unknown user id: " + userId);
+            if (integration == null)
+            {
+                LOGGER.info("unknown user id: " + userId + ". Fallbacking...");
+                user = SlackPersonaImpl.builder().id(userId).build();
             }
-            user = new SlackIntegrationUser(integration);
-
+            else
+            {
+                user = new SlackIntegrationUser(integration);
+            }
         }
         Map<String, Integer> reacs = extractReactionsFromMessageJSON(obj);
         ArrayList<SlackAttachment> attachments = extractAttachmentsFromMessageJSON(obj);
