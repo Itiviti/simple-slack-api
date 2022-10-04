@@ -22,7 +22,7 @@ apply from: project.rootProject.file("gradle/scripts/coverage.gradle")
 
 group = 'com.ullink.slack'
 archivesBaseName = 'simpleslackapi'
-version = '1.3.0'
+version = '1.4.0'
 
 
 def pomConfig = {
@@ -103,6 +103,17 @@ def pomConfig = {
             name 'Bahadir Akin'
             email 'bhdrkn@gmail.com'
             url 'https://github.com/bhdrkn'
+        }
+        contributor {
+            name 'Nicolas Haquet'
+            url 'https://github.com/nhaquet2'
+        }
+        contributor {
+            name 'Sebastien Lelouvier'
+        }
+        contributor {
+            name 'Nathalie Mahé'
+            url 'https://github.com/nathmahe'
         }
     }
     scm {
